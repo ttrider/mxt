@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Test Page</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <!-- <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script src='main.js'></script> -->
+</head>
+
+<body>
+
+    <div id="root1" style="margin:3em; border:1px solid green;">
+    </div>
+    <div id="root2" style="margin:3em; border:1px solid green;">
+    </div>
+    <div id="root3" style="margin:3em; border:1px solid green;">
+    </div>
+
+    <script defer type="text/javascript">
+        const template = `<div id="t01id01">Hello MXT!</div>`;
+        // initialize 
+        const te = document.createElement("template");
+        te.innerHTML = template;
+
+        function init(data) {
+            const el = document.importNode(te, true);
+            const d01 = el.content.getElementById("t01id01");
+            if (!d01)
+                throw new Error("missing element");
+            d01.id = "";
+            // set or update style
+            d01.setAttribute("style", `color: ${data.color}`);
+            return el.content;
+        }
+
+        document.getElementById("root1").appendChild(init({
+            color: "red"
+        }));
+        document.getElementById("root2").appendChild(init({
+            color: "yellow"
+        }));
+        document.getElementById("root3").appendChild(init({
+            color: "green"
+        }));
+    </script>
+</body>
+
+</html>

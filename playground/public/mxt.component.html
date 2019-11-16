@@ -1,0 +1,194 @@
+<template id="myt">
+    <div style="color: {color}; background:blue;">
+        {sometxt}
+    </div>
+</template>
+
+
+<script>
+
+
+
+
+
+    var comp = new MyComponent();
+
+    var d = document.getElementById("foo");
+
+    comp.bind(d, obj);
+
+</script>
+
+<script>
+
+    class MyComponent {
+
+        bind(host, mxdata) {
+
+        }
+
+        initialize(context) {
+
+            var t = document.createElement("template");
+            t.innerHTML = '<div id="mytdiv000"></div>';
+
+            // made a clone here
+
+            var mytdiv000 = t.content.getElementById("mytdiv000");
+            // style handler
+            // it is based on color property
+            // if color is observable - do handler
+            // if not - just assign the value
+            var mytdiv000style = "color: " + context.color;
+            var mytdiv000styleContent = content.sometxt;
+            mytdiv000.setAttribute("style", mytdiv000style);
+            mytdiv000.innerHTML = mytdiv000styleContent;
+            mytdiv000.id = null;
+
+
+
+        }
+
+
+
+
+
+        template = '<template id="myt"><div id="mytdiv000" style="color: {color}">{sometxt}</div></template>';
+    }
+
+
+
+
+
+
+
+
+</script>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+<body>
+
+    <mxt:if data-mxt-template="productrow">
+        <div>Mxt</div>
+
+    </mxt:if>
+
+    <table id="producttable">
+        <thead>
+            <tr>
+                <td>UPC_Code</td>
+                <td>Product_Name</td>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- existing data could optionally be included here -->
+        </tbody>
+    </table>
+
+    <mxt.if data-mxt-template="productrow">
+        <div>between</div>
+
+    </mxt.if>
+
+    <table id="producttable2">
+        <thead>
+            <tr>
+                <td>UPC_Code</td>
+                <td>Product_Name</td>
+            </tr>
+        </thead>
+
+        <tbody data-mxt-template="{productrow}">
+            <tr>
+                <td>foo</td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <mxt.if data-mxt-template="productrow" template="qew" condition="asdhasd">
+        <div>bar</div>
+
+    </mxt.if>
+
+    <template id="productrow">
+        <tr>
+            <td class="record"></td>
+            <td></td>
+        </tr>
+        <style>
+            td {
+                background: blue;
+            }
+        </style>
+    </template>
+
+
+    <script defer type="text/javascript">
+        var a = document.getElementsByTagName("mxt.if");
+
+        for (var aa = 0; aa < a.length; aa++) {
+
+            var ae = a.item(aa);
+
+            document.writeln("<!--" + ae.getAttributeNames().join() + "-->")
+
+        }
+
+
+
+        var suffix = "custom1234";
+
+        var template = document.querySelector('#productrow');
+        var tcontent = template.content;
+        // process style
+        var style = tcontent.querySelector("style");
+
+        var str = style.innerText;
+        var str2 = str.replace(/([^{]+)({[^}]*})/gm, function (part) {
+
+            return "." + suffix + " " + part;
+
+        })
+
+
+        style.innerHTML = str2;
+
+        tcontent.removeChild(style);
+
+        document.head.appendChild(style);
+
+
+        // Clone the new row and insert it into the table
+        var tbody = document.querySelector("tbody");
+
+        tbody.className += " " + suffix;
+
+
+        var clone = document.importNode(tcontent, true);
+        var td = clone.querySelectorAll("td");
+        td[0].textContent = "1235646565";
+        td[1].textContent = "Stuff";
+
+        tbody.appendChild(clone);
+
+        // Clone the new row and insert it into the table
+        var clone2 = document.importNode(tcontent, true);
+        td = clone2.querySelectorAll("td");
+        td[0].textContent = "0384928528";
+        td[1].textContent = "Acme Kidney Beans 2";
+
+        tbody.appendChild(clone2);
+    </script>
+</body>
+
+</html>

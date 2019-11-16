@@ -1,15 +1,13 @@
+import { autorun } from "mobx";
 
-const uid = "qwsderf24";
-const template = `<template id="t01" type="mxt">
-    <div id="t01id01">Hello MXT!</div>
-</template>`;
+const template = `<div id="t01id01">Hello MXT!</div>`;
 
 // initialize 
 const te = document.createElement("template");
 te.innerHTML = template;
 
 
-function init(data: any) {
+export function init(data: any) {
 
     const el = document.importNode(te, true);
 
@@ -18,9 +16,12 @@ function init(data: any) {
     d01.id = "";
 
     // set or update style
-    d01.setAttribute("style", `color: ${data.color}`);
-
+    autorun(() => {
+        d01.setAttribute("style", `color: ${data.color}`);
+    });
     return el.content;
 }
+
+
 
 

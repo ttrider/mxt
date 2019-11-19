@@ -25,6 +25,7 @@
     "homepage": "https://github.com/ttrider/mxt#readme",
     "devDependencies": {
         "@types/chai": "^4.2.4",
+        "@types/glob": "^7.1.1",
         "@types/mocha": "^5.2.7",
         "@types/node": "^12.12.4",
         "@types/uuid": "^3.4.6",
@@ -39,5 +40,8 @@
         "typescript": "^3.6.4",
         "uuid": "^3.3.3"
     },
-    "dependencies": {}
+    "dependencies": {
+        "glob": "^7.1.6",
+        "htmlparser2": "^4.0.0"
+    }
 }

@@ -33,7 +33,7 @@ export function init(data: any) {
 
     });
 
-    const wrapper = document.createElement("style-context");
+    const wrapper = document.createElement("span");
     wrapper.setAttribute("class", "ts001");
     wrapper.appendChild(el.content);
 

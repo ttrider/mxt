@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import { parseDOM } from "htmlparser2";
 import { Node } from "domhandler";
+import { ElementType } from "domelementtype";
 
 const globp = util.promisify(glob);
 const readFile = util.promisify(fs.readFile);
@@ -12,6 +13,13 @@ const readFile = util.promisify(fs.readFile);
 interface Options {
     input: string;
 
+    plugins?: Plugin[];
+
+}
+
+interface Plugin {
+    tag: string;
+    
 }
 
 interface ComponentFileInfo {
@@ -67,17 +75,29 @@ async function loadFiles(input: string) {
 async function processFile(inputFile: ComponentFileInfo) {
     console.info(inputFile.name);
 
-    // if you find the top level <style> => add to the <head> as is
-    // if you find the top level <script> => add to the generated component
-    // if you find anything else => ignore ???
+    for (const node of inputFile.dom) {
+        if (node.type) {
+            switch (node.type.toLowerCase()) {
+                case "style": {
 
-    // if find top level <template> => create the component
+                }
+                case "link": {
 
-    
+                }
+                case "script": {
+
+                }
+                case "template": {
+
+                }
+
+            }
+        }
+
+    }
+
+
 
 }
-
-
-
 
 export default mxt;

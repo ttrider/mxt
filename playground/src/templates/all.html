@@ -1,0 +1,52 @@
+<!-- STYLES
+This is the global style. It will go into <head> element as-is
+-->
+<style>
+    .global {
+        background: green;
+    }
+</style>
+<!-- it can be more then one, if needed -->
+<style>
+    .global-second {
+        background: yellow;
+    }
+</style>
+<!-- you can use less by setting the type attribute and using a plugin -->
+<style type="text/less">
+    @mycolor: #123456; .lessStyle{ background: @mycolor; }
+</style>
+<!-- or sass -->
+<style type="text/less">
+    #mycolor: #123456; .sassStyle{ background: #mycolor; }
+</style>
+
+<!-- links will go to the <head> as-is-->
+<link href="test.css" rel="stylesheet">
+
+<!-- /STYLES -->
+
+<!-- SCRIPTS -->
+
+<!-- Scripts will go to the end of the body of the document-->
+<script src="myscript.js"></script>
+
+<!-- you can use in-line scripts as well -->
+<script>
+    function foo() {
+        console.info("foo");
+    }
+</script>
+
+<!-- you can use typescript with a plugin -->
+<script type="text/typescript">
+    function foo(input: string) { console.info("foo"); return input; }
+</script>
+
+<!-- /SCRIPTS -->
+
+<!-- TEMPLATES -->
+
+<!-- /TEMPLATES -->
+
+<!-- all other elements are PROHIBITED

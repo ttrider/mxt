@@ -3,14 +3,15 @@ import util from "util";
 import fs from "fs";
 import path from "path";
 import { parseDOM } from "htmlparser2";
-import { Node } from "domhandler";
+import { Node, Element } from "domhandler";
 import { ElementType } from "domelementtype";
+import { Handler } from "htmlparser2/lib/Parser";
 
 const globp = util.promisify(glob);
 const readFile = util.promisify(fs.readFile);
 
 
-interface Options {
+export interface Options {
     input: string;
 
     plugins?: Plugin[];
@@ -18,9 +19,15 @@ interface Options {
 }
 
 interface Plugin {
-    tag: string;
-    
+    handler: (context: HandlerContext) => boolean;
+
 }
+
+export interface HandlerContext {
+
+    element: Element;
+}
+
 
 interface ComponentFileInfo {
 
@@ -34,7 +41,12 @@ interface ComponentFileInfo {
 
 async function mxt(options: Options) {
 
+    options.plugins = (options.plugins || []);
+
+
     const fileSet = await loadFiles(options.input);
+
+
 
     for (const inputFile of fileSet) {
 
@@ -101,3 +113,8 @@ async function processFile(inputFile: ComponentFileInfo) {
 }
 
 export default mxt;
+
+
+const defaultHandlers: Handler[] = [
+
+];

@@ -16,7 +16,24 @@ export interface Options {
 
     plugins?: Plugin[];
 
+    //es5 vs es6
+
 }
+
+/*
+events:
+
+    
+
+                    
+
+
+
+
+
+
+*/
+
 
 interface Plugin {
     handler: (context: HandlerContext) => boolean;

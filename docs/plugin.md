@@ -115,6 +115,22 @@ Transform the template
 
 - none
 
+## beforeTransformStyle
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
+
+**Default implementation:**
+
+- none
+
 ## transformStyle
 
 Transform the template
@@ -126,6 +142,22 @@ Transform the template
 **Output Context:**
 
 - template
+
+**Default implementation:**
+
+- none
+
+## beforeTransformLink
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
 
 **Default implementation:**
 
@@ -147,6 +179,38 @@ Transform the template
 
 - none
 
+## afterTransformLink
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
+
+**Default implementation:**
+
+- none
+
+## beforeTransformScript
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
+
+**Default implementation:**
+
+- none
+
 ## transformScript
 
 Transform the template
@@ -163,6 +227,38 @@ Transform the template
 
 - none
 
+## afterTransformScript
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
+
+**Default implementation:**
+
+- none
+
+## beforeTransformTemplate
+
+Called before transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
+
+**Default implementation:**
+
+- none
+
 ## transformTemplate
 
 Transform the template
@@ -174,6 +270,22 @@ Transform the template
 **Output Context:**
 
 - template
+
+**Default implementation:**
+
+- none
+
+## afterTransformTemplate
+
+Called after transforming an element
+
+**Input Context:**
+
+- loaded templates
+
+**Output Context:**
+
+- loaded templates
 
 **Default implementation:**
 

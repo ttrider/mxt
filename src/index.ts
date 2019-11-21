@@ -34,15 +34,85 @@ events:
 
 */
 
+declare type PluginHandlers =
+    "beforeLoad" |
+    "afterLoad" |
+
+    "beforeTransform" |
+    "transform" |
+    "beforeTransformStyle" |
+    "transformStyle" |
+    "beforeTransformLink" |
+    "transformLink" |
+    "afterTransformLink" |
+    "beforeTransformScript" |
+    "transformScript" |
+    "afterTransformScript" |
+    "beforeTransformTemplate" |
+    "transformTemplate" |
+    "afterTransformTemplate" |
+    "afterTransform" |
+    "beforeParseStyle" |
+    "parseStyle" |
+    "afterParseStyle" |
+    "beforeParseScript" |
+    "parseScript" |
+    "afterParseScript" |
+    "beforeParseTemplate" |
+    "parseTemplate" |
+    "afterParseTemplate" |
+    "beforeCodegen" |
+    "codegen" |
+    "afterCodegen" |
+    "beforePackage" |
+    "package" |
+    "afterPackage" |
+    "done";
 
 interface Plugin {
-    handler: (context: HandlerContext) => boolean;
-
+    beforeLoad?: (context: HandlerContext) => boolean;
+    load?: (context: HandlerContext) => boolean;
+    afterLoad?: (context: HandlerContext) => boolean;
+    beforeTransform?: (context: HandlerContext) => boolean;
+    transform?: (context: HandlerContext) => boolean;
+    beforeTransformStyle?: (context: HandlerContext) => boolean;
+    transformStyle?: (context: HandlerContext) => boolean;
+    beforeTransformLink?: (context: HandlerContext) => boolean;
+    transformLink?: (context: HandlerContext) => boolean;
+    afterTransformLink?: (context: HandlerContext) => boolean;
+    beforeTransformScript?: (context: HandlerContext) => boolean;
+    transformScript?: (context: HandlerContext) => boolean;
+    afterTransformScript?: (context: HandlerContext) => boolean;
+    beforeTransformTemplate?: (context: HandlerContext) => boolean;
+    transformTemplate?: (context: HandlerContext) => boolean;
+    afterTransformTemplate?: (context: HandlerContext) => boolean;
+    afterTransform?: (context: HandlerContext) => boolean;
+    beforeParseStyle?: (context: HandlerContext) => boolean;
+    parseStyle?: (context: HandlerContext) => boolean;
+    afterParseStyle?: (context: HandlerContext) => boolean;
+    beforeParseScript?: (context: HandlerContext) => boolean;
+    parseScript?: (context: HandlerContext) => boolean;
+    afterParseScript?: (context: HandlerContext) => boolean;
+    beforeParseTemplate?: (context: HandlerContext) => boolean;
+    parseTemplate?: (context: HandlerContext) => boolean;
+    afterParseTemplate?: (context: HandlerContext) => boolean;
+    beforeCodegen?: (context: HandlerContext) => boolean;
+    codegen?: (context: HandlerContext) => boolean;
+    afterCodegen?: (context: HandlerContext) => boolean;
+    beforePackage?: (context: HandlerContext) => boolean;
+    package?: (context: HandlerContext) => boolean;
+    afterPackage?: (context: HandlerContext) => boolean;
+    done?: (context: HandlerContext) => boolean;
 }
 
 export interface HandlerContext {
 
-    element: Element;
+    options: Options,
+    files: string[],
+    componentFiles: ComponentFileInfo[],
+    plugins: Plugin[],
+
+    element?: Element;
 }
 
 
@@ -60,25 +130,31 @@ async function mxt(options: Options) {
 
     options.plugins = (options.plugins || []);
 
+    const files = await globp(options.input, { absolute: true });
 
-    const fileSet = await loadFiles(options.input);
+    const context: HandlerContext = {
+        options: options,
+        files,
+        plugins: (options.plugins || []),
+        componentFiles: []
+    };
 
+    executePluginMethod("beforeLoad", context);
 
+    await loadFiles(context);
 
-    for (const inputFile of fileSet) {
+    executePluginMethod("afterLoad", context);
 
-        processFile(inputFile);
-
+    // transform stage
+    for (const componentFile of context.componentFiles) {
+        transformFile(context, componentFile);
     }
 }
+export default mxt;
 
-async function loadFiles(input: string) {
+async function loadFiles(context: HandlerContext) {
 
-    const fileSet: ComponentFileInfo[] = [];
-
-    const files = await globp(input, { absolute: true });
-
-    for (const filePath of files) {
+    for (const filePath of context.files) {
 
         const fileName = path.basename(filePath);
         const ext = path.extname(fileName);
@@ -88,7 +164,7 @@ async function loadFiles(input: string) {
 
             const content = fileBuffer.toString();
 
-            fileSet.push({
+            context.componentFiles.push({
                 path: filePath,
                 name: fileName.substr(0, fileName.length - ext.length),
                 content: content,
@@ -97,14 +173,19 @@ async function loadFiles(input: string) {
         }
 
     }
-
-    return fileSet;
 }
 
-async function processFile(inputFile: ComponentFileInfo) {
-    console.info(inputFile.name);
+async function transformFile(context: HandlerContext, componentFile: ComponentFileInfo) {
 
-    for (const node of inputFile.dom) {
+    for (const node of componentFile.dom) {
+
+        executePluginMethod("beforeTransform", context, componentFile, node);
+
+        executePluginMethod("transform", context, componentFile, node);
+
+        executePluginMethod("afterTransform", context, componentFile, node);
+
+
         if (node.type) {
             switch (node.type.toLowerCase()) {
                 case "style": {
@@ -129,7 +210,18 @@ async function processFile(inputFile: ComponentFileInfo) {
 
 }
 
-export default mxt;
+function executePluginMethod(handlerName: PluginHandlers, context: HandlerContext) {
+
+    for (const plugin of context.plugins) {
+        const handler = plugin[handlerName];
+        if (handler && handler(context)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 
 const defaultHandlers: Handler[] = [

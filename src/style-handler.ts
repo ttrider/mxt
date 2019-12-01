@@ -1,17 +1,38 @@
-import { HandlerContext } from "./index";
+import { HandlerContext, ComponentFileInfo, ElementInfo, extractExpressions, StyleElementInfo } from "./index";
+import { Element, DataNode } from "domhandler";
 
-function defaultStyleHandler(context: HandlerContext) {
-    if (context.element.name !== "style") {
+
+export function parseStyle(context: HandlerContext, componentFile: ComponentFileInfo, element: Element) {
+    if (element.name.toLowerCase() === "link") {
+        return parseLink(context, componentFile, element);
+    }
+    if (element.name.toLowerCase() !== "style") {
         return false;
     }
 
-    // if (context.template === undefined){
-    //     // global mode
-    // }
-    
-    
+    const styleElement: StyleElementInfo = {
+        name: "style",
+        attributes: element.attribs,
+        rules:[]
+    };
+
+    if (element.firstChild) {
+        styleElement.content = (element.firstChild as DataNode).data;
+        styleElement.expressions = extractExpressions(styleElement.content);
+    }
+
+    componentFile.globalStyles.push(styleElement);
 
     return true;
 }
 
-export default defaultStyleHandler;
+function parseLink(context: HandlerContext, componentFile: ComponentFileInfo, element: Element) {
+
+    const linkElement: ElementInfo = {
+        name: "link",
+        attributes: element.attribs,
+    };
+
+    componentFile.links.push(linkElement);
+    return true;
+}

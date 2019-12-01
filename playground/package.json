@@ -23,6 +23,8 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@types/less": "^3.0.1",
+    "less": "^3.10.3",
     "mobx": "^5.15.0"
   }
 }

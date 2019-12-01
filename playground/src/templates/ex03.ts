@@ -11,14 +11,14 @@ ts001.innerHTML = `.ts001 div {background: greenyellow;cursor: pointer;box-sizin
     .ts001 div:hover{border: dashed salmon 1px;}`;
 document.head.appendChild(ts001);
 
-export function init(data: any) {
+export function init(data: any, host?: Element | null) {
 
     const el = document.importNode(te, true);
 
     const d01 = el.content.getElementById("t01id01");
     if (!d01) throw new Error("missing element");
     d01.removeAttribute("id");
-    
+
 
     // set or update style
     autorun(() => {
@@ -36,6 +36,10 @@ export function init(data: any) {
     const wrapper = document.createElement("span");
     wrapper.setAttribute("class", "ts001");
     wrapper.appendChild(el.content);
+
+    if (host) {
+        host.appendChild(wrapper);
+    }
 
     return wrapper;
 }

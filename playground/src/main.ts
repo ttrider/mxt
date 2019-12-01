@@ -1,8 +1,8 @@
 import { observable, computed } from "mobx"
 
-import {init as ex01_init} from "./templates/ex01";
-import {init as ex02_init} from "./templates/ex02";
-import {init as ex03_init} from "./templates/ex03";
+import { init as ex01_init } from "./templates/ex01";
+import { init as ex02_init } from "./templates/ex02";
+import { init as ex03_init } from "./templates/ex03";
 
 class TestData {
     @observable r = 128;
@@ -32,20 +32,18 @@ if (document) {
 
     // example 01
     const root_ex01 = document.getElementById("ex01");
-    if (root_ex01){
+    if (root_ex01) {
         root_ex01.appendChild(ex01_init(data));
     }
 
     // example 02
     const root_ex02 = document.getElementById("ex02");
-    if (root_ex02){
+    if (root_ex02) {
         root_ex02.appendChild(ex02_init(data));
     }
 
     // example 03
     const root_ex03 = document.getElementById("ex03");
-    if (root_ex03){
-        root_ex03.appendChild(ex03_init(data));
-    }
+    ex03_init(data, root_ex03);
 }
 

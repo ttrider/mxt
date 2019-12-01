@@ -41,7 +41,12 @@
     "uuid": "^3.3.3"
   },
   "dependencies": {
+    "@babel/core": "^7.7.4",
+    "@types/css": "0.0.31",
+    "@types/less": "^3.0.1",
+    "css": "^2.2.4",
     "glob": "^7.1.6",
-    "htmlparser2": "^4.0.0"
+    "htmlparser2": "^4.0.0",
+    "less": "^3.10.3"
   }
 }

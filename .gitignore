@@ -62,5 +62,8 @@ typings/
 
 lib
 # we don't need *.js files in git
-*.js
+src/*.js
+playground/public/*.js
+playground/src/*.js
+playground/src/templates/*.js
 *.js.map

@@ -10,7 +10,11 @@ import { Handler } from "htmlparser2/lib/Parser";
 const globp = util.promisify(glob);
 const readFile = util.promisify(fs.readFile);
 
+import { parse } from "babylon";
+import traverse, { Scope } from "babel-traverse";
 import { parseSync } from "@babel/core";
+import { statement } from "@babel/template";
+import { Expression, SpreadElement, Statement, Scopable, V8IntrinsicIdentifier, JSXNamespacedName, ArgumentPlaceholder, VariableDeclaration } from "@babel/types";
 
 const test00 = `
 const a = 0;
@@ -84,12 +88,21 @@ export interface ElementInfo {
     attributes: { [name: string]: string },
     content?: string,
     expressions?: string[];
-    
+
 }
-export interface StyleElementInfo extends ElementInfo{
+export interface StyleElementInfo extends ElementInfo {
     rules: string[]
 }
 
+export interface TemplateInfo extends ElementInfo {
+
+
+    tokens: Array<{
+        tagId: string,
+        attrName: string,
+        attrValue: string
+    }>;
+}
 
 export interface Options {
     input: string;
@@ -232,8 +245,8 @@ async function loadFiles(context: HandlerContext) {
                 name: fileName.substr(0, fileName.length - ext.length),
                 content: content,
                 dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
-                links:[],
-                globalStyles:[]
+                links: [],
+                globalStyles: []
             });
         }
 
@@ -366,6 +379,65 @@ export function extractExpressions(content: string) {
     }
 
     return expressions;
+}
+
+export function parseExpressions(content: string) {
+
+    const results = parse("`" + content + "`");
+
+    const statements = results.program.body;
+
+    if (statements === undefined || statements.length === 0) {
+        return;
+    }
+
+    const statement = statements[0];
+    if (statement.type !== "ExpressionStatement" || statement.expression === undefined || statement.expression.type !== "TemplateLiteral") {
+        return;
+    }
+
+    const expression = statement.expression;
+
+    if (expression.expressions.length === 0) {
+        return {
+            originalContent: content,
+            content
+        }
+    }
+
+    const state: {
+        originalContent: string,
+        content: string,
+        external: string[]
+    } = {
+        originalContent: content,
+        content,
+        external: []
+    };
+
+    traverse(results, {
+        Identifier(path, state) {
+            const name = path.node.name;
+            if (!path.scope.hasBinding(name)) {
+                state.external.push(name);
+            }
+        },
+    }, undefined, state);
+
+    return state;
+
+    // const y = 123;
+    //const z = 12;
+    //    const t = `${function fff(a: number) { const y = 222; return (a * y).toString() }(z)}`;
+    //const t = `${var a=0;}`;
+
+
+    // const dt = { a: 0, b: "1", c: () => { return "c" } };
+
+    // const { a, b, c, d } = dt as any;
+
+
+
 }
 
 

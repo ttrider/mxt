@@ -1,6 +1,4 @@
-import { Element } from "domhandler";
 import { parseStyle } from "../src/style-handler";
-import { HandlerContext, ComponentFileInfo } from "../src";
 import { setupElementTest } from "./utils";
 
 test("invalid element type", () => {

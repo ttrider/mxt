@@ -6,7 +6,6 @@ const template = `<div id="t01id01">Hello MXT!</div>`;
 const te = document.createElement("template");
 te.innerHTML = template;
 
-
 export function init(data: any) {
 
     const el = document.importNode(te, true);

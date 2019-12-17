@@ -16,22 +16,7 @@ import { parseSync } from "@babel/core";
 import { statement } from "@babel/template";
 import { Expression, SpreadElement, Statement, Scopable, V8IntrinsicIdentifier, JSXNamespacedName, ArgumentPlaceholder, VariableDeclaration } from "@babel/types";
 
-const test00 = `
-const a = 0;
-const b = "foo";
-export default function foo(){
-  return b+a;
-}`;
 
-const results = parseSync(test00, {
-    filename: "./test",
-    ast: true,
-    code: true,
-    minified: true,
-    compact: true
-});
-
-console.info(results);
 
 
 
@@ -95,13 +80,20 @@ export interface StyleElementInfo extends ElementInfo {
 }
 
 export interface TemplateInfo extends ElementInfo {
+    id: string,
+    elements: Element[],
+    tokens: AttributeTokenInfo[];
+}
 
+export interface ExpressionInfo {
+    content: string,
+    hasTokens: boolean,
+    externalReferences: string[]
+}
 
-    tokens: Array<{
-        tagId: string,
-        attrName: string,
-        attrValue: string
-    }>;
+export interface AttributeTokenInfo extends ExpressionInfo {
+    elementId: string;
+    attributeName: string;
 }
 
 export interface Options {
@@ -179,9 +171,11 @@ export interface ComponentFileInfo {
     name: string,
     content: string,
     dom: Node[],
-
     links: ElementInfo[],
     globalStyles: StyleElementInfo[],
+
+    templates: { [id: string]: TemplateInfo },
+    errors: Error[]
 }
 
 
@@ -246,7 +240,9 @@ async function loadFiles(context: HandlerContext) {
                 content: content,
                 dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
                 links: [],
-                globalStyles: []
+                globalStyles: [],
+                templates: {},
+                errors: []
             });
         }
 
@@ -385,59 +381,27 @@ export function parseExpressions(content: string) {
 
     const results = parse("`" + content + "`");
 
-    const statements = results.program.body;
-
-    if (statements === undefined || statements.length === 0) {
-        return;
-    }
-
-    const statement = statements[0];
-    if (statement.type !== "ExpressionStatement" || statement.expression === undefined || statement.expression.type !== "TemplateLiteral") {
-        return;
-    }
-
-    const expression = statement.expression;
-
-    if (expression.expressions.length === 0) {
-        return {
-            originalContent: content,
-            content
-        }
-    }
-
-    const state: {
-        originalContent: string,
-        content: string,
-        external: string[]
-    } = {
-        originalContent: content,
+    const state: ExpressionInfo = {
         content,
-        external: []
+        hasTokens: false,
+        externalReferences: []
     };
 
     traverse(results, {
-        Identifier(path, state) {
+        TemplateLiteral(path) {
+            if (path.node.expressions.length > 0) {
+                state.hasTokens = true;
+            }
+        },
+        Identifier(path, state: ExpressionInfo) {
             const name = path.node.name;
             if (!path.scope.hasBinding(name)) {
-                state.external.push(name);
+                state.externalReferences.push(name);
             }
         },
     }, undefined, state);
 
     return state;
-
-    // const y = 123;
-    //const z = 12;
-    //    const t = `${function fff(a: number) { const y = 222; return (a * y).toString() }(z)}`;
-    //const t = `${var a=0;}`;
-
-
-    // const dt = { a: 0, b: "1", c: () => { return "c" } };
-
-    // const { a, b, c, d } = dt as any;
-
-
-
 }
 
 

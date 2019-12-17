@@ -9,8 +9,10 @@ export function setupElementTest(content: string) {
         dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
         name: "Test01",
         path: "./test01",
-        links:[],
-        globalStyles:[]
+        links: [],
+        globalStyles: [],
+        templates: {},
+        errors: []
     };
 
     const context: HandlerContext = {

@@ -1,4 +1,4 @@
-import { HandlerContext, ComponentFileInfo, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo } from "./index";
+import { HandlerContext, ComponentFileInfo, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, parseExpressions, AttributeTokenInfo } from "./index";
 import { Element, DataNode } from "domhandler";
 import { isTag, ElementType } from "domelementtype";
 
@@ -12,19 +12,33 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
     if (element.attribs["type"] !== "mxt") {
         return false;
     }
+    const template_id = element.attribs.id;
+    if (!template_id) {
+        componentFile.errors.push(new Error(`template doesn't have an id`))
+        return false;
+    }
+
+    if (componentFile.templates[template_id]) {
+        componentFile.errors.push(new Error(`duplicate template id`))
+        return false;
+    }
 
     const template: TemplateInfo = {
+        id: element.attribs.id,
         name: "template",
         attributes: element.attribs,
+        elements: [],
         tokens: []
     };
 
+    componentFile.templates[template_id] = template;
+
     // traverse template
     for (const item of element.children) {
-        processItem(template, item as Element);
-
+        const element = item as Element;
+        template.elements.push(element);
+        processItem(template, element);
     }
-
 
     function processItem(template: TemplateInfo, item: Element) {
 
@@ -65,35 +79,38 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
     function processTag(template: TemplateInfo, tagItem: Element) {
 
-        // check attributes for tokens
+        const tokenizedAttributes: string[] = [];
         for (const attrName in tagItem.attribs) {
             if (tagItem.attribs.hasOwnProperty(attrName)) {
 
                 const attrValue = tagItem.attribs[attrName];
 
-                const hasToken = /(^|[^\\])\${.*}/gm.test(attrValue);
+                if (attrValue) {
+                    const attrState = parseExpressions(attrValue) as AttributeTokenInfo;
+                    if (attrState.hasTokens) {
 
-                if (hasToken) {
-                    if (!tagItem.attribs.id) {
-                        tagItem.attribs.id = `tagid_${idindex++}`;
+                        if (!tagItem.attribs.id) {
+                            tagItem.attribs.id = `tagid_${idindex++}`;
+                        }
+
+                        attrState.attributeName = attrName;
+                        attrState.elementId = tagItem.attribs.id;
+
+                        template.tokens.push(attrState);
+
+                        tokenizedAttributes.push(attrName);
                     }
-
-                    template.tokens.push({
-                        tagId: tagItem.attribs.id,
-                        attrName,
-                        attrValue
-                    });
-
                 }
             }
+        }
+        for (const tokenizedAttribute of tokenizedAttributes) {
+            delete tagItem.attribs[tokenizedAttribute];
         }
 
         for (const item of tagItem.children) {
             processItem(template, item as Element);
-
         }
     }
-
 
     return true;
 }

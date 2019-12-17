@@ -10,9 +10,7 @@ import { Handler } from "htmlparser2/lib/Parser";
 const globp = util.promisify(glob);
 const readFile = util.promisify(fs.readFile);
 
-import { parse } from "babylon";
-import traverse, { Scope } from "babel-traverse";
-import { parseSync } from "@babel/core";
+import { parseSync, parse, traverse } from "@babel/core";
 import { statement } from "@babel/template";
 import { Expression, SpreadElement, Statement, Scopable, V8IntrinsicIdentifier, JSXNamespacedName, ArgumentPlaceholder, VariableDeclaration } from "@babel/types";
 
@@ -379,7 +377,11 @@ export function extractExpressions(content: string) {
 
 export function parseExpressions(content: string) {
 
-    const results = parse("`" + content + "`");
+    const results = parseSync("`" + content + "`", {
+        babelrc: false,
+        configFile: false
+    });
+    if (!results) return;
 
     const state: ExpressionInfo = {
         content,

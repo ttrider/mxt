@@ -4,7 +4,7 @@ import { setupElementTest } from "./utils";
 test("invalid element type", () => {
 
   const { context, component, element } = setupElementTest(`<somelement></somelement>`)
-
+ 
   expect(parseStyle(context, component, element)).toBe(false);
 
   expect(context.globalLinkElements.length).toBe(0);
@@ -12,7 +12,7 @@ test("invalid element type", () => {
 
 
 test("valid global link", () => {
-
+ 
   const { context, component, element } = setupElementTest(`<link href="foo" rel="stylesheet"/>`)
 
   expect(parseStyle(context, component, element)).toBe(true);
@@ -31,7 +31,7 @@ test("valid global link", () => {
 test("empty style", () => {
 
   const { context, component, element } = setupElementTest(`<style></style>`)
-
+ 
   expect(parseStyle(context, component, element)).toBe(true);
 
   expect(component.globalStyles).toContainEqual({
@@ -46,7 +46,7 @@ test("simple style", () => {
   const { context, component, element } = setupElementTest(`<style>.a{color:red;}</style>`)
 
   expect(parseStyle(context, component, element)).toBe(true);
-
+ 
   expect(component.globalStyles.length).toBe(1);
 
   expect(component.globalStyles).toContainEqual({
@@ -59,7 +59,7 @@ test("simple style", () => {
 });
 
 test("style with expressions", () => {
-
+ 
   const { context, component, element } = setupElementTest(`<style>.a{color:\${red};}</style>`)
 
   expect(parseStyle(context, component, element)).toBe(true);

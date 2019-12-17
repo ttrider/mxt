@@ -14,6 +14,6 @@ test("simple template", () => {
   expect(parseTemplate(context, component, element)).toBe(true);
  
   codegen(context, component);
-
+ 
 });
 

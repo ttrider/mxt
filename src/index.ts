@@ -4,7 +4,6 @@ import fs from "fs";
 import path from "path";
 import { parseDOM } from "htmlparser2";
 import { Node, Element } from "domhandler";
-import { ElementType } from "domelementtype";
 import { Handler } from "htmlparser2/lib/Parser";
 
 const globp = util.promisify(glob);

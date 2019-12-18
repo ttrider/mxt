@@ -1,69 +1,52 @@
 import { HandlerContext, ComponentFileInfo } from ".";
-import { tsModuleBlock, tsModuleDeclaration, blockStatement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
+import { Statement, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
 import { transformSync, ConfigAPI, parse, parseSync, transformFromAstSync } from "@babel/core";
 import generate from "@babel/generator";
-
-
-const tts = require("@babel/plugin-transform-typescript").default;
-
+import { getOuterHTML } from "DomUtils";
+import { getTemplateLiteral } from "./code-utils";
 
 
 export function codegen(context: HandlerContext, componentFile: ComponentFileInfo) {
 
-
-    const body = [
-
-        variableDeclaration("const", [variableDeclarator(identifier("mobx123"), callExpression(identifier("require"), [stringLiteral("mobx")]))]),
+    const body: Statement[] = [
         importDeclaration([importSpecifier(identifier("autorun"), identifier("autorun"))], stringLiteral("mobx")),
-        variableDeclaration("var", [variableDeclarator(identifier("mobx321"), callExpression(identifier("require"), [stringLiteral("mobx")]))]),
-
     ];
 
-    const md = declareModule(stringLiteral("foobar"), blockStatement(body), "CommonJS");
 
-    const tsm = tsModuleDeclaration(stringLiteral("tsfoobar"), tsModuleBlock(body));
+    for (const templateId in componentFile.templates) {
+        if (componentFile.templates.hasOwnProperty(templateId)) {
+            const template = componentFile.templates[templateId];
 
-    const ast = file(program([md, tsm]), "", undefined);
-
-
-    // const pp = parseSync("var a = 0;", {
-    //     filename: "./test",
-    //     ast: true,
-    //     code: false,
-    //     minified: false,
-    //     compact: false,
-    //     sourceType: "module",
-
-    // });
+            const constTemplateName = `${template.id}$$template`;
 
 
-    // if (pp) {
-    //const results = transformFromAstSync(pp, undefined, { plugins: ["@babel/transform-typescript"] })
-    const results = transformFromAstSync(ast, undefined, {
-        //plugins: ["@babel/transform-typescript"],
-        plugins:["@babel/plugin-transform-typescript"],
-        presets: ["@babel/preset-typescript"],
-        configFile: false,
-        babelrc: false,
-        code: true,
-        ast: true,
-        filename: "./testtest.ts"
-    });
+            const templateLiteral = getTemplateLiteral(template.elements);
+            if (templateLiteral) {
+                //body.push(variableDeclaration("const", [variableDeclarator(identifier(`${template.id}$$template`), templateLiteral)]));
 
-    if (results) {
-        console.info(results.code);
-        console.info(results.map);
+                body.push(variableDeclaration(
+                    "const",
+                    [
+                        variableDeclarator(
+                            identifier(constTemplateName),
+                            callExpression(
+                                identifier("document.createElement"),
+                                [stringLiteral("template")]
+                            )
+                        )
+                    ]
+                ));
+
+                body.push(expressionStatement(assignmentExpression("=", identifier(constTemplateName+".innerHTML"), templateLiteral)));
+            }
+        }
     }
-    //  }
 
-    //transformSync()
-    // const tsv = tts(ast);
-    // traverse(ast, tsv);
-
+    const ast = file(program(body), "", undefined);
 
 
     const gen = generate(ast, {
-        
+
     });
     console.info(gen.code);
 

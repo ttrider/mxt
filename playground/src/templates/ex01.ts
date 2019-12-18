@@ -16,7 +16,8 @@ export function init(data: any) {
 
     // set or update style
     autorun(() => {
-        d01.setAttribute("style", `color: ${data.color}`);
+        const {color} = data;
+        d01.setAttribute("style", `color: ${color}`);
     });
     return el.content;
 }

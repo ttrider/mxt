@@ -1,11 +1,12 @@
-import { HandlerContext, ComponentFileInfo, AttributeTokenInfo } from ".";
+import { HandlerContext, AttributeTokenInfo } from ".";
 import { Identifier, arrayPattern, assignmentPattern, sequenceExpression, spreadElement, returnStatement, unaryExpression, throwStatement, newExpression, ifStatement, Statement, nullLiteral, numericLiteral, booleanLiteral, exportNamedDeclaration, tsTypeReference, tsUndefinedKeyword, tsNullKeyword, tsTypeLiteral, tsLiteralType, tsUnionType, exportDefaultDeclaration, tsAnyKeyword, tsTypeAnnotation, tsParameterProperty, tsDeclareFunction, functionDeclaration, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
 import * as t from "@babel/types";
 import generate from "@babel/generator";
 import { getTemplateLiteral } from "./code-utils";
+import { ComponentFile } from "./core";
 
 
-export function codegen(context: HandlerContext, componentFile: ComponentFileInfo) {
+export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
 
     componentFile.initStatements.push(importDeclaration([importSpecifier(identifier("autorun"), identifier("autorun"))], stringLiteral("mobx")));

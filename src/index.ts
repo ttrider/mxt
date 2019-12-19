@@ -3,7 +3,8 @@ import util from "util";
 import fs from "fs";
 import path from "path";
 import { parseDOM } from "htmlparser2";
-import { Node, Element } from "domhandler";
+import { Node, Element, DataNode } from "domhandler";
+
 import { Handler } from "htmlparser2/lib/Parser";
 
 const globp = util.promisify(glob);
@@ -12,6 +13,7 @@ const readFile = util.promisify(fs.readFile);
 import { parseSync, parse, traverse } from "@babel/core";
 import { statement } from "@babel/template";
 import { Expression, SpreadElement, Statement, Scopable, V8IntrinsicIdentifier, JSXNamespacedName, ArgumentPlaceholder, VariableDeclaration } from "@babel/types";
+import { ComponentFile } from "./core";
 
 
 
@@ -109,41 +111,41 @@ interface Plugin {
     afterLoad?: (context: HandlerContext) => boolean;
 
 
-    beforeTransform?: (context: HandlerContext, componentFile: ComponentFileInfo, node: Node) => boolean;
-    transform?: (context: HandlerContext, componentFile: ComponentFileInfo, node: Node) => boolean;
-    afterTransform?: (context: HandlerContext, componentFile: ComponentFileInfo, node: Node) => boolean;
+    beforeTransform?: (context: HandlerContext, componentFile: ComponentFile, node: Node) => boolean;
+    transform?: (context: HandlerContext, componentFile: ComponentFile, node: Node) => boolean;
+    afterTransform?: (context: HandlerContext, componentFile: ComponentFile, node: Node) => boolean;
 
-    beforeTransformStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    transformStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterTransformStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeTransformStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    transformStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterTransformStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeTransformLink?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    transformLink?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterTransformLink?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeTransformLink?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    transformLink?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterTransformLink?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeTransformScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    transformScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterTransformScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeTransformScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    transformScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterTransformScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeTransformTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    transformTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterTransformTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeTransformTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    transformTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterTransformTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeParseStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    parseStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterParseStyle?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeParseStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    parseStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterParseStyle?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeParseScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    parseScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterParseScript?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeParseScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    parseScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterParseScript?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeParseTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    parseTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
-    afterParseTemplate?: (context: HandlerContext, componentFile: ComponentFileInfo, element: Element) => boolean;
+    beforeParseTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    parseTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
+    afterParseTemplate?: (context: HandlerContext, componentFile: ComponentFile, element: Element) => boolean;
 
-    beforeCodegen?: (context: HandlerContext, componentFile: ComponentFileInfo) => boolean;
-    codegen?: (context: HandlerContext, componentFile: ComponentFileInfo) => boolean;
-    afterCodegen?: (context: HandlerContext, componentFile: ComponentFileInfo) => boolean;
+    beforeCodegen?: (context: HandlerContext, componentFile: ComponentFile) => boolean;
+    codegen?: (context: HandlerContext, componentFile: ComponentFile) => boolean;
+    afterCodegen?: (context: HandlerContext, componentFile: ComponentFile) => boolean;
 
     beforePackage?: (context: HandlerContext) => boolean;
     package?: (context: HandlerContext) => boolean;
@@ -155,7 +157,7 @@ export interface HandlerContext {
 
     options: Options,
     files: string[],
-    componentFiles: ComponentFileInfo[],
+    componentFiles: ComponentFile[],
     plugins: Plugin[],
 
     globalLinkElements: ElementInfo[],
@@ -164,21 +166,6 @@ export interface HandlerContext {
 }
 
 
-export interface ComponentFileInfo {
-
-    path: string,
-    name: string,
-    content: string,
-    dom: Node[],
-    links: ElementInfo[],
-    globalStyles: StyleElementInfo[],
-
-    templates: { [id: string]: TemplateInfo },
-    errors: Error[],
-
-    initStatements:Statement[],
-    componentStatements:Statement[],
-}
 
 
 
@@ -253,7 +240,7 @@ async function loadFiles(context: HandlerContext) {
     }
 }
 
-function transformFile(context: HandlerContext, componentFile: ComponentFileInfo) {
+function transformFile(context: HandlerContext, componentFile: ComponentFile) {
 
     for (const node of componentFile.dom) {
 
@@ -292,7 +279,7 @@ function transformFile(context: HandlerContext, componentFile: ComponentFileInfo
     }
 }
 
-function parseFile(context: HandlerContext, componentFile: ComponentFileInfo) {
+function parseFile(context: HandlerContext, componentFile: ComponentFile) {
 
     for (const node of componentFile.dom) {
 
@@ -321,7 +308,7 @@ function parseFile(context: HandlerContext, componentFile: ComponentFileInfo) {
     }
 }
 
-function codegenFile(context: HandlerContext, componentFile: ComponentFileInfo) {
+function codegenFile(context: HandlerContext, componentFile: ComponentFile) {
     executeComponent("beforeCodegen", context, componentFile);
     executeComponent("codegen", context, componentFile);
     executeComponent("afterCodegen", context, componentFile);
@@ -338,7 +325,7 @@ function execute(handlerName: PluginHandlers, context: HandlerContext) {
     }
     return false;
 }
-function executeComponent(handlerName: PluginComponentHandlers, context: HandlerContext, componentFile: ComponentFileInfo) {
+function executeComponent(handlerName: PluginComponentHandlers, context: HandlerContext, componentFile: ComponentFile) {
 
     for (const plugin of context.plugins) {
         const handler = plugin[handlerName];
@@ -348,7 +335,7 @@ function executeComponent(handlerName: PluginComponentHandlers, context: Handler
     }
     return false;
 }
-function executeComponentNode<T extends keyof PluginHandlerMap>(handlerName: T, context: HandlerContext, componentFile: ComponentFileInfo, element: PluginHandlerMap[T]) {
+function executeComponentNode<T extends keyof PluginHandlerMap>(handlerName: T, context: HandlerContext, componentFile: ComponentFile, element: PluginHandlerMap[T]) {
 
     for (const plugin of context.plugins) {
         const handler = plugin[handlerName];

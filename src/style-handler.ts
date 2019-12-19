@@ -1,8 +1,9 @@
-import { HandlerContext, ComponentFileInfo, ElementInfo, extractExpressions, StyleElementInfo } from "./index";
-import { Element, DataNode } from "domhandler";
+import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo } from "./index";
+import { Node, Element, DataNode } from "domhandler";
+import { ComponentFile } from "./core";
 
 
-export function parseStyle(context: HandlerContext, componentFile: ComponentFileInfo, element: Element) {
+export function parseStyle(context: HandlerContext, componentFile: ComponentFile, element: Element) {
     if (element.name.toLowerCase() === "link") {
         return parseLink(context, componentFile, element);
     }
@@ -26,7 +27,7 @@ export function parseStyle(context: HandlerContext, componentFile: ComponentFile
     return true;
 }
 
-function parseLink(context: HandlerContext, componentFile: ComponentFileInfo, element: Element) {
+function parseLink(context: HandlerContext, componentFile: ComponentFile, element: Element) {
 
     const linkElement: ElementInfo = {
         name: "link",

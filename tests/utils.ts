@@ -1,10 +1,11 @@
-import { ComponentFileInfo, HandlerContext } from "../src";
+import {  HandlerContext } from "../src";
 import { parseDOM } from "htmlparser2";
 import { Node, Element } from "domhandler";
+import { ComponentFile } from "../src/core";
 
 export function setupElementTest(content: string) {
 
-    const component: ComponentFileInfo = {
+    const component: ComponentFile = {
         content,
         dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
         name: "Test01",

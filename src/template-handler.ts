@@ -1,11 +1,12 @@
-import { HandlerContext, ComponentFileInfo, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, parseExpressions, AttributeTokenInfo } from "./index";
+import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, parseExpressions, AttributeTokenInfo } from "./index";
 import { Element, DataNode } from "domhandler";
 import { isTag, ElementType } from "domelementtype";
+import { ComponentFile } from "./core";
 
 let idindex = 1;
 
 
-export function parseTemplate(context: HandlerContext, componentFile: ComponentFileInfo, element: Element) {
+export function parseTemplate(context: HandlerContext, componentFile: ComponentFile, element: Element) {
     if (element.name.toLowerCase() !== "template") {
         return false;
     }

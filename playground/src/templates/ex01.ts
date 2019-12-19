@@ -1,7 +1,9 @@
 import { autorun, transaction } from "mobx";
 
 const t01$$template = document.createElement("template");
-t01$$template.innerHTML = `<div id="t01id01">Hello MXT!</div>`;
+t01$$template.innerHTML = `
+    <div id$$original="" id="tagid_1">Hello MXT!</div>
+  `;
 
 // const t02$$template = document.createElement("template");
 // t02$$template.innerHTML = `<div id="t01id02">Hello MXT 02!</div>`;
@@ -41,5 +43,25 @@ t01$$template.innerHTML = `<div id="t01id01">Hello MXT!</div>`;
 
 //const tt01 = t01;
 export { t01 };
+
+
+export function t01(data: any, host: null | undefined | Element) {
+  const component = document.importNode(t01$$template, true);
+  const tagid_1$$element = component.content.getElementById("tagid_1");
+  if (!tagid_1$$element) throw new Error("missing element: @tagid_1");
+  tagid_1$$element.id = "";
+  tagid_1$$element.id$$original = "";
+  autorun(tagid_1$$func);
+  if (host) host.appendChild(component.content);
+  if (host) host.appendChild(component.content);
+  return component.content;
+
+  function tagid_1$$func() {
+    const {
+      color: color
+    } = data;
+    tagid_1$$element.setAttribute("style", "color: ${color}");
+  }
+}
 
 

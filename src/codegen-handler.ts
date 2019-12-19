@@ -1,8 +1,7 @@
 import { HandlerContext, ComponentFileInfo, AttributeTokenInfo } from ".";
 import { Identifier, arrayPattern, assignmentPattern, sequenceExpression, spreadElement, returnStatement, unaryExpression, throwStatement, newExpression, ifStatement, Statement, nullLiteral, numericLiteral, booleanLiteral, exportNamedDeclaration, tsTypeReference, tsUndefinedKeyword, tsNullKeyword, tsTypeLiteral, tsLiteralType, tsUnionType, exportDefaultDeclaration, tsAnyKeyword, tsTypeAnnotation, tsParameterProperty, tsDeclareFunction, functionDeclaration, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
-import { transformSync, ConfigAPI, parse, parseSync, transformFromAstSync } from "@babel/core";
+import * as t from "@babel/types";
 import generate from "@babel/generator";
-import { getOuterHTML } from "DomUtils";
 import { getTemplateLiteral } from "./code-utils";
 
 
@@ -19,25 +18,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
 
             const constTemplateName = `${template.id}$$template`;
 
-
             const templateLiteral = getTemplateLiteral(template.elements);
             if (templateLiteral) {
-
                 body.push(makeConstVarByFunc(constTemplateName, "document.createElement", "template"));
-
-                body.push(variableDeclaration(
-                    "const",
-                    [
-                        variableDeclarator(
-                            identifier(constTemplateName),
-                            callExpression(
-                                identifier("document.createElement"),
-                                [stringLiteral("template")]
-                            )
-                        )
-                    ]
-                ));
-
                 body.push(expressionStatement(assignmentExpression("=", identifier(constTemplateName + ".innerHTML"), templateLiteral)));
             }
         }
@@ -52,122 +35,56 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
 
             const funcBody: Statement[] = [];
 
-            const templateLiteral = getTemplateLiteral(template.elements);
-            if (templateLiteral) {
 
-                funcBody.push(makeConstVarByFunc("component", "document.importNode", identifier(constTemplateName), true));
+            funcBody.push(makeConstVarByFunc("component", "document.importNode", identifier(constTemplateName), true));
 
-                const elements = template.tokens.reduce((p, v) => {
-                    if (p[v.elementId] === undefined) {
-                        p[v.elementId] = [v];
-                    } else {
-                        p[v.elementId].push(v);
-                    }
-                    return p;
-                }, {} as { [elementId: string]: AttributeTokenInfo[] });
-
-
-                for (const elementId in elements) {
-                    if (elements.hasOwnProperty(elementId)) {
-                        const tokenSet = elements[elementId];
-                        const elementOriginalId = tokenSet[0].elementIdOriginal;
-
-                        const elementName = `${elementId}$$element`;
-
-                        funcBody.push(variableDeclaration("const", [
-                            variableDeclarator(
-                                identifier(elementName),
-                                callExpression(
-                                    identifier("component.content.getElementById"),
-                                    [stringLiteral(elementId)]
-                                ))
-                        ]));
-
-                        funcBody.push(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)));
-                        funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id`), stringLiteral(elementOriginalId))));
-                        funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id$$original`), stringLiteral(""))));
-
-
-                        funcBody.push(
-                            expressionStatement(
-                                callExpression(
-
-                                    identifier("host.appendChild"),
-                                    [identifier("component.content")]
-                                )
-                            )
-                        );
-                        // autorun(() => {
-                        //     const { color } = data;
-                        //     t01$$01$$el.setAttribute("style", `color: ${color}`);
-                        // });
-
-
-
-                    }
+            const elements = template.tokens.reduce((p, v) => {
+                if (p[v.elementId] === undefined) {
+                    p[v.elementId] = [v];
+                } else {
+                    p[v.elementId].push(v);
                 }
-
-                funcBody.push(
-                    ifStatement(
-                        identifier("host"),
-                        expressionStatement(callExpression(
-                            identifier("host.appendChild"),
-                            [identifier("component.content")]
-                        ))
-                    )
-                );
-
-                funcBody.push(returnStatement(identifier("component.content")));
+                return p;
+            }, {} as { [elementId: string]: AttributeTokenInfo[] });
 
 
-                for (const elementId in elements) {
-                    if (elements.hasOwnProperty(elementId)) {
-                        const tokenSet = elements[elementId];
+            for (const elementId in elements) {
+                if (elements.hasOwnProperty(elementId)) {
+                    const tokenSet = elements[elementId];
+                    const elementOriginalId = tokenSet[0].elementIdOriginal;
 
-                        const autorunFuncBody: Statement[] = [];
-
-                        // consolidate external references
-                        const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
-                            for (const er of i.externalReferences) {
-                                e[er] = null;
-                            }
-                            return e;
-                        }, {})).map(er => identifier(er));
-
-                        //spreadElement(sequenceExpression(externalReferences)),
+                    const elementName = `${elementId}$$element`;
 
 
-                        autorunFuncBody.push(variableDeclaration("const", [
-                            variableDeclarator(assignmentPattern(arrayPattern(externalReferences), identifier("data")))
-                        ]));
-
-
-                        funcBody.push(
-                            functionDeclaration(
-                                identifier("dataset"),
-                                [
-                                ], blockStatement(autorunFuncBody)
-                            ));
-
-
-                    }
+                    funcBody.push(makeConstVarByFunc(elementName, "component.content.getElementById", elementId));
+                    funcBody.push(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)));
+                    funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id`), stringLiteral(elementOriginalId))));
+                    funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id$$original`), stringLiteral(""))));
+                    funcBody.push(t.expressionStatement(t.callExpression(t.identifier("autorun"), [
+                        t.arrowFunctionExpression([], makeAutorunFunction(elementName, tokenSet)
+                        )])));
                 }
-
-                // function declaration
-                const func = exportNamedDeclaration(
-
-                    functionDeclaration(
-                        identifier(template.id),
-                        [
-                            makeFunctionParameter("data"),
-                            makeFunctionParameter("host", null, undefined, "Element"),
-                        ], blockStatement(funcBody)
-                    ), []);
-
-
-                body.push(func);
-
             }
+
+            funcBody.push(ifStatement(identifier("host"), expressionStatement(callExpression(identifier("host.appendChild"), [identifier("component.content")]))));
+            funcBody.push(returnStatement(identifier("component.content")));
+
+
+            // function declaration
+            const func = exportNamedDeclaration(
+
+                functionDeclaration(
+                    identifier(template.id),
+                    [
+                        makeFunctionParameter("data"),
+                        makeFunctionParameter("host", null, undefined, "Element"),
+                    ], blockStatement(funcBody)
+                ), []);
+
+
+            body.push(func);
+
+
         }
     }
 
@@ -183,6 +100,29 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
     return false;
 }
 
+
+function makeAutorunFunction(elementName: string, tokenSet: AttributeTokenInfo[]) {
+
+    const autorunFuncBody: Statement[] = [];
+
+    // consolidate external references
+    const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
+        for (const er of i.externalReferences) {
+            e[er] = null;
+        }
+        return e;
+    }, {})).map(er => identifier(er));
+
+    autorunFuncBody.push(variableDeclaration("const", [
+        variableDeclarator(assignmentPattern(t.objectPattern(externalReferences.map(er => t.objectProperty(er, er, undefined, true))), identifier("data")))
+    ]));
+
+    for (const token of tokenSet) {
+        autorunFuncBody.push(t.expressionStatement(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), t.stringLiteral(token.content)])));
+    }
+
+    return blockStatement(autorunFuncBody)
+}
 
 
 function makeFunctionParameter(name: string, ...types: (null | string | undefined)[]) {

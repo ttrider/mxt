@@ -89,12 +89,14 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                     const attrState = parseExpressions(attrValue) as AttributeTokenInfo;
                     if (attrState.hasTokens) {
 
-                        if (!tagItem.attribs.id) {
+                        if (tagItem.attribs.id$$original === undefined) {
+                            tagItem.attribs.id$$original = tagItem.attribs.id === undefined ? "" : tagItem.attribs.id;
                             tagItem.attribs.id = `tagid_${idindex++}`;
                         }
 
                         attrState.attributeName = attrName;
                         attrState.elementId = tagItem.attribs.id;
+                        attrState.elementIdOriginal = tagItem.attribs.id$$original;
 
                         template.tokens.push(attrState);
 

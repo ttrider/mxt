@@ -89,7 +89,9 @@ export interface ExpressionInfo {
 }
 
 export interface AttributeTokenInfo extends ExpressionInfo {
+
     elementId: string;
+    elementIdOriginal: string;
     attributeName: string;
 }
 

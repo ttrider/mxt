@@ -1,27 +1,45 @@
-import { autorun } from "mobx";
+import { autorun, transaction } from "mobx";
 
-const template = `<div id="t01id01">Hello MXT!</div>`;
+const t01$$template = document.createElement("template");
+t01$$template.innerHTML = `<div id="t01id01">Hello MXT!</div>`;
 
-// initialize 
-const te = document.createElement("template");
-te.innerHTML = template;
+// const t02$$template = document.createElement("template");
+// t02$$template.innerHTML = `<div id="t01id02">Hello MXT 02!</div>`;
 
-export function init(data: any) {
+// const t03$$template = document.createElement("template");
+// t03$$template.innerHTML = `<div id="t01id03">Hello MXT 02!</div>`;
 
-    const el = document.importNode(te, true);
+ function t01(data: any, host?: Element | null) {
 
-    const d01 = el.content.getElementById("t01id01");
-    if (!d01) throw new Error("missing element");
-    d01.id = "";
+    const t01$$component = document.importNode(t01$$template, true);
 
-    // set or update style
+    const t01$$01$$el = t01$$component.content.getElementById("t01id01");
+    if (!t01$$01$$el) throw new Error("missing element: @t01id01");
+    t01$$01$$el.id = ""; //or the last id
+
+    // const t01$$02$$el = t01$$component.content.getElementById("t01id02");
+    // if (!t01$$02$$el) throw new Error("missing element: @t01id02");
+    // t01$$02$$el.id = ""; //or the last id
+
     autorun(() => {
-        const {color} = data;
-        d01.setAttribute("style", `color: ${color}`);
+        const { color } = data;
+        t01$$01$$el.setAttribute("style", `color: ${color}`);
     });
-    return el.content;
+
+    // autorun(() => {
+    //     const { color } = data;
+    //     t01$$02$$el.setAttribute("style", `color: ${color}`);
+    // });
+
+
+    if (host) {
+        host.appendChild(t01$$component.content);
+    }
+
+    return t01$$component.content;
 }
 
-
+//const tt01 = t01;
+export { t01 };
 
 

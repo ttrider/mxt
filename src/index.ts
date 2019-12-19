@@ -174,7 +174,10 @@ export interface ComponentFileInfo {
     globalStyles: StyleElementInfo[],
 
     templates: { [id: string]: TemplateInfo },
-    errors: Error[]
+    errors: Error[],
+
+    initStatements:Statement[],
+    componentStatements:Statement[],
 }
 
 
@@ -241,7 +244,9 @@ async function loadFiles(context: HandlerContext) {
                 links: [],
                 globalStyles: [],
                 templates: {},
-                errors: []
+                errors: [],
+                initStatements:[],
+                componentStatements:[]
             });
         }
 

@@ -12,7 +12,9 @@ export function setupElementTest(content: string) {
         links: [],
         globalStyles: [],
         templates: {},
-        errors: []
+        errors: [],
+        initStatements: [],
+        componentStatements: []
     };
 
     const context: HandlerContext = {

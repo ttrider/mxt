@@ -1,6 +1,6 @@
 import { observable, computed } from "mobx"
 
-import { init as ex01_init } from "./templates/ex01";
+import { t01 } from "./templates/ex01";
 import { init as ex02_init } from "./templates/ex02";
 import { init as ex03_init } from "./templates/ex03";
 
@@ -33,7 +33,7 @@ if (document) {
     // example 01
     const root_ex01 = document.getElementById("ex01");
     if (root_ex01) {
-        root_ex01.appendChild(ex01_init(data));
+        root_ex01.appendChild(t01(data));
     }
 
     // example 02

@@ -7,9 +7,8 @@ import { getTemplateLiteral } from "./code-utils";
 
 export function codegen(context: HandlerContext, componentFile: ComponentFileInfo) {
 
-    const body: Statement[] = [
-        importDeclaration([importSpecifier(identifier("autorun"), identifier("autorun"))], stringLiteral("mobx")),
-    ];
+
+    componentFile.initStatements.push(importDeclaration([importSpecifier(identifier("autorun"), identifier("autorun"))], stringLiteral("mobx")));
 
     // create definitions code
     for (const templateId in componentFile.templates) {
@@ -20,8 +19,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
 
             const templateLiteral = getTemplateLiteral(template.elements);
             if (templateLiteral) {
-                body.push(makeConstVarByFunc(constTemplateName, "document.createElement", "template"));
-                body.push(expressionStatement(assignmentExpression("=", identifier(constTemplateName + ".innerHTML"), templateLiteral)));
+                componentFile.initStatements.push(makeConstVarByFunc(constTemplateName, "document.createElement", "template"));
+                componentFile.initStatements.push(expressionStatement(assignmentExpression("=", identifier(constTemplateName + ".innerHTML"), templateLiteral)));
             }
         }
     }
@@ -59,7 +58,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
                     funcBody.push(makeConstVarByFunc(elementName, "component.content.getElementById", elementId));
                     funcBody.push(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)));
                     funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id`), stringLiteral(elementOriginalId))));
-                    funcBody.push(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id$$original`), stringLiteral(""))));
                     funcBody.push(t.expressionStatement(t.callExpression(t.identifier("autorun"), [
                         t.arrowFunctionExpression([], makeAutorunFunction(elementName, tokenSet)
                         )])));
@@ -77,18 +75,18 @@ export function codegen(context: HandlerContext, componentFile: ComponentFileInf
                     identifier(template.id),
                     [
                         makeFunctionParameter("data"),
-                        makeFunctionParameter("host", null, undefined, "Element"),
+                        makeOptionalFunctionParameter("host", null, undefined, "Element"),
                     ], blockStatement(funcBody)
                 ), []);
 
 
-            body.push(func);
+                componentFile.componentStatements.push(func);
 
 
         }
     }
 
-    const ast = file(program(body), "", undefined);
+    const ast = file(program(componentFile.componentStatements), "", undefined);
 
 
     const gen = generate(ast, {
@@ -118,13 +116,18 @@ function makeAutorunFunction(elementName: string, tokenSet: AttributeTokenInfo[]
     ]));
 
     for (const token of tokenSet) {
-        autorunFuncBody.push(t.expressionStatement(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), t.stringLiteral(token.content)])));
+        autorunFuncBody.push(t.expressionStatement(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), t.identifier("`" + token.content + "`")])));
     }
 
     return blockStatement(autorunFuncBody)
 }
 
 
+function makeOptionalFunctionParameter(name: string, ...types: (null | string | undefined)[]) {
+    const p = makeFunctionParameter(name, ...types);
+    p.optional = true;
+    return p;
+}
 function makeFunctionParameter(name: string, ...types: (null | string | undefined)[]) {
 
     const i = identifier(name);
@@ -161,7 +164,7 @@ function makeConstVarByFunc(name: string, funcName: string, ...args: Array<strin
     return variableDeclaration("const", [
         variableDeclarator(
             identifier(name),
-            callExpression(
+            t.callExpression(
                 identifier(funcName),
                 args.map(a => {
 

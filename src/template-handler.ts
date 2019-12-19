@@ -108,6 +108,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
         for (const tokenizedAttribute of tokenizedAttributes) {
             delete tagItem.attribs[tokenizedAttribute];
         }
+        delete tagItem.attribs.id$$original;
 
         for (const item of tagItem.children) {
             processItem(template, item as Element);

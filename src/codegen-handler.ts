@@ -2,7 +2,7 @@ import { HandlerContext, AttributeTokenInfo } from ".";
 import { Identifier, arrayPattern, assignmentPattern, sequenceExpression, spreadElement, returnStatement, unaryExpression, throwStatement, newExpression, ifStatement, Statement, nullLiteral, numericLiteral, booleanLiteral, exportNamedDeclaration, tsTypeReference, tsUndefinedKeyword, tsNullKeyword, tsTypeLiteral, tsLiteralType, tsUnionType, exportDefaultDeclaration, tsAnyKeyword, tsTypeAnnotation, tsParameterProperty, tsDeclareFunction, functionDeclaration, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
 import * as t from "@babel/types";
 import generate from "@babel/generator";
-import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "./code-utils";
+import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "./ast/builder";
 import { ComponentFile } from "./component-file";
 
 
@@ -24,8 +24,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                 declareVar(constTemplateName)
                     .const
-                    .init(makeCall("document.createElement", "template").statement)
-                    .statement,
+                    .init(makeCall("document.createElement", "template").build())
+                    .build(),
 
                 makeAssignment(constTemplateName + ".innerHTML", templateLiteral)
             );
@@ -43,8 +43,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
             const funcBody = statementList().add(
                 declareVar("component")
                     .const
-                    .init(makeCall("document.importNode", t.identifier(constTemplateName), true).statement)
-                    .statement
+                    .init(makeCall("document.importNode", t.identifier(constTemplateName), true).build())
+                    .build()
             );
 
             const elements = template.tokens.reduce((p, v) => {
@@ -73,24 +73,24 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
 
                     const af = makeCall("autorun", declareFunction()
-                        .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement)
-                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).statement))
-                        .statement);
+                        .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).build())
+                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                        .build());
 
 
 
                     funcBody
                         .add(declareVar(elementName)
                             .const
-                            .init(makeCall("component.content.getElementById", elementId).statement)
-                            .statement)
+                            .init(makeCall("component.content.getElementById", elementId).build())
+                            .build())
 
                         .add(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)))
                         .add(makeAssignment(`${elementName}.id`, elementOriginalId))
                         .add(makeCall("autorun", declareFunction()
-                            .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement)
-                            .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).statement))
-                            .statement).statement)
+                            .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).build())
+                            .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                            .build()).build())
                         ;
                 }
             }
@@ -105,7 +105,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .param("host", null, undefined, "Element")
                     .body(funcBody)
                     .export
-                    .statement);
+                    .build());
 
 
         }
@@ -124,5 +124,5 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
     console.info(gen.code);
 
 
-    return false;
+    return true;
 }

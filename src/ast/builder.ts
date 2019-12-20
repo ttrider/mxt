@@ -4,7 +4,7 @@ import { parseSync } from "@babel/core";
 import * as t from "@babel/types";
 
 interface IBuilder {
-    build: t.Statement | t.Expression
+    build(): t.Statement | t.Expression
 }
 
 function isBuilder(value: any): value is IBuilder {
@@ -15,6 +15,7 @@ export declare type StatementItem =
     t.Statement |
     t.Expression |
 
+    IBuilder |
 
     { statements: t.Statement[] }
     ;
@@ -33,6 +34,10 @@ export function statementList(statements?: t.Statement[], ...node: Array<Stateme
 
     function add(...node: Array<StatementItem>) {
         for (let statement of node) {
+
+            if (isBuilder(statement)) {
+                statement = statement.build();
+            }
 
             if (t.isStatement(statement)) {
                 items.push(statement);
@@ -65,7 +70,7 @@ export function declareFunction(functionName?: string) {
         param: addParam,
         body: addStatement,
 
-        get statement() { return buildStatement() }
+        build: buildStatement
     };
 
     return context;
@@ -153,7 +158,7 @@ export function declareVar(name: string) {
 
         init: addInitValue,
 
-        get statement() { return buildStatement() }
+        build: buildStatement
     };
 
     return context;
@@ -187,7 +192,7 @@ export function declareObjectDestruction(...props: Array<{ name: string, as?: st
 
         init: addInitValue,
 
-        get statement() { return buildStatement() }
+        build: buildStatement
     };
 
     return context;
@@ -217,13 +222,12 @@ export function declareObjectDestruction(...props: Array<{ name: string, as?: st
 
 export function makeCall(name: string, ...params: any[]) {
 
-    const body = statementList();
     const parameters = params.map(getValueExpression);
 
     const context: IBuilder & any = {
         param: addParam,
 
-        get statement() { return buildStatement() }
+        build: buildStatement
     };
 
     return context;
@@ -260,31 +264,15 @@ export function makeThrow(message: string) {
     );
 }
 
-
-function parseStatements(code: string, wrapAsTemplate?: boolean) {
-
-    if (wrapAsTemplate) {
-        code = "`" + code + "`";
-    }
-
-    const results = parseSync(code, {
-        babelrc: false,
-        configFile: false
-    });
-
-
-
-    if (results && results.type === "File" && results.program) {
-        return results.program.body;
-    }
-
-}
-
-
 function getValueExpression(value?: any) {
     if (value === undefined) {
         return t.identifier("undefined");
     }
+
+    if (isBuilder(value)) {
+        value = value.build();
+    }
+
     else if (t.isExpression(value)) {
         return value;
     }

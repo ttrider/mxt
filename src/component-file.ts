@@ -5,7 +5,7 @@ import * as t from "@babel/types";
 import fs from "fs";
 import path from "path";
 import util from "util";
-import { statementList, StatementItem } from "./code-utils";
+import { statementList, StatementItem } from "./ast/builder";
 
 const readFile = util.promisify(fs.readFile);
 

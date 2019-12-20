@@ -64,6 +64,21 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                     const elementName = `${elementId}$$element`;
 
+                    const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
+                        for (const er of i.externalReferences) {
+                            e[er] = null;
+                        }
+                        return e;
+                    }, {})).map(er => { return { name: er }; });
+
+
+                    const af = makeCall("autorun", declareFunction()
+                        .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement)
+                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).statement))
+                        .statement);
+
+
+
                     funcBody
                         .add(declareVar(elementName)
                             .const
@@ -72,9 +87,11 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                         .add(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)))
                         .add(makeAssignment(`${elementName}.id`, elementOriginalId))
-                        .add(t.callExpression(t.identifier("autorun"), [
-                            t.arrowFunctionExpression([], makeAutorunFunction(elementName, tokenSet)
-                            )]));
+                        .add(makeCall("autorun", declareFunction()
+                            .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement)
+                            .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).statement))
+                            .statement).statement)
+                        ;
                 }
             }
 
@@ -109,41 +126,3 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
     return false;
 }
-
-
-function makeAutorunFunction(elementName: string, tokenSet: AttributeTokenInfo[]) {
-
-
-
-    // consolidate external references
-    const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
-        for (const er of i.externalReferences) {
-            e[er] = null;
-        }
-        return e;
-    }, {})).map(er => { return { name: er }; });
-
-
-    const autorunFuncBody = statementList()
-        .add(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement);
-
-    for (const token of tokenSet) {
-        autorunFuncBody.add(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), makeTemplateLiteral(token.content)]));
-    }
-
-
-
-    return blockStatement(autorunFuncBody.statements)
-}
-
-
-
-function makeConstVarByFunc(name: string, funcName: string, ...args: Array<string | number | boolean | Identifier>) {
-
-    return declareVar(name)
-        .const
-        .init(makeCall(funcName, ...args).statement)
-        .statement;
-
-}
-

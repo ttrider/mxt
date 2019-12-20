@@ -3,7 +3,13 @@ import { getOuterHTML } from "DomUtils";
 import { parseSync } from "@babel/core";
 import * as t from "@babel/types";
 
+interface IBuilder {
+    build: t.Statement | t.Expression
+}
 
+function isBuilder(value: any): value is IBuilder {
+    return (value && value.build);
+}
 
 export declare type StatementItem =
     t.Statement |
@@ -52,7 +58,7 @@ export function declareFunction(functionName?: string) {
     const body = statementList();
     let isExport = false;
 
-    const context = {
+    const context: IBuilder & any = {
         get export() { isExport = true; return context },
 
 
@@ -140,7 +146,7 @@ export function declareVar(name: string) {
     let kind: "const" | "let" | "var" = "const";
     let initExpression: t.Expression;
 
-    const context = {
+    const context: IBuilder & any = {
         get const() { kind = "const"; return context },
         get let() { kind = "let"; return context },
         get var() { kind = "var"; return context },
@@ -172,7 +178,7 @@ export function declareObjectDestruction(...props: Array<{ name: string, as?: st
     let initExpression: t.Expression;
     const properties: Array<{ name: string, as?: string }> = [...props];
 
-    const context = {
+    const context: IBuilder & any = {
         get const() { kind = "const"; return context },
         get let() { kind = "let"; return context },
         get var() { kind = "var"; return context },
@@ -214,7 +220,7 @@ export function makeCall(name: string, ...params: any[]) {
     const body = statementList();
     const parameters = params.map(getValueExpression);
 
-    const context = {
+    const context: IBuilder & any = {
         param: addParam,
 
         get statement() { return buildStatement() }

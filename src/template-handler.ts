@@ -1,7 +1,7 @@
 import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, parseExpressions, AttributeTokenInfo } from "./index";
 import { Element, DataNode } from "domhandler";
 import { isTag, ElementType } from "domelementtype";
-import { ComponentFile } from "./core";
+import { ComponentFile } from "./component-file";
 
 let idindex = 1;
 

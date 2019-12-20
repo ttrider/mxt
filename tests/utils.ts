@@ -1,26 +1,15 @@
-import {  HandlerContext } from "../src";
+import { HandlerContext } from "../src";
 import { parseDOM } from "htmlparser2";
 import { Node, Element } from "domhandler";
-import { ComponentFile } from "../src/core";
+import { ComponentFile } from "../src/component-file";
 
 export function setupElementTest(content: string) {
 
-    const component: ComponentFile = {
-        content,
-        dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
-        name: "Test01",
-        path: "./test01",
-        links: [],
-        globalStyles: [],
-        templates: {},
-        errors: [],
-        initStatements: [],
-        componentStatements: []
-    };
+    const component = ComponentFile.fromContent(content);
 
     const context: HandlerContext = {
         componentFiles: [component],
-        files: [component.path],
+        files: [component.filePath],
         plugins: [],
         options: {
             input: "./test01.html"

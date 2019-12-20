@@ -1,19 +1,14 @@
 import glob from "glob";
 import util from "util";
 import fs from "fs";
-import path from "path";
-import { parseDOM } from "htmlparser2";
-import { Node, Element, DataNode } from "domhandler";
+import { Node, Element } from "domhandler";
 
 import { Handler } from "htmlparser2/lib/Parser";
 
 const globp = util.promisify(glob);
-const readFile = util.promisify(fs.readFile);
 
-import { parseSync, parse, traverse } from "@babel/core";
-import { statement } from "@babel/template";
-import { Expression, SpreadElement, Statement, Scopable, V8IntrinsicIdentifier, JSXNamespacedName, ArgumentPlaceholder, VariableDeclaration } from "@babel/types";
-import { ComponentFile } from "./core";
+import { parseSync, traverse } from "@babel/core";
+import { ComponentFile } from "./component-file";
 
 
 
@@ -214,29 +209,7 @@ export default mxt;
 async function loadFiles(context: HandlerContext) {
 
     for (const filePath of context.files) {
-
-        const fileName = path.basename(filePath);
-        const ext = path.extname(fileName);
-
-        const fileBuffer = await readFile(filePath);
-        if (fileBuffer) {
-
-            const content = fileBuffer.toString();
-
-            context.componentFiles.push({
-                path: filePath,
-                name: fileName.substr(0, fileName.length - ext.length),
-                content: content,
-                dom: parseDOM(content, { xmlMode: true, withStartIndices: true, withEndIndices: true }),
-                links: [],
-                globalStyles: [],
-                templates: {},
-                errors: [],
-                initStatements:[],
-                componentStatements:[]
-            });
-        }
-
+        context.componentFiles.push(await ComponentFile.fromFile(filePath));
     }
 }
 
@@ -400,8 +373,5 @@ export function parseExpressions(content: string) {
 }
 
 
-const defaultHandlers: Handler[] = [
-
-];
 
 

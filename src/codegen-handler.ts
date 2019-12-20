@@ -2,7 +2,7 @@ import { HandlerContext, AttributeTokenInfo } from ".";
 import { Identifier, arrayPattern, assignmentPattern, sequenceExpression, spreadElement, returnStatement, unaryExpression, throwStatement, newExpression, ifStatement, Statement, nullLiteral, numericLiteral, booleanLiteral, exportNamedDeclaration, tsTypeReference, tsUndefinedKeyword, tsNullKeyword, tsTypeLiteral, tsLiteralType, tsUnionType, exportDefaultDeclaration, tsAnyKeyword, tsTypeAnnotation, tsParameterProperty, tsDeclareFunction, functionDeclaration, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
 import * as t from "@babel/types";
 import generate from "@babel/generator";
-import { getTemplateLiteral, statementList, declareFunction } from "./code-utils";
+import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "./code-utils";
 import { ComponentFile } from "./component-file";
 
 
@@ -17,13 +17,19 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const constTemplateName = `${template.id}$$template`;
 
-            const templateLiteral = getTemplateLiteral(template.elements);
-            if (templateLiteral) {
+            const templateLiteral = makeTemplateLiteral(template.elements);
 
-                componentFile.initStatements.add(
-                    makeConstVarByFunc(constTemplateName, "document.createElement", "template"),
-                    expressionStatement(assignmentExpression("=", identifier(constTemplateName + ".innerHTML"), templateLiteral)));
-            }
+
+            componentFile.initStatements.add(
+
+                declareVar(constTemplateName)
+                    .const
+                    .init(makeCall("document.createElement", "template").statement)
+                    .statement,
+
+                makeAssignment(constTemplateName + ".innerHTML", templateLiteral)
+            );
+
         }
     }
 
@@ -34,7 +40,12 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const constTemplateName = `${template.id}$$template`;
 
-            const funcBody = statementList().add(makeConstVarByFunc("component", "document.importNode", identifier(constTemplateName), true));
+            const funcBody = statementList().add(
+                declareVar("component")
+                    .const
+                    .init(makeCall("document.importNode", t.identifier(constTemplateName), true).statement)
+                    .statement
+            );
 
             const elements = template.tokens.reduce((p, v) => {
                 if (p[v.elementId] === undefined) {
@@ -53,13 +64,17 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                     const elementName = `${elementId}$$element`;
 
+                    funcBody
+                        .add(declareVar(elementName)
+                            .const
+                            .init(makeCall("component.content.getElementById", elementId).statement)
+                            .statement)
 
-                    funcBody.add(makeConstVarByFunc(elementName, "component.content.getElementById", elementId))
                         .add(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)))
-                        .add(expressionStatement(assignmentExpression("=", identifier(`${elementName}.id`), stringLiteral(elementOriginalId))))
-                        .add(t.expressionStatement(t.callExpression(t.identifier("autorun"), [
+                        .add(makeAssignment(`${elementName}.id`, elementOriginalId))
+                        .add(t.callExpression(t.identifier("autorun"), [
                             t.arrowFunctionExpression([], makeAutorunFunction(elementName, tokenSet)
-                            )])));
+                            )]));
                 }
             }
 
@@ -98,7 +113,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
 function makeAutorunFunction(elementName: string, tokenSet: AttributeTokenInfo[]) {
 
-    const autorunFuncBody: Statement[] = [];
+
 
     // consolidate external references
     const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
@@ -106,45 +121,29 @@ function makeAutorunFunction(elementName: string, tokenSet: AttributeTokenInfo[]
             e[er] = null;
         }
         return e;
-    }, {})).map(er => identifier(er));
+    }, {})).map(er => { return { name: er }; });
 
-    autorunFuncBody.push(variableDeclaration("const", [
-        variableDeclarator(assignmentPattern(t.objectPattern(externalReferences.map(er => t.objectProperty(er, er, undefined, true))), identifier("data")))
-    ]));
+
+    const autorunFuncBody = statementList()
+        .add(declareObjectDestruction(...externalReferences).const.init(identifier("data")).statement);
 
     for (const token of tokenSet) {
-        autorunFuncBody.push(t.expressionStatement(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), t.identifier("`" + token.content + "`")])));
+        autorunFuncBody.add(t.callExpression(t.identifier(elementName + ".setAttribute"), [t.stringLiteral(token.attributeName), makeTemplateLiteral(token.content)]));
     }
 
-    return blockStatement(autorunFuncBody)
+
+
+    return blockStatement(autorunFuncBody.statements)
 }
 
 
 
 function makeConstVarByFunc(name: string, funcName: string, ...args: Array<string | number | boolean | Identifier>) {
 
-    return variableDeclaration("const", [
-        variableDeclarator(
-            identifier(name),
-            t.callExpression(
-                identifier(funcName),
-                args.map(a => {
-
-                    if (typeof a === "string") { return stringLiteral(a) }
-                    if (typeof a === "number") { return numericLiteral(a) }
-                    if (typeof a === "boolean") { return booleanLiteral(a) }
-
-
-                    return a;
-                })
-            ))
-    ]);
+    return declareVar(name)
+        .const
+        .init(makeCall(funcName, ...args).statement)
+        .statement;
 
 }
 
-function makeThrow(message: string) {
-
-    return throwStatement(
-        newExpression(identifier("Error"), [stringLiteral(message)])
-    );
-}

@@ -3,21 +3,7 @@ import { getOuterHTML } from "DomUtils";
 import { parseSync } from "@babel/core";
 import * as t from "@babel/types";
 
-export function getTemplateLiteral(literal: string | Element[]) {
 
-    if (typeof literal !== "string") {
-        literal = getOuterHTML(literal, { decodeEntities: true, xmlMode: true });
-    }
-
-    const statements = parseStatements(literal, true);
-    if (statements && statements.length > 0) {
-        const statement = statements[0];
-
-        if (statement && statement.type === "ExpressionStatement" && statement.expression.type === "TemplateLiteral") {
-            return statement.expression;
-        }
-    }
-}
 
 export declare type StatementItem =
     t.Statement |
@@ -151,8 +137,6 @@ export function declareFunction(functionName?: string) {
 
 export function declareVar(name: string) {
 
-    const parameters: t.Identifier[] = [];
-    const body = statementList();
     let kind: "const" | "let" | "var" = "const";
     let initExpression: t.Expression;
 
@@ -168,36 +152,107 @@ export function declareVar(name: string) {
 
     return context;
 
-    function addInitValue(value: string | number | boolean | null | undefined | t.Expression) {
+    function addInitValue(value: any) {
+        initExpression = getValueExpression(value);
+        return context;
+    }
 
-        if (value === undefined) {
-            initExpression = t.identifier("undefined");
-            
-        } else
-        if (value === null) {
-            initExpression = t.nullLiteral();
-            
-        } else
-        if (typeof value === "string"){
-            initExpression = t.stringLiteral(value);
-            
-        }else
-        if (typeof value === "number"){
-            initExpression = t.numericLiteral(value);
-            
-        }
+    function buildStatement() {
+        return t.variableDeclaration(kind, [
+            t.variableDeclarator(
+                t.identifier(name),
+                initExpression)
+        ]);
+    }
+}
 
+export function declareObjectDestruction(...props: Array<{ name: string, as?: string }>) {
 
+    let kind: "const" | "let" | "var" = "const";
+    let initExpression: t.Expression;
+    const properties: Array<{ name: string, as?: string }> = [...props];
+
+    const context = {
+        get const() { kind = "const"; return context },
+        get let() { kind = "let"; return context },
+        get var() { kind = "var"; return context },
+
+        property: addProperty,
+
+        init: addInitValue,
+
+        get statement() { return buildStatement() }
+    };
+
+    return context;
+
+    function addProperty(name: string, as?: string) {
+        properties.push({ name, as });
+        return context;
+    }
+
+    function addInitValue(value: any) {
+        initExpression = getValueExpression(value);
         return context;
     }
 
     function buildStatement() {
 
+        return t.variableDeclaration(kind, [
+            t.variableDeclarator(
+                t.assignmentPattern(
+                    t.objectPattern(
+                        properties.map(er => t.objectProperty(t.identifier(er.name), t.identifier(er.as ? er.as : er.name), undefined, !er.as))),
+                    initExpression))
+        ]);
+
+    }
+}
+
+export function makeCall(name: string, ...params: any[]) {
+
+    const body = statementList();
+    const parameters = params.map(getValueExpression);
+
+    const context = {
+        param: addParam,
+
+        get statement() { return buildStatement() }
+    };
+
+    return context;
+
+    function addParam(...params: any[]) {
+        parameters.push(...params.map(getValueExpression));
     }
 
+    function buildStatement() {
+
+        return t.callExpression(
+            t.identifier(name),
+            parameters);
+    }
+
+}
+export function makeAssignment(target: string, value: any) {
+    return t.assignmentExpression("=", t.identifier(target), getValueExpression(value));
 
 }
 
+export function makeTemplateLiteral(literal: string | Element[]) {
+
+    if (typeof literal !== "string") {
+        literal = getOuterHTML(literal, { decodeEntities: true, xmlMode: true });
+    }
+    return t.identifier("`" + literal + "`");
+}
+
+export function makeThrow(message: string) {
+
+    return t.throwStatement(
+        t.newExpression(t.identifier("Error"), [t.stringLiteral(message)])
+    );
+}
 
 
 function parseStatements(code: string, wrapAsTemplate?: boolean) {
@@ -217,6 +272,17 @@ function parseStatements(code: string, wrapAsTemplate?: boolean) {
         return results.program.body;
     }
 
+}
+
+
+function getValueExpression(value?: any) {
+    if (value === undefined) {
+        return t.identifier("undefined");
+    }
+    else if (t.isExpression(value)) {
+        return value;
+    }
+    return t.valueToNode(value);
 }
 
 

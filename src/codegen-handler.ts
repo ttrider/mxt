@@ -1,7 +1,6 @@
 import { HandlerContext, AttributeTokenInfo } from ".";
-import { Identifier, arrayPattern, assignmentPattern, sequenceExpression, spreadElement, returnStatement, unaryExpression, throwStatement, newExpression, ifStatement, Statement, nullLiteral, numericLiteral, booleanLiteral, exportNamedDeclaration, tsTypeReference, tsUndefinedKeyword, tsNullKeyword, tsTypeLiteral, tsLiteralType, tsUnionType, exportDefaultDeclaration, tsAnyKeyword, tsTypeAnnotation, tsParameterProperty, tsDeclareFunction, functionDeclaration, expressionStatement, tsModuleBlock, tsModuleDeclaration, blockStatement, templateElement, declareModule, ModuleDeclaration, ImportDeclaration, file, identifier, ExportDeclaration, importSpecifier, importDeclaration, stringLiteral, program, declareVariable, assignmentExpression, callExpression, variableDeclaration, variableDeclarator } from "@babel/types";
+import { returnStatement, unaryExpression, ifStatement, expressionStatement, identifier, callExpression } from "@babel/types";
 import * as t from "@babel/types";
-import generate from "@babel/generator";
 import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "./ast/builder";
 import { ComponentFile } from "./component-file";
 
@@ -72,10 +71,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     }, {})).map(er => { return { name: er }; });
 
 
-                    const af = makeCall("autorun", declareFunction()
-                        .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).build())
-                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
-                        .build());
 
 
 
@@ -110,19 +105,5 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
         }
     }
-
-
-
-    const st = componentFile.getStatements();
-
-    const ast = file(program(st), "", undefined);
-
-
-    const gen = generate(ast, {
-
-    });
-    console.info(gen.code);
-
-
     return true;
 }

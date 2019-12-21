@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`expression with functions 1`] = `
+Object {
+  "content": "\${function(a){return a*b*c;}(d)}",
+  "externalReferences": Array [
+    "b",
+    "c",
+    "d",
+  ],
+  "hasTokens": true,
+}
+`;
+
+exports[`multiple value expressions 1`] = `
+Object {
+  "content": "abc\${def}ghi\${jkl}",
+  "externalReferences": Array [
+    "def",
+    "jkl",
+  ],
+  "hasTokens": true,
+}
+`;
+
+exports[`null expression 1`] = `
+Object {
+  "content": "abc",
+  "externalReferences": Array [],
+  "hasTokens": false,
+}
+`;
+
+exports[`simple value expression 1`] = `
+Object {
+  "content": "\${abc}",
+  "externalReferences": Array [
+    "abc",
+  ],
+  "hasTokens": true,
+}
+`;

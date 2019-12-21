@@ -12,8 +12,6 @@ test("simple template", () => {
   const { context, component, element } = setupElementTest(input);
 
   expect(parseTemplate(context, component, element)).toBe(true);
- 
-  codegen(context, component);
- 
+  expect(component.templates["t01"]).not.toBeUndefined();
 });
 

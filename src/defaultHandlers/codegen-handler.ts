@@ -1,8 +1,8 @@
-import { HandlerContext, AttributeTokenInfo } from ".";
+import { HandlerContext, AttributeTokenInfo } from "..";
 import { returnStatement, unaryExpression, ifStatement, expressionStatement, identifier, callExpression } from "@babel/types";
 import * as t from "@babel/types";
-import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "./ast/builder";
-import { ComponentFile } from "./component-file";
+import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "../ast/builder";
+import { ComponentFile } from "../component-file";
 
 
 export function codegen(context: HandlerContext, componentFile: ComponentFile) {

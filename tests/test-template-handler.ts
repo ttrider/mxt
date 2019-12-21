@@ -1,5 +1,4 @@
-import { parseTemplate } from "../src/template-handler";
-import { codegen } from "../src/codegen-handler";
+import { parseTemplate } from "../src/defaultHandlers/template-handler";
 import { setupElementTest } from "./utils";
 
 test("simple template", () => {

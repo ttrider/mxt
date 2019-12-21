@@ -1,6 +1,6 @@
-import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo } from "./index";
+import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo } from "../index";
 import { Node, Element, DataNode } from "domhandler";
-import { ComponentFile } from "./component-file";
+import { ComponentFile } from "../component-file";
 
 
 export function parseStyle(context: HandlerContext, componentFile: ComponentFile, element: Element) {

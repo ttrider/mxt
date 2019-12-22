@@ -3,6 +3,7 @@ import { parseDOM } from "htmlparser2";
 import { Node, Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
 
+
 export function setupElementTest(content: string) {
 
     const component = ComponentFile.fromContent(content);

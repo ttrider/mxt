@@ -71,9 +71,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     }, {})).map(er => { return { name: er }; });
 
 
-
-
-
                     funcBody
                         .add(declareVar(elementName)
                             .const

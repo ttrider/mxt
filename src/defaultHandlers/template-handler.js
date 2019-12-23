@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../index");
+const ts_1 = require("../ast/ts");
 let idindex = 1;
 function parseTemplate(context, componentFile, element) {
     if (element.name.toLowerCase() !== "template") {
@@ -67,7 +67,7 @@ function parseTemplate(context, componentFile, element) {
             if (tagItem.attribs.hasOwnProperty(attrName)) {
                 const attrValue = tagItem.attribs[attrName];
                 if (attrValue) {
-                    const attrState = index_1.parseExpressions(attrValue);
+                    const attrState = ts_1.parseInlineExpressions(attrValue);
                     if (attrState.hasTokens) {
                         if (tagItem.attribs.id$$original === undefined) {
                             tagItem.attribs.id$$original = tagItem.attribs.id === undefined ? "" : tagItem.attribs.id;

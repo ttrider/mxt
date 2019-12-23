@@ -49,21 +49,21 @@ describe("token", () => {
 
 
 
-  test("playground", () => {
+  // test("playground", () => {
 
-    const input =
-      `<template id="t01" type="mxt">
-    <div style="color: \${color};">Hello MXT!</div>
-    <div title="\${title}">Hello MXT too!</div>
-  </template>`;
+  //   const input =
+  //     `<template id="t01" type="mxt">
+  //   <div style="color: \${color};">Hello MXT!</div>
+  //   <div title="\${title}">Hello MXT too!</div>
+  // </template>`;
 
-    const tscode = setup(input);
+  //   const tscode = setup(input);
 
-    const jscode = dosomething(tscode.code);
+  //   const jscode = dosomething(tscode.code);
 
-    console.info(jscode);
+  //   console.info(jscode);
 
-  });
+  // });
 
 
   function setup(content: string) {

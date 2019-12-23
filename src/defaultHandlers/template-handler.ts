@@ -1,7 +1,8 @@
-import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, parseExpressions, AttributeTokenInfo } from "../index";
+import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, AttributeTokenInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { isTag, ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
+import { parseInlineExpressions } from "../ast/ts";
 
 let idindex = 1;
 
@@ -87,7 +88,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 const attrValue = tagItem.attribs[attrName];
 
                 if (attrValue) {
-                    const attrState = parseExpressions(attrValue) as AttributeTokenInfo;
+                    const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
                     if (attrState.hasTokens) {
 
                         if (tagItem.attribs.id$$original === undefined) {

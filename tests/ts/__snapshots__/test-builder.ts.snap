@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`builder import { member } from fromModule 1`] = `"import { member } from \\"fromModule\\";"`;
+
+exports[`builder import { member as local } from fromModule 1`] = `"import { member as local } from \\"fromModule\\";"`;
+
+exports[`builder import defmember, { member1 as local1, member 2 } from fromModule 1`] = `"import defmember, { member1 as local1, member2 } from \\"fromModule\\";"`;
+
+exports[`builder import defname from fromModule 1`] = `"import defname from \\"fromModule\\";"`;

@@ -1,7 +1,6 @@
 import * as ts from "typescript";
 import { ExpressionInfo } from "..";
 
-
 export function parseInlineExpressions(content: string) {
 
     const state: ExpressionInfo = {
@@ -19,15 +18,10 @@ export function parseInlineExpressions(content: string) {
             result
                 .filter(r => r.code === 2304)
                 .map(r => code.substr(r.start === undefined ? 0 : r.start, r.length));
-    } 
+    }
 
     return state;
 }
-interface CompilationResult {
-    code?: string;
-    diagnostics: ts.Diagnostic[]
-};
-
 
 function getDiagnosticsForText(text: string) {
     const dummyFilePath = "/file.ts";
@@ -73,4 +67,13 @@ function hasTokens(node: ts.Node) {
         }
         ts.forEachChild(node, traverse);
     }
+}
+
+export function generateCode(node: ts.Node) {
+
+    const sf = (!ts.isSourceFile(node)) ? ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest) : node;
+
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    return printer.printNode(ts.EmitHint.Unspecified, node, sf);
+
 }

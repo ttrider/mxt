@@ -5,6 +5,7 @@ import * as t from "@babel/types";
 import fs from "fs";
 import path from "path";
 import util from "util";
+import ts from "typescript";
 import { statementList, StatementItem } from "./ast/builder";
 
 const readFile = util.promisify(fs.readFile);
@@ -69,7 +70,7 @@ export class ComponentFile {
         return this;
     }
 
-    
+
 
     getImportStatements() {
 

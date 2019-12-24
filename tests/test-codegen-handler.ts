@@ -2,7 +2,7 @@ import { parseTemplate } from "../src/defaultHandlers/template-handler";
 import { codegen } from "../src/defaultHandlers/codegen-handler";
 import { setupElementTest } from "./utils";
 import { generateFromAst } from "../src/ast/generator";
-import { dosomething } from "../src/ast/tsbuilder";
+
 
 describe("token", () => {
 
@@ -46,25 +46,6 @@ describe("token", () => {
 
     expect(setup(input)).toMatchSnapshot();
   })
-
-
-
-  // test("playground", () => {
-
-  //   const input =
-  //     `<template id="t01" type="mxt">
-  //   <div style="color: \${color};">Hello MXT!</div>
-  //   <div title="\${title}">Hello MXT too!</div>
-  // </template>`;
-
-  //   const tscode = setup(input);
-
-  //   const jscode = dosomething(tscode.code);
-
-  //   console.info(jscode);
-
-  // });
-
 
   function setup(content: string) {
     const { context, component, element } = setupElementTest(content);

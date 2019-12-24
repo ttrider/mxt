@@ -1,15 +1,10 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const types_1 = require("@babel/types");
-const t = __importStar(require("@babel/types"));
-const builder_1 = require("../ast/builder");
+const typescript_1 = __importDefault(require("typescript"));
+const builder_1 = require("../ts/builder");
 function codegen(context, componentFile) {
     componentFile.addImport("autorun", "mobx");
     // create definitions code
@@ -20,8 +15,7 @@ function codegen(context, componentFile) {
             const templateLiteral = builder_1.makeTemplateLiteral(template.elements);
             componentFile.initStatements.add(builder_1.declareVar(constTemplateName)
                 .const
-                .init(builder_1.makeCall("document.createElement", "template").build())
-                .build(), builder_1.makeAssignment(constTemplateName + ".innerHTML", templateLiteral));
+                .init(builder_1.makeCall("document.createElement", "template")), typescript_1.default.createStatement(builder_1.makeAssignment(constTemplateName + ".innerHTML", templateLiteral)));
         }
     }
     // create init function code
@@ -29,10 +23,9 @@ function codegen(context, componentFile) {
         if (componentFile.templates.hasOwnProperty(templateId)) {
             const template = componentFile.templates[templateId];
             const constTemplateName = `${template.id}$$template`;
-            const funcBody = builder_1.statementList().add(builder_1.declareVar("component")
+            const funcBody = builder_1.statements().add(builder_1.declareVar("component")
                 .const
-                .init(builder_1.makeCall("document.importNode", t.identifier(constTemplateName), true).build())
-                .build());
+                .init(builder_1.makeCall("document.importNode", typescript_1.default.createIdentifier(constTemplateName), true)));
             const elements = template.tokens.reduce((p, v) => {
                 if (p[v.elementId] === undefined) {
                     p[v.elementId] = [v];
@@ -58,20 +51,20 @@ function codegen(context, componentFile) {
                         .const
                         .init(builder_1.makeCall("component.content.getElementById", elementId).build())
                         .build())
-                        .add(types_1.ifStatement(types_1.unaryExpression("!", types_1.identifier(elementName)), builder_1.makeThrow(`missing element: @${elementId}`)))
-                        .add(builder_1.makeAssignment(`${elementName}.id`, elementOriginalId))
+                        .add(typescript_1.default.createIf(typescript_1.default.createPrefix(typescript_1.default.SyntaxKind.ExclamationToken, typescript_1.default.createIdentifier(elementName)), builder_1.makeThrow(`missing element: @${elementId}`)))
+                        .add(typescript_1.default.createStatement(builder_1.makeAssignment(`${elementName}.id`, elementOriginalId)))
                         .add(builder_1.makeCall("autorun", builder_1.declareFunction()
-                        .body(builder_1.declareObjectDestruction(...externalReferences).const.init(types_1.identifier("data")).build())
+                        .body(builder_1.declareObjectDestruction(...externalReferences).const.init(typescript_1.default.createIdentifier("data")))
                         .body(...tokenSet.map(token => builder_1.makeCall(elementName + ".setAttribute", token.attributeName, builder_1.makeTemplateLiteral(token.content)).build()))
                         .build()).build());
                 }
             }
-            funcBody.add(types_1.ifStatement(types_1.identifier("host"), types_1.expressionStatement(types_1.callExpression(types_1.identifier("host.appendChild"), [types_1.identifier("component.content")]))))
-                .add(types_1.returnStatement(types_1.identifier("component.content")));
+            funcBody.add(typescript_1.default.createIf(typescript_1.default.createIdentifier("host"), typescript_1.default.createStatement(builder_1.makeCall("host.appendChild", typescript_1.default.createIdentifier("component.content")).build())))
+                .add(typescript_1.default.createReturn(typescript_1.default.createIdentifier("component.content")));
             componentFile.componentStatements.add(builder_1.declareFunction(template.id)
                 .param("data")
                 .param("host", null, undefined, "Element")
-                .body(funcBody)
+                .body(funcBody.build())
                 .export
                 .build());
         }

@@ -1,7 +1,6 @@
 import { HandlerContext, AttributeTokenInfo } from "..";
-import { returnStatement, unaryExpression, ifStatement, expressionStatement, identifier, callExpression } from "@babel/types";
-import * as t from "@babel/types";
-import { statementList, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "../ast/builder";
+import ts from "typescript";
+import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "../ts/builder";
 import { ComponentFile } from "../component-file";
 
 
@@ -23,10 +22,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                 declareVar(constTemplateName)
                     .const
-                    .init(makeCall("document.createElement", "template").build())
-                    .build(),
+                    .init(makeCall("document.createElement", "template")),
 
-                makeAssignment(constTemplateName + ".innerHTML", templateLiteral)
+                ts.createStatement(makeAssignment(constTemplateName + ".innerHTML", templateLiteral))
             );
 
         }
@@ -39,11 +37,10 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const constTemplateName = `${template.id}$$template`;
 
-            const funcBody = statementList().add(
+            const funcBody = statements().add(
                 declareVar("component")
                     .const
-                    .init(makeCall("document.importNode", t.identifier(constTemplateName), true).build())
-                    .build()
+                    .init(makeCall("document.importNode", ts.createIdentifier(constTemplateName), true))
             );
 
             const elements = template.tokens.reduce((p, v) => {
@@ -70,32 +67,34 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                         return e;
                     }, {})).map(er => { return { name: er }; });
 
-
                     funcBody
                         .add(declareVar(elementName)
                             .const
                             .init(makeCall("component.content.getElementById", elementId).build())
                             .build())
 
-                        .add(ifStatement(unaryExpression("!", identifier(elementName)), makeThrow(`missing element: @${elementId}`)))
-                        .add(makeAssignment(`${elementName}.id`, elementOriginalId))
+                        .add(ts.createIf(
+                            ts.createPrefix(ts.SyntaxKind.ExclamationToken, ts.createIdentifier(elementName)),
+                            makeThrow(`missing element: @${elementId}`)
+                        ))
+
+                        .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)))
                         .add(makeCall("autorun", declareFunction()
-                            .body(declareObjectDestruction(...externalReferences).const.init(identifier("data")).build())
+                            .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
                             .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
                             .build()).build())
                         ;
                 }
             }
 
-            funcBody.add(ifStatement(identifier("host"), expressionStatement(callExpression(identifier("host.appendChild"), [identifier("component.content")]))))
-                .add(returnStatement(identifier("component.content")));
-
+            funcBody.add(ts.createIf(ts.createIdentifier("host"), ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("component.content")).build())))
+                .add(ts.createReturn(ts.createIdentifier("component.content")));
 
             componentFile.componentStatements.add(
                 declareFunction(template.id)
                     .param("data")
                     .param("host", null, undefined, "Element")
-                    .body(funcBody)
+                    .body(funcBody.build())
                     .export
                     .build());
 

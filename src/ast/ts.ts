@@ -69,11 +69,19 @@ function hasTokens(node: ts.Node) {
     }
 }
 
-export function generateCode(node: ts.Node) {
-
-    const sf = (!ts.isSourceFile(node)) ? ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest) : node;
+export function generateCode(node: ts.Node | ts.Statement[]) {
 
     const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
-    return printer.printNode(ts.EmitHint.Unspecified, node, sf);
 
+    if (Array.isArray(node)) {
+
+        const sf = ts.updateSourceFileNode(
+            ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest),
+            node);
+
+        return printer.printNode(ts.EmitHint.Unspecified, sf, sf);
+    }
+
+    const sf = (!ts.isSourceFile(node)) ? ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest) : node;
+    return printer.printNode(ts.EmitHint.Unspecified, node, sf);
 }

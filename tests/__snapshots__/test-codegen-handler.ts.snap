@@ -1,118 +1,103 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`token multiple elements 1`] = `
-Object {
-  "code": "import { autorun } from \\"mobx\\";
+"import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
 t01$$template.innerHTML = \`
     <div id=\\"tagid_4\\">Hello MXT!</div>
     <div id=\\"tagid_5\\">Hello MXT too!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-  const component = document.importNode(t01$$template, true);
-  const tagid_4$$element = component.content.getElementById(\\"tagid_4\\");
-  if (!tagid_4$$element) throw new Error(\\"missing element: @tagid_4\\");
-  tagid_4$$element.id = \\"\\";
-  autorun(() => {
-    const {
-      color
-    } = data;
-    tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`);
-  });
-  const tagid_5$$element = component.content.getElementById(\\"tagid_5\\");
-  if (!tagid_5$$element) throw new Error(\\"missing element: @tagid_5\\");
-  tagid_5$$element.id = \\"\\";
-  autorun(() => {
-    const {
-      title
-    } = data;
-    tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`);
-  });
-  if (host) host.appendChild(component.content);
-  return component.content;
-}",
-  "map": null,
-  "rawMappings": null,
+    const component = document.importNode(t01$$template, true);
+    const tagid_4$$element = component.content.getElementById(\\"tagid_4\\");
+    if (!tagid_4$$element)
+        throw new Error(\\"missing element: @tagid_4\\");
+    tagid_4$$element.id = \\"\\";
+    autorun(() => {
+        const { color } = data;
+        tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`)
+    })
+    const tagid_5$$element = component.content.getElementById(\\"tagid_5\\");
+    if (!tagid_5$$element)
+        throw new Error(\\"missing element: @tagid_5\\");
+    tagid_5$$element.id = \\"\\";
+    autorun(() => {
+        const { title } = data;
+        tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`)
+    })
+    if (host)
+        host.appendChild(component.content);
+    return component.content;
 }
+"
 `;
 
 exports[`token single element, attribute, token 1`] = `
-Object {
-  "code": "import { autorun } from \\"mobx\\";
+"import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
 t01$$template.innerHTML = \`
     <div id=\\"tagid_1\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-  const component = document.importNode(t01$$template, true);
-  const tagid_1$$element = component.content.getElementById(\\"tagid_1\\");
-  if (!tagid_1$$element) throw new Error(\\"missing element: @tagid_1\\");
-  tagid_1$$element.id = \\"old\\";
-  autorun(() => {
-    const {
-      color
-    } = data;
-    tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-  });
-  if (host) host.appendChild(component.content);
-  return component.content;
-}",
-  "map": null,
-  "rawMappings": null,
+    const component = document.importNode(t01$$template, true);
+    const tagid_1$$element = component.content.getElementById(\\"tagid_1\\");
+    if (!tagid_1$$element)
+        throw new Error(\\"missing element: @tagid_1\\");
+    tagid_1$$element.id = \\"old\\";
+    autorun(() => {
+        const { color } = data;
+        tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`)
+    })
+    if (host)
+        host.appendChild(component.content);
+    return component.content;
 }
+"
 `;
 
 exports[`token single element, multiple attributes,tokens 1`] = `
-Object {
-  "code": "import { autorun } from \\"mobx\\";
+"import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
 t01$$template.innerHTML = \`
     <div id=\\"tagid_2\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-  const component = document.importNode(t01$$template, true);
-  const tagid_2$$element = component.content.getElementById(\\"tagid_2\\");
-  if (!tagid_2$$element) throw new Error(\\"missing element: @tagid_2\\");
-  tagid_2$$element.id = \\"old\\";
-  autorun(() => {
-    const {
-      color,
-      title
-    } = data;
-    tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`);
-  });
-  if (host) host.appendChild(component.content);
-  return component.content;
-}",
-  "map": null,
-  "rawMappings": null,
+    const component = document.importNode(t01$$template, true);
+    const tagid_2$$element = component.content.getElementById(\\"tagid_2\\");
+    if (!tagid_2$$element)
+        throw new Error(\\"missing element: @tagid_2\\");
+    tagid_2$$element.id = \\"old\\";
+    autorun(() => {
+        const { color, title } = data;
+        tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`)
+        tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`)
+    })
+    if (host)
+        host.appendChild(component.content);
+    return component.content;
 }
+"
 `;
 
 exports[`token single element, multiple tokens per attribute 1`] = `
-Object {
-  "code": "import { autorun } from \\"mobx\\";
+"import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
 t01$$template.innerHTML = \`
     <div id=\\"tagid_3\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-  const component = document.importNode(t01$$template, true);
-  const tagid_3$$element = component.content.getElementById(\\"tagid_3\\");
-  if (!tagid_3$$element) throw new Error(\\"missing element: @tagid_3\\");
-  tagid_3$$element.id = \\"old\\";
-  autorun(() => {
-    const {
-      color,
-      margin
-    } = data;
-    tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`);
-  });
-  if (host) host.appendChild(component.content);
-  return component.content;
-}",
-  "map": null,
-  "rawMappings": null,
+    const component = document.importNode(t01$$template, true);
+    const tagid_3$$element = component.content.getElementById(\\"tagid_3\\");
+    if (!tagid_3$$element)
+        throw new Error(\\"missing element: @tagid_3\\");
+    tagid_3$$element.id = \\"old\\";
+    autorun(() => {
+        const { color, margin } = data;
+        tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`)
+    })
+    if (host)
+        host.appendChild(component.content);
+    return component.content;
 }
+"
 `;

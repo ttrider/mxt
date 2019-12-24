@@ -1,12 +1,12 @@
 import { ElementInfo, StyleElementInfo, TemplateInfo } from ".";
 import { parseDOM } from "htmlparser2";
 import * as dom from "domhandler";
-import * as t from "@babel/types";
+//import * as t from "@babel/types";
 import fs from "fs";
 import path from "path";
 import util from "util";
 import ts from "typescript";
-import { statementList, StatementItem } from "./ast/builder";
+import { statements, StatementItem, importStatement } from "./ts/builder";
 
 const readFile = util.promisify(fs.readFile);
 
@@ -22,8 +22,8 @@ export class ComponentFile {
     templates: { [id: string]: TemplateInfo } = {};
     errors: Error[] = [];
 
-    initStatements = statementList();
-    componentStatements = statementList();
+    initStatements = statements();
+    componentStatements = statements();
 
     importStatements: {
         [from: string]: { variable: string, as: string }[]
@@ -74,30 +74,31 @@ export class ComponentFile {
 
     getImportStatements() {
 
-        const items: t.Statement[] = [];
+        const items: ts.Statement[] = [];
 
         for (const from in this.importStatements) {
             if (this.importStatements.hasOwnProperty(from)) {
-                items.push(
-                    t.importDeclaration(
-                        this.importStatements[from].map(i =>
-                            t.importSpecifier(
-                                t.identifier(i.as),
-                                t.identifier(i.variable))),
-                        t.stringLiteral(from)));
+
+                const ii = importStatement(from);
+
+                for (const i of this.importStatements[from]) {
+                    ii.importMember(i.variable, i.as);
+                }
+
+                items.push(ii.build());
             }
         }
         return items;
     }
 
     getStatements() {
-        const statements: t.Statement[] =
-            [
-                ...this.getImportStatements(),
-                ...this.initStatements.statements,
-                ...this.componentStatements.statements
-            ];
-        return statements;
+        const s = 
+        [
+            ...this.getImportStatements(),
+            ...this.initStatements.build(),
+            ...this.componentStatements.build()
+        ] as ts.Statement[];
+        return s;
     }
 
 

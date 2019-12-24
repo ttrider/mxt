@@ -1,10 +1,28 @@
-import ts from "typescript";
+import ts, { isExpressionStatement } from "typescript";
+import { Element } from "domhandler";
+import { getOuterHTML } from "DomUtils";
+
+interface IBuilder {
+    build(): ts.Statement
+}
+
+function isBuilder(value: any): value is IBuilder {
+    return (value && value.build);
+}
+
+export declare type StatementItem =
+    ts.Statement |
+    ts.Expression |
+    IBuilder
+    ;
 
 
-
-
-
-
+export function isExpression(value: any): value is ts.Expression {
+    return (value && value._expressionBrand !== undefined);
+}
+export function isStatement(value: any): value is ts.Expression {
+    return (value && value._statementBrand !== undefined);
+}
 export function importStatement(from: string, name?: string) {
 
     const importMembers: Array<{ name: string, as?: string }> = [];
@@ -26,7 +44,7 @@ export function importStatement(from: string, name?: string) {
         const specifiers = importMembers
             .map(m => {
 
-                if (m.as === undefined) {
+                if (m.as === undefined || m.as === m.name) {
                     return ts.createImportSpecifier(undefined, ts.createIdentifier(m.name));
                 }
                 return ts.createImportSpecifier(ts.createIdentifier(m.name), ts.createIdentifier(m.as));
@@ -43,21 +61,6 @@ export function importStatement(from: string, name?: string) {
         return id;
     }
 }
-
-
-interface IBuilder {
-    build(): ts.Statement
-}
-
-function isBuilder(value: any): value is IBuilder {
-    return (value && value.build);
-}
-
-export declare type StatementItem =
-    ts.Statement |
-    IBuilder
-    ;
-
 
 export function statements(...node: Array<StatementItem | StatementItem[]>) {
 
@@ -80,6 +83,9 @@ export function statements(...node: Array<StatementItem | StatementItem[]>) {
             for (let item of st) {
                 if (isBuilder(item)) {
                     item = item.build();
+                }
+                if (isExpression(item)) {
+                    item = ts.createStatement(item);
                 }
                 items.push(item);
             }
@@ -130,9 +136,9 @@ export function declareFunction(functionName?: string) {
 
         if (functionName) {
             const modifiers = isExport ? [ts.createToken(ts.SyntaxKind.ExportKeyword)] : [];
-            return ts.createFunctionDeclaration([], modifiers, undefined, functionName, undefined, parameters, undefined, ts.createBlock([]));
+            return ts.createFunctionDeclaration([], modifiers, undefined, functionName, undefined, parameters, undefined, ts.createBlock(body.build(), true));
         } else {
-            return ts.createArrowFunction(undefined, undefined, parameters, undefined, undefined, ts.createBlock([]));
+            return ts.createArrowFunction(undefined, undefined, parameters, undefined, undefined, ts.createBlock(body.build(), true));
         }
     }
 
@@ -212,7 +218,92 @@ export function declareVar(name: string) {
     }
 }
 
+export function declareObjectDestruction(...props: Array<{ name: string, as?: string }>) {
 
+    let kind: ts.NodeFlags.Const | ts.NodeFlags.Let | undefined = ts.NodeFlags.Const;
+    let initExpression: ts.Expression;
+    const properties: Array<{ name: string, as?: string }> = [...props];
+
+    const context = {
+        get const() { kind = ts.NodeFlags.Const; return context },
+        get let() { kind = ts.NodeFlags.Let; return context },
+        get var() { kind = undefined; return context },
+
+        property: (name: string, as?: string) => {
+            properties.push({ name, as });
+            return context;
+        },
+        init: (value: any) => {
+            initExpression = getValueExpression(value);
+            return context;
+        },
+
+        build: buildStatement
+    };
+
+    return context;
+
+    function buildStatement() {
+
+        return ts.createVariableStatement(
+            [],
+            ts.createVariableDeclarationList(
+                [
+                    ts.createVariableDeclaration(
+                        ts.createObjectBindingPattern(properties.map(item => {
+
+                            if (item.as === undefined) {
+                                return ts.createBindingElement(undefined, undefined, item.name);
+                            }
+                            return ts.createBindingElement(undefined, item.name, item.as);
+                        })),
+                        undefined,
+                        initExpression,
+                    ),
+                ],
+                kind
+            ),
+        )
+    }
+}
+
+export function makeCall(name: string, ...params: any[]) {
+
+    const parameters = params.map(getValueExpression);
+
+    const context = {
+        param: (...params: any[]) => {
+            parameters.push(...params.map(getValueExpression));
+        },
+
+        build: buildStatement
+    };
+
+    return context;
+
+    function buildStatement() {
+        return ts.createCall(ts.createIdentifier(name), undefined, parameters);
+    }
+
+}
+export function makeAssignment(target: string, value: any) {
+    return ts.createAssignment(ts.createIdentifier(target), getValueExpression(value));
+}
+
+export function makeTemplateLiteral(literal: string | Element[]) {
+
+    if (typeof literal !== "string") {
+        literal = getOuterHTML(literal, { decodeEntities: true, xmlMode: true });
+    }
+    return ts.createIdentifier("`" + literal + "`");
+}
+
+export function makeThrow(message: string) {
+
+    return ts.createThrow(
+        ts.createNew(ts.createIdentifier("Error"), undefined, [ts.createStringLiteral(message)])
+    );
+}
 
 
 function getValueExpression(value?: any) {

@@ -26,7 +26,6 @@ function parseInlineExpressions(content) {
     return state;
 }
 exports.parseInlineExpressions = parseInlineExpressions;
-;
 function getDiagnosticsForText(text) {
     const dummyFilePath = "/file.ts";
     const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.Latest);
@@ -66,4 +65,14 @@ function hasTokens(node) {
         ts.forEachChild(node, traverse);
     }
 }
+function generateCode(node) {
+    const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
+    if (Array.isArray(node)) {
+        const sf = ts.updateSourceFileNode(ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest), node);
+        return printer.printNode(ts.EmitHint.Unspecified, sf, sf);
+    }
+    const sf = (!ts.isSourceFile(node)) ? ts.createSourceFile("./dummy.ts", "", ts.ScriptTarget.Latest) : node;
+    return printer.printNode(ts.EmitHint.Unspecified, node, sf);
+}
+exports.generateCode = generateCode;
 //# sourceMappingURL=ts.js.map

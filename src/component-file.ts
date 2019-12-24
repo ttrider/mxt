@@ -1,7 +1,6 @@
 import { ElementInfo, StyleElementInfo, TemplateInfo } from ".";
 import { parseDOM } from "htmlparser2";
 import * as dom from "domhandler";
-//import * as t from "@babel/types";
 import fs from "fs";
 import path from "path";
 import util from "util";

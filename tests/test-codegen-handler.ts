@@ -1,7 +1,6 @@
 import { parseTemplate } from "../src/defaultHandlers/template-handler";
 import { codegen } from "../src/defaultHandlers/codegen-handler";
 import { setupElementTest } from "./utils";
-import { generateFromAst } from "../src/ast/generator";
 import { generateCode } from "../src/ast/ts";
 
 describe("token", () => {

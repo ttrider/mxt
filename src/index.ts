@@ -1,17 +1,8 @@
 import glob from "glob";
 import util from "util";
-import fs from "fs";
 import { Node, Element } from "domhandler";
-
-import { Handler } from "htmlparser2/lib/Parser";
-
 const globp = util.promisify(glob);
-
-import { parseSync, traverse } from "@babel/core";
 import { ComponentFile } from "./component-file";
-
-
-
 
 
 declare type PluginHandlers =
@@ -339,37 +330,6 @@ export function extractExpressions(content: string) {
     }
 
     return expressions;
-}
-
-export function parseExpressions(content: string) {
-
-    const results = parseSync("`" + content + "`", {
-        babelrc: false,
-        configFile: false
-    });
-    if (!results) return;
-
-    const state: ExpressionInfo = {
-        content,
-        hasTokens: false,
-        externalReferences: []
-    };
-
-    traverse(results, {
-        TemplateLiteral(path) {
-            if (path.node.expressions.length > 0) {
-                state.hasTokens = true;
-            }
-        },
-        Identifier(path, state: ExpressionInfo) {
-            const name = path.node.name;
-            if (!path.scope.hasBinding(name)) {
-                state.externalReferences.push(name);
-            }
-        },
-    }, undefined, state);
-
-    return state;
 }
 
 

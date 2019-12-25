@@ -1,7 +1,4 @@
-import { parseTemplate } from "../src/defaultHandlers/template-handler";
-import { codegen } from "../src/defaultHandlers/codegen-handler";
-import { setupElementTest } from "./utils";
-import { generateCode } from "../src/ast/ts";
+import { codegenSetup } from "./utils";
 
 describe("token", () => {
 
@@ -12,7 +9,7 @@ describe("token", () => {
     <div id="old" style="color: \${color}">Hello MXT!</div>
   </template>`;
 
-    const results = setup(input);
+    const results = codegenSetup(input);
     expect(results).toMatchSnapshot();
   });
 
@@ -23,7 +20,7 @@ describe("token", () => {
     <div id="old" style="color: \${color}" title="\${title}">Hello MXT!</div>
   </template>`;
 
-    const results = setup(input);
+    const results = codegenSetup(input);
     expect(results).toMatchSnapshot();
   });
 
@@ -34,7 +31,7 @@ describe("token", () => {
     <div id="old" style="color: \${color}; margin: \${margin}" >Hello MXT!</div>
   </template>`;
 
-    const results = setup(input);
+    const results = codegenSetup(input);
     expect(results).toMatchSnapshot();
   });
 
@@ -46,15 +43,9 @@ describe("token", () => {
     <div title="\${title}">Hello MXT too!</div>
   </template>`;
 
-    const results = setup(input);
+    const results = codegenSetup(input);
     expect(results).toMatchSnapshot();
   })
 
-  function setup(content: string) {
-    const { context, component, element } = setupElementTest(content);
-
-    expect(parseTemplate(context, component, element)).toBe(true);
-    expect(codegen(context, component)).toBe(true);
-    return generateCode(component.getStatements())
-  }
+  
 });

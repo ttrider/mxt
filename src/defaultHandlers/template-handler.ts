@@ -1,8 +1,9 @@
-import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, AttributeTokenInfo } from "../index";
+import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, AttributeTokenInfo, DynamicElementInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { isTag, ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
 import { parseInlineExpressions } from "../ast/ts";
+import getElementInfo from "../dom/elementInfo";
 
 let idindex = 1;
 
@@ -30,8 +31,10 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
         name: "template",
         attributes: element.attribs,
         elements: [],
-        tokens: []
+        dynamicElements: {}
     };
+
+
 
     componentFile.templates[template_id] = template;
 
@@ -81,39 +84,89 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
     function processTag(template: TemplateInfo, tagItem: Element) {
 
+        const elementInfo = getElementInfo(tagItem.name);
+
         const tokenizedAttributes: string[] = [];
+
         for (const attrName in tagItem.attribs) {
             if (tagItem.attribs.hasOwnProperty(attrName)) {
 
                 const attrValue = tagItem.attribs[attrName];
 
+                // detect and process tokens in attributes
                 if (attrValue) {
-                    const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
-                    if (attrState.hasTokens) {
-
-                        if (tagItem.attribs.id$$original === undefined) {
-                            tagItem.attribs.id$$original = tagItem.attribs.id === undefined ? "" : tagItem.attribs.id;
-                            tagItem.attribs.id = `tagid_${idindex++}`;
-                        }
-
-                        attrState.attributeName = attrName;
-                        attrState.elementId = tagItem.attribs.id;
-                        attrState.elementIdOriginal = tagItem.attribs.id$$original;
-
-                        template.tokens.push(attrState);
-
-                        tokenizedAttributes.push(attrName);
-                    }
+                    processAttributeTokens(attrName, attrValue);
                 }
+
+                // detect event handlers
+                if (attrName.startsWith("mxt.")) {
+                    processMxtAttribute(attrName, attrValue);
+                }
+
+
             }
         }
         for (const tokenizedAttribute of tokenizedAttributes) {
             delete tagItem.attribs[tokenizedAttribute];
         }
-        delete tagItem.attribs.id$$original;
 
         for (const item of tagItem.children) {
             processItem(template, item as Element);
+        }
+
+        function processMxtAttribute(attrName: string, attrValue: string) {
+
+            // Events
+            // mxt.<event>
+            // mxt.<event>.preventDefault 
+            // mxt.<event>.stopPropagation 
+            // mxt.<event>.stopImmediatePropagation
+
+            const mxtParts = attrName.split(".");
+            if (mxtParts[0] !== "mxt" || mxtParts.length < 2) {
+                return;
+            }
+
+            const eventInfo = elementInfo?.events[mxtParts[1]];
+            if (eventInfo) {
+
+
+
+
+
+
+            }
+        }
+
+
+        function processAttributeTokens(attrName: string, attrValue: string) {
+            const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
+            if (attrState.hasTokens) {
+
+                const el = getDynamicElement(tagItem);
+                attrState.attributeName = attrName;
+                el.attributes[attrName] = attrState;
+                tokenizedAttributes.push(attrName);
+            }
+        }
+
+        function getDynamicElement(tagItem: Element) {
+
+            const tagId = tagItem.attribs.id ? tagItem.attribs.id : "";
+
+            let item = template.dynamicElements[tagId];
+            if (!item) {
+
+                const originalId = tagId ? tagId : "";
+                tagItem.attribs.id = `tagid_${idindex++}`;
+                item = {
+                    attributes: {},
+                    id: tagItem.attribs.id,
+                    originalId,
+                };
+                template.dynamicElements[tagItem.attribs.id] = item;
+            }
+            return item;
         }
     }
 

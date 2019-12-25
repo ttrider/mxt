@@ -58,8 +58,16 @@ export interface ElementInfo {
     attributes: { [name: string]: string },
     content?: string,
     expressions?: string[];
+}
+
+export interface DynamicElementInfo {
+
+    id: string;
+    originalId?: string;
+    attributes: { [name: string]: AttributeTokenInfo };
 
 }
+
 export interface StyleElementInfo extends ElementInfo {
     rules: string[]
 }
@@ -67,7 +75,8 @@ export interface StyleElementInfo extends ElementInfo {
 export interface TemplateInfo extends ElementInfo {
     id: string,
     elements: Element[],
-    tokens: AttributeTokenInfo[];
+    //tokens: AttributeTokenInfo[];
+    dynamicElements: { [name: string]: DynamicElementInfo };
 }
 
 export interface ExpressionInfo {

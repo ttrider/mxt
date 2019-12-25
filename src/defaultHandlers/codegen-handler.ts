@@ -43,29 +43,23 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .init(makeCall("document.importNode", ts.createIdentifier(constTemplateName), true))
             );
 
-            const elements = template.tokens.reduce((p, v) => {
-                if (p[v.elementId] === undefined) {
-                    p[v.elementId] = [v];
-                } else {
-                    p[v.elementId].push(v);
-                }
-                return p;
-            }, {} as { [elementId: string]: AttributeTokenInfo[] });
-
-
-            for (const elementId in elements) {
-                if (elements.hasOwnProperty(elementId)) {
-                    const tokenSet = elements[elementId];
-                    const elementOriginalId = tokenSet[0].elementIdOriginal;
+            //const elements = template.dynamicElements
+            for (const elementId in template.dynamicElements) {
+                if (template.dynamicElements.hasOwnProperty(elementId)) {
+                    const element = template.dynamicElements[elementId];
 
                     const elementName = `${elementId}$$element`;
+                    const elementOriginalId = element.originalId;
+
+                    const tokenSet = Object.values(element.attributes);
 
                     const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
                         for (const er of i.externalReferences) {
                             e[er] = null;
                         }
                         return e;
-                    }, {})).map(er => { return { name: er }; });
+                    }, {}))
+                        .map(er => { return { name: er }; });
 
                     funcBody
                         .add(declareVar(elementName)
@@ -76,13 +70,17 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                         .add(ts.createIf(
                             ts.createPrefix(ts.SyntaxKind.ExclamationToken, ts.createIdentifier(elementName)),
                             makeThrow(`missing element: @${elementId}`)
-                        ))
+                        ));
 
-                        .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)))
-                        .add(makeCall("autorun", declareFunction()
-                            .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
-                            .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
-                            .build()).build())
+                    if (elementOriginalId !== undefined) {
+                        funcBody
+                            .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)));
+                    }
+
+                    funcBody.add(makeCall("autorun", declareFunction()
+                        .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
+                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                        .build()).build())
                         ;
                 }
             }

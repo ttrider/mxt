@@ -1,7 +1,10 @@
 import { HandlerContext } from "../src";
-import { parseDOM } from "htmlparser2";
-import { Node, Element } from "domhandler";
+import {  Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
+import { parseTemplate } from "../src/defaultHandlers/template-handler";
+import { codegen } from "../src/defaultHandlers/codegen-handler";
+import { generateCode } from "../src/ast/ts";
+
 
 
 export function setupElementTest(content: string) {
@@ -25,7 +28,13 @@ export function setupElementTest(content: string) {
     return { context, component, element };
 }
 
+export function codegenSetup(content: string) {
+    const { context, component, element } = setupElementTest(content);
 
+    expect(parseTemplate(context, component, element)).toBe(true);
+    expect(codegen(context, component)).toBe(true);
+    return generateCode(component.getStatements())
+  }
 
 
 

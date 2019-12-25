@@ -23,8 +23,7 @@ export function init(data: any) {
     // wiring in the click
     d01.addEventListener("click", (ev) => {
 
-        data.colorClick();
-
+        data.colorClick(ev);
 
     });
 

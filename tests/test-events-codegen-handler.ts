@@ -25,9 +25,9 @@ describe("events", () => {
 
     const results = codegenSetup(input);
 
-    logs.push(results); 
+    //logs.push(results); 
 
-    //expect(results).toMatchSnapshot();
+    expect(results).toMatchSnapshot();
   });
 
   test("handler and propagation functions", () => {
@@ -39,9 +39,9 @@ describe("events", () => {
 
     const results = codegenSetup(input);
 
-    logs.push(results); 
+    //logs.push(results); 
 
-    //expect(results).toMatchSnapshot();
+    expect(results).toMatchSnapshot();
   });
 
   test("handler with options", () => {
@@ -53,9 +53,9 @@ describe("events", () => {
 
     const results = codegenSetup(input);
 
-    logs.push(results); 
+    //logs.push(results); 
 
-    //expect(results).toMatchSnapshot();
+    expect(results).toMatchSnapshot();
   }); 
   
   
@@ -68,8 +68,8 @@ describe("events", () => {
 
     const results = codegenSetup(input);
 
-    logs.push(results); 
+    //logs.push(results); 
 
-    //expect(results).toMatchSnapshot();
+    expect(results).toMatchSnapshot();
   }); 
 });

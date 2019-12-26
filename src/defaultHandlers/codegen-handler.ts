@@ -122,34 +122,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                                 funcBody.add(evFunction.build());
 
-                                // document.addEventListener("click", (ev) => {
-
-                                //     const {doClick} = data;
-                                //     doClick(ev);
-
-                                //     ev.preventDefault();
-                                //     ev.stopPropagation();
-                                //     ev.stopImmediatePropagation();
-                                // }, { once: true, capture: true, passive: true })
-
-
-
                             }
                         }
                     }
-
-                    // addlFuncBody.add(
-                    //     declareFunction(elementAutorunFunc)
-                    //         .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
-                    //         .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
-                    //         .build());
-
-                    // funcBody.add(
-                    //     declareVar(elementAutorun)
-                    //         .const
-                    //         .init(
-                    //             makeCall("autorun", ts.createIdentifier(elementAutorunFunc))));
-
 
                     funcBody.add(
                         declareVar(elementAutorun)

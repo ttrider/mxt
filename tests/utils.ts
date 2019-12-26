@@ -1,5 +1,5 @@
 import { HandlerContext } from "../src";
-import {  Element } from "domhandler";
+import { Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
 import { parseTemplate } from "../src/defaultHandlers/template-handler";
 import { codegen } from "../src/defaultHandlers/codegen-handler";
@@ -34,8 +34,22 @@ export function codegenSetup(content: string) {
     expect(parseTemplate(context, component, element)).toBe(true);
     expect(codegen(context, component)).toBe(true);
     return generateCode(component.getStatements())
-  }
+}
 
+export function templateTestSetup(content: string, templateId: string) {
+
+    const { context, component, element } = setupElementTest(content);
+    expect(parseTemplate(context, component, element)).toBe(true);
+    expect(component.templates).toHaveProperty(templateId);
+    const template = component.templates[templateId];
+    expect(template).not.toBeUndefined();
+    const dynamicElement = template.dynamicElements !== undefined && Object.keys(template.dynamicElements).length > 0 ? Object.values(template.dynamicElements)[0] : undefined;
+
+    return {
+        template, dynamicElement
+    };
+
+}
 
 
 

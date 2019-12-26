@@ -65,7 +65,17 @@ export interface DynamicElementInfo {
     id: string;
     originalId?: string;
     attributes: { [name: string]: AttributeTokenInfo };
+    events: { [name: string]: Eventinfo };
 
+}
+
+export interface Eventinfo {
+
+    name: string,
+    handler?: string,
+    preventDefault?: boolean,
+    stopPropagation?: boolean,
+    stopImmediatePropagation?: boolean
 }
 
 export interface StyleElementInfo extends ElementInfo {

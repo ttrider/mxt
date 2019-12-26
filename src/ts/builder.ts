@@ -1,4 +1,4 @@
-import ts, { isExpressionStatement } from "typescript";
+import ts from "typescript";
 import { Element } from "domhandler";
 import { getOuterHTML } from "DomUtils";
 

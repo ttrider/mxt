@@ -1,6 +1,6 @@
-import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo, TemplateInfo, AttributeTokenInfo, DynamicElementInfo } from "../index";
-import { Element, DataNode } from "domhandler";
-import { isTag, ElementType } from "domelementtype";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo } from "../index";
+import { Element } from "domhandler";
+import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
 import { parseInlineExpressions } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
@@ -129,12 +129,36 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
             const eventInfo = elementInfo?.events[mxtParts[1]];
             if (eventInfo) {
+                // we have an event!
+                const name = mxtParts[1];
 
+                const de = getDynamicElement(tagItem);
 
+                let ev = de.events[name];
+                if (!ev) {
+                    ev = de.events[name] = {
+                        name,
+                    }
+                };
 
+                if (mxtParts.length === 3) {
 
+                    const trueValue = attrValue === undefined || attrValue === "" || attrValue.toLowerCase() === "true";
 
-
+                    switch (mxtParts[2]) {
+                        case "preventDefault":
+                            ev.preventDefault = trueValue;
+                            break;
+                        case "stopPropagation":
+                            ev.stopPropagation = trueValue;
+                            break;
+                        case "stopImmediatePropagation":
+                            ev.stopImmediatePropagation = trueValue;
+                            break;
+                    }
+                } else {
+                    ev.handler = attrValue;
+                }
             }
         }
 
@@ -161,6 +185,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 tagItem.attribs.id = `tagid_${idindex++}`;
                 item = {
                     attributes: {},
+                    events: {},
                     id: tagItem.attribs.id,
                     originalId,
                 };

@@ -1,4 +1,4 @@
-import { HandlerContext, AttributeTokenInfo } from "..";
+import { HandlerContext } from "..";
 import ts from "typescript";
 import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "../ts/builder";
 import { ComponentFile } from "../component-file";
@@ -43,7 +43,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .init(makeCall("document.importNode", ts.createIdentifier(constTemplateName), true))
             );
 
-            //const elements = template.dynamicElements
             for (const elementId in template.dynamicElements) {
                 if (template.dynamicElements.hasOwnProperty(elementId)) {
                     const element = template.dynamicElements[elementId];
@@ -77,11 +76,30 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                             .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)));
                     }
 
+                    if (element.events) {
+                        for (const eventName in element.events) {
+                            if (element.events.hasOwnProperty(eventName)) {
+                                const event = element.events[eventName];
+
+                                // document.addEventListener("click", (ev) => {
+
+                                //     const {doClick} = data;
+                                //     doClick(ev);
+
+                                //     ev.preventDefault();
+                                //     ev.stopPropagation();
+                                //     ev.stopImmediatePropagation();
+                                // }, { once: true, capture: true, passive: true })
+
+                            }
+                        }
+                    }
+
+
                     funcBody.add(makeCall("autorun", declareFunction()
                         .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
                         .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
-                        .build()).build())
-                        ;
+                    ).build());
                 }
             }
 

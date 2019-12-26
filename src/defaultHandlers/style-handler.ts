@@ -1,5 +1,5 @@
 import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo } from "../index";
-import { Node, Element, DataNode } from "domhandler";
+import {  Element, DataNode } from "domhandler";
 import { ComponentFile } from "../component-file";
 
 

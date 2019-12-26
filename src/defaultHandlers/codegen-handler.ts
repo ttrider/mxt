@@ -34,8 +34,13 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
     for (const templateId in componentFile.templates) {
         if (componentFile.templates.hasOwnProperty(templateId)) {
             const template = componentFile.templates[templateId];
-
             const constTemplateName = `${template.id}$$template`;
+
+
+
+
+            const addlFuncBody = statements();
+
 
             const funcBody = statements().add(
                 declareVar("component")
@@ -48,6 +53,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     const element = template.dynamicElements[elementId];
 
                     const elementName = `${elementId}$$element`;
+                    const elementAutorun = `${elementId}$$autorun`;
+
+
                     const elementOriginalId = element.originalId;
 
                     const tokenSet = Object.values(element.attributes);
@@ -63,8 +71,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     funcBody
                         .add(declareVar(elementName)
                             .const
-                            .init(makeCall("component.content.getElementById", elementId).build())
-                            .build())
+                            .init(makeCall("component.content.getElementById", elementId))
+                        )
 
                         .add(ts.createIf(
                             ts.createPrefix(ts.SyntaxKind.ExclamationToken, ts.createIdentifier(elementName)),
@@ -81,6 +89,39 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                             if (element.events.hasOwnProperty(eventName)) {
                                 const event = element.events[eventName];
 
+                                const elementEventFunction = `${elementId}$$${eventName}`;
+
+                                const df = declareFunction(elementEventFunction)
+                                    .param("ev", "Event");
+                                if (event.handler) {
+                                    df.body(declareObjectDestruction({ name: event.handler }).const.init(ts.createIdentifier("data")))
+                                        .body(makeCall(event.handler, ts.createIdentifier("ev")).build())
+                                }
+
+                                if (event.preventDefault) {
+                                    df.body(makeCall("ev.preventDefault").build())
+                                }
+                                if (event.stopPropagation) {
+                                    df.body(makeCall("ev.stopPropagation").build())
+                                }
+                                if (event.stopImmediatePropagation) {
+                                    df.body(makeCall("ev.stopImmediatePropagation").build())
+                                }
+
+                                addlFuncBody.add(df.build());
+
+                                const options: string[] = [];
+                                if (event.once) { options.push("once") }
+                                if (event.passive) { options.push("passive") }
+                                if (event.capture) { options.push("capture") }
+
+                                const evFunction = makeCall(elementName + ".addEventListener", eventName, ts.createIdentifier(elementEventFunction));
+                                if (options.length) {
+                                    evFunction.param(ts.createIdentifier("{" + options.join(", ") + "}"));
+                                }
+
+                                funcBody.add(evFunction.build());
+
                                 // document.addEventListener("click", (ev) => {
 
                                 //     const {doClick} = data;
@@ -91,20 +132,40 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                 //     ev.stopImmediatePropagation();
                                 // }, { once: true, capture: true, passive: true })
 
+
+
                             }
                         }
                     }
 
+                    // addlFuncBody.add(
+                    //     declareFunction(elementAutorunFunc)
+                    //         .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
+                    //         .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                    //         .build());
 
-                    funcBody.add(makeCall("autorun", declareFunction()
-                        .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
-                        .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
-                    ).build());
+                    // funcBody.add(
+                    //     declareVar(elementAutorun)
+                    //         .const
+                    //         .init(
+                    //             makeCall("autorun", ts.createIdentifier(elementAutorunFunc))));
+
+
+                    funcBody.add(
+                        declareVar(elementAutorun)
+                            .const
+                            .init(
+                                makeCall("autorun", declareFunction()
+                                    .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
+                                    .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                                ).build()));
                 }
             }
 
             funcBody.add(ts.createIf(ts.createIdentifier("host"), ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("component.content")).build())))
                 .add(ts.createReturn(ts.createIdentifier("component.content")));
+
+            funcBody.add(addlFuncBody.build());
 
             componentFile.componentStatements.add(
                 declareFunction(template.id)
@@ -113,8 +174,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .body(funcBody.build())
                     .export
                     .build());
-
-
         }
     }
     return true;

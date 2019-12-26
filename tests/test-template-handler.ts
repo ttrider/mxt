@@ -123,5 +123,4 @@ describe("events", () => {
     expect(dynamicElement).not.toBeUndefined();
     expect(dynamicElement.events).not.toHaveProperty("someevent");
   });
-
 });

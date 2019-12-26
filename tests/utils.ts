@@ -33,7 +33,8 @@ export function codegenSetup(content: string) {
 
     expect(parseTemplate(context, component, element)).toBe(true);
     expect(codegen(context, component)).toBe(true);
-    return generateCode(component.getStatements())
+
+    return generateCode(component.getStatements());
 }
 
 export function templateTestSetup(content: string, templateId: string) {
@@ -48,6 +49,10 @@ export function templateTestSetup(content: string, templateId: string) {
     return {
         template, dynamicElement
     };
+
+}
+
+export function LogResults() {
 
 }
 

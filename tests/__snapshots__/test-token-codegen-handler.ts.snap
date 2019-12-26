@@ -13,18 +13,18 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (!tagid_4$$element)
         throw new Error(\\"missing element: @tagid_4\\");
     tagid_4$$element.id = \\"\\";
-    autorun(() => {
+    const tagid_4$$autorun = autorun(() => {
         const { color } = data;
         tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`)
-    })
+    });
     const tagid_5$$element = component.content.getElementById(\\"tagid_5\\");
     if (!tagid_5$$element)
         throw new Error(\\"missing element: @tagid_5\\");
     tagid_5$$element.id = \\"\\";
-    autorun(() => {
+    const tagid_5$$autorun = autorun(() => {
         const { title } = data;
         tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`)
-    })
+    });
     if (host)
         host.appendChild(component.content);
     return component.content;
@@ -44,10 +44,10 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (!tagid_1$$element)
         throw new Error(\\"missing element: @tagid_1\\");
     tagid_1$$element.id = \\"old\\";
-    autorun(() => {
+    const tagid_1$$autorun = autorun(() => {
         const { color } = data;
         tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`)
-    })
+    });
     if (host)
         host.appendChild(component.content);
     return component.content;
@@ -67,11 +67,11 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (!tagid_2$$element)
         throw new Error(\\"missing element: @tagid_2\\");
     tagid_2$$element.id = \\"old\\";
-    autorun(() => {
+    const tagid_2$$autorun = autorun(() => {
         const { color, title } = data;
         tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`)
         tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`)
-    })
+    });
     if (host)
         host.appendChild(component.content);
     return component.content;
@@ -91,10 +91,10 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (!tagid_3$$element)
         throw new Error(\\"missing element: @tagid_3\\");
     tagid_3$$element.id = \\"old\\";
-    autorun(() => {
+    const tagid_3$$autorun = autorun(() => {
         const { color, margin } = data;
         tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`)
-    })
+    });
     if (host)
         host.appendChild(component.content);
     return component.content;

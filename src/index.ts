@@ -71,11 +71,15 @@ export interface DynamicElementInfo {
 
 export interface Eventinfo {
 
-    name: string,
-    handler?: string,
-    preventDefault?: boolean,
-    stopPropagation?: boolean,
-    stopImmediatePropagation?: boolean
+    name: string;
+    handler?: string;
+    preventDefault?: boolean;
+    stopPropagation?: boolean;
+    stopImmediatePropagation?: boolean;
+    capture?: boolean;
+    once?: boolean;
+    passive?: boolean;
+
 }
 
 export interface StyleElementInfo extends ElementInfo {

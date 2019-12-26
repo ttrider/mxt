@@ -1,6 +1,20 @@
 import { codegenSetup } from "./utils";
+import path from "path";
+import fs from "fs";
 
 describe("token", () => {
+
+  const logs: string[] = [];
+
+  afterAll(() => {
+
+    if (logs.length > 0) {
+
+      const filename = path.resolve(__dirname, "__snapshots__", path.basename(__filename) + ".log");
+      fs.writeFileSync(filename, logs.join("\n=======================\n\n"));
+
+    }
+  });
 
   test("single element, attribute, token", () => {
 
@@ -10,7 +24,9 @@ describe("token", () => {
   </template>`;
 
     const results = codegenSetup(input);
+
     expect(results).toMatchSnapshot();
+
   });
 
   test("single element, multiple attributes,tokens", () => {
@@ -22,6 +38,7 @@ describe("token", () => {
 
     const results = codegenSetup(input);
     expect(results).toMatchSnapshot();
+
   });
 
   test("single element, multiple tokens per attribute", () => {
@@ -36,7 +53,6 @@ describe("token", () => {
   });
 
   test("multiple elements", () => {
-
     const input =
       `<template id="t01" type="mxt">
     <div style="color: \${color};">Hello MXT!</div>
@@ -44,8 +60,11 @@ describe("token", () => {
   </template>`;
 
     const results = codegenSetup(input);
+
+    logs.push(results); 
+
     expect(results).toMatchSnapshot();
   })
 
-  
+
 });

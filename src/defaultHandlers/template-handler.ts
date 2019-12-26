@@ -145,19 +145,35 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
                     const trueValue = attrValue === undefined || attrValue === "" || attrValue.toLowerCase() === "true";
 
-                    switch (mxtParts[2]) {
-                        case "preventDefault":
+                    switch (mxtParts[2].toLowerCase() ?? "") {
+                        case "preventdefault":
                             ev.preventDefault = trueValue;
+                            tokenizedAttributes.push(attrName);
                             break;
-                        case "stopPropagation":
+                        case "stoppropagation":
                             ev.stopPropagation = trueValue;
+                            tokenizedAttributes.push(attrName);
                             break;
-                        case "stopImmediatePropagation":
+                        case "stopimmediatepropagation":
                             ev.stopImmediatePropagation = trueValue;
+                            tokenizedAttributes.push(attrName);
+                            break;
+                        case "capture":
+                            ev.capture = trueValue;
+                            tokenizedAttributes.push(attrName);
+                            break;
+                        case "once":
+                            ev.once = trueValue;
+                            tokenizedAttributes.push(attrName);
+                            break;
+                        case "passive":
+                            ev.passive = trueValue;
+                            tokenizedAttributes.push(attrName);
                             break;
                     }
                 } else {
                     ev.handler = attrValue;
+                    tokenizedAttributes.push(attrName);
                 }
             }
         }

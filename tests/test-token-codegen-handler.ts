@@ -23,7 +23,9 @@ describe("token", () => {
     <div id="old" style="color: \${color}">Hello MXT!</div>
   </template>`;
 
+
     const results = codegenSetup(input);
+   
 
     expect(results).toMatchSnapshot();
 
@@ -49,9 +51,10 @@ describe("token", () => {
   </template>`;
 
     const results = codegenSetup(input);
+    
     expect(results).toMatchSnapshot();
   });
-
+ 
   test("multiple elements", () => {
     const input =
       `<template id="t01" type="mxt">

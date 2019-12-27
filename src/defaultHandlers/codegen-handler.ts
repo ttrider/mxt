@@ -36,17 +36,26 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
             const template = componentFile.templates[templateId];
             const constTemplateName = `${template.id}$$template`;
 
+            const elements = Object.values(template.dynamicElements);
+
 
 
 
             const addlFuncBody = statements();
 
 
-            const funcBody = statements().add(
-                declareVar("component")
-                    .const
-                    .init(makeCall("document.importNode", ts.createIdentifier(constTemplateName), true))
-            );
+            const funcBody = statements()
+                .add(
+                    declareVar("disposed")
+                        .let
+                        .init(ts.createFalse()))
+
+                .add(
+                    declareObjectDestruction({ name: "$$elements" }, ...elements.map(e => { return { name: `${e.id}$$element` } }))
+                        .const
+                        .init(makeCall("$$mxt$$initialize$$", ts.createIdentifier(constTemplateName), ts.createArrayLiteral(elements.map(e => ts.createStringLiteral(e.id))))
+                            .build()
+                        ))
 
             for (const elementId in template.dynamicElements) {
                 if (template.dynamicElements.hasOwnProperty(elementId)) {
@@ -54,7 +63,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                     const elementName = `${elementId}$$element`;
                     const elementAutorun = `${elementId}$$autorun`;
-
 
                     const elementOriginalId = element.originalId;
 
@@ -67,17 +75,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                         return e;
                     }, {}))
                         .map(er => { return { name: er }; });
-
-                    funcBody
-                        .add(declareVar(elementName)
-                            .const
-                            .init(makeCall("component.content.getElementById", elementId))
-                        )
-
-                        .add(ts.createIf(
-                            ts.createPrefix(ts.SyntaxKind.ExclamationToken, ts.createIdentifier(elementName)),
-                            makeThrow(`missing element: @${elementId}`)
-                        ));
 
                     if (elementOriginalId !== undefined) {
                         funcBody
@@ -137,7 +134,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                 }
             }
 
-            funcBody.add(ts.createIf(ts.createIdentifier("host"), ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("component.content")).build())))
+            funcBody.add(ts.createIf(ts.createIdentifier("host"), ts.createStatement(makeCall("$$mxt$$appendTo$$", ts.createIdentifier("$$elements"), ts.createIdentifier("host")).build())))
                 .add(ts.createReturn(ts.createIdentifier("component.content")));
 
             funcBody.add(addlFuncBody.build());
@@ -151,5 +148,55 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .build());
         }
     }
+
+
+    componentFile.componentStatements
+        .add(
+            declareFunction("$$mxt$$initialize$$")
+                .param("template", "HTMLTemplateElement")
+                .param("elementIds", "string[]")
+                .body(declareVar("elements", "Element[]").const.init(ts.createArrayLiteral()))
+                .body(declareVar("child").let.init(ts.createIdentifier("template.content.firstElementChild")))
+                .body(ts.createWhile(ts.createIdentifier("child"),
+                    ts.createBlock(
+                        [
+                            ts.createStatement(makeCall("elements.push", ts.createIdentifier("child")).build()),
+                            ts.createStatement(makeAssignment("child", ts.createIdentifier("child.nextElementSibling")))
+                        ]
+                    )
+                ))
+                .body(declareVar("context", "any").const.init(
+                    ts.createObjectLiteral(
+                        [ts.createPropertyAssignment("$$elements", ts.createIdentifier("elements"))]
+                    )
+                ))
+
+                .body(ts.createForOf(undefined, ts.createIdentifier("elementId"), ts.createIdentifier("elementIds"),
+                    ts.createBlock(
+                        [
+                            declareVar("element").const.init(makeCall("template.content.getElementById", ts.createIdentifier("elementId"))).build(),
+                            ts.createIf(ts.createIdentifier("element"),
+                                ts.createBlock([
+                                    ts.createStatement(makeAssignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
+                        ]
+                    )
+                ))
+                .body(ts.createReturn(ts.createIdentifier("context")))
+                .build())
+        .add(
+            declareFunction("$$mxt$$appendTo$$")
+                .param("elements", "Element[]")
+                .param("host", "Element")
+                .body(ts.createForOf(undefined, ts.createIdentifier("el"), ts.createIdentifier("elements"), ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("el")).build())))
+                .build()
+        )
+        .add(
+            declareFunction("$$mxt$$remove$$")
+                .param("elements", "Element[]")
+                .body(ts.createForOf(undefined, ts.createIdentifier("el"), ts.createIdentifier("elements"), ts.createStatement(makeCall("el.remove").build())))
+                .build()
+
+
+        )
     return true;
 }

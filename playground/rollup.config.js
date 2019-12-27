@@ -5,7 +5,6 @@ import { terser } from 'rollup-plugin-terser';
 import rollup_start_dev from './rollup_start_dev';
 import typescript from 'rollup-plugin-typescript';
 
-
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
@@ -17,7 +16,7 @@ export default {
         file: 'public/bundle.js'
     },
     plugins: [
-	typescript(),
+        typescript(),
 
         // If you have external dependencies installed from
         // npm, you'll most likely need these plugins. In

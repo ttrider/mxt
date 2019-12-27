@@ -22,7 +22,18 @@ class TestData {
         this.r = this.r % 255;
         this.g = this.g % 255;
         this.b = this.b % 255;
+
+        if (this.el){
+            //this.el.dispose();
+
+            const root_mv = document.getElementById("mv");
+            if (root_mv) {
+                this.el.appendTo(root_mv);
+            }
+        }
     }
+
+    el:any
 }
 
 
@@ -33,7 +44,11 @@ if (document) {
     // example 01
     const root_ex01 = document.getElementById("ex01");
     if (root_ex01) {
-        root_ex01.appendChild(t01(data));
+
+        data.el = t01(data);
+
+        data.el.appendTo(root_ex01);
+
     }
 
     // example 02

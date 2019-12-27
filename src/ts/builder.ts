@@ -179,7 +179,7 @@ export function declareFunction(functionName?: string) {
     }
 }
 
-export function declareVar(name: string) {
+export function declareVar(name: string, type?: null | string | undefined) {
 
     let kind: ts.NodeFlags.Const | ts.NodeFlags.Let | undefined = ts.NodeFlags.Const;
     let initExpression: ts.Expression;
@@ -199,6 +199,19 @@ export function declareVar(name: string) {
 
     return context;
 
+    function getType(tp: null | string | undefined) {
+
+        if (tp === undefined) {
+            return ts.createTypeReferenceNode("undefined", undefined)
+        }
+
+        if (tp === null) {
+            return (ts.createNull());
+        }
+
+        return ts.createTypeReferenceNode(tp, undefined);
+    }
+
     function buildStatement() {
 
         return ts.createVariableStatement(
@@ -207,7 +220,7 @@ export function declareVar(name: string) {
                 [
                     ts.createVariableDeclaration(
                         name,
-                        undefined,
+                        type === undefined ? undefined : getType(type),
                         initExpression,
                     ),
                 ],

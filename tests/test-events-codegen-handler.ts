@@ -53,7 +53,7 @@ describe("events", () => {
 
     const results = codegenSetup(input);
 
-    //logs.push(results); 
+    logs.push(results); 
 
     expect(results).toMatchSnapshot();
   }); 

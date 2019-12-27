@@ -1,42 +1,77 @@
 import { autorun } from "mobx";
+
 const t01$$template = document.createElement("template");
 t01$$template.innerHTML = `
     <div id="tagid_4">Hello MXT!</div>
+    <div id="tagid_5">Hello MXT too!</div>
   `;
-export function t01(data: any, host?: null | undefined | Element) {
+export function t01(data: { color: any, title: any }, host?: null | undefined | Element) {
+  let disposed = false;
 
-  return create(data, host).element;
+  const { $$elements, tagid_4$$element, tagid_5$$element } = $$mxt$$initialize$$(t01$$template, "tagid_4", "tagid_5");
 
+  tagid_4$$element.id = "";
+  const tagid_4$$autorun = autorun(() => {
+    const { color } = data;
+    tagid_4$$element.setAttribute("style", `color: ${color};`)
+  });
 
-  function create(data: any, host?: null | undefined | Element) {
+  tagid_5$$element.id = "";
+  const tagid_5$$autorun = autorun(() => {
+    const { title } = data;
+    tagid_5$$element.setAttribute("title", `${title}`)
+  });
+  if (host)
+    $$mxt$$appendTo$$($$elements, host);
 
-    const component = document.importNode(t01$$template, true);
-    const tagid_4$$element = component.content.getElementById("tagid_4");
-    if (!tagid_4$$element)
-      throw new Error("missing element: @tagid_4");
-    tagid_4$$element.id = "old";
-    tagid_4$$element.addEventListener("click", tagid_4$$click)
-    const tagid_4$$autorun = autorun(() => {
-      const { color } = data;
-      tagid_4$$element.setAttribute("style", `color: ${color}`)
-    });
-    if (host)
-      host.appendChild(component.content);
+  return {
+    elements: $$elements,
+    get disposed() { return disposed },
 
-    return {
-      element: component.content,
-      delete: () => {
-        component.content.parentElement?.removeChild(component.content);
+    appendTo: (host: Element) => $$mxt$$appendTo$$($$elements, host),
+    remove: () => $$mxt$$remove$$($$elements),
 
-        tagid_4$$autorun();
-        tagid_4$$element.removeEventListener("click", tagid_4$$click);
-      }
-    };
+    dispose: () => {
+      disposed = true;
+      $$mxt$$remove$$($$elements);
+      $$elements.splice(0, $$elements.length);
+      tagid_4$$autorun();
+      tagid_5$$autorun();
+    }
+  };
+}
 
-    function tagid_4$$click(ev: Event) {
-      ev.preventDefault()
+function $$mxt$$initialize$$(template: HTMLTemplateElement, ...elementIds: string[]) {
+
+  const elements: Element[] = [];
+  let c = template.content.firstElementChild;
+  while (c) {
+    elements.push(c);
+    c = c.nextElementSibling;
+  }
+
+  const context: any = {
+    $$elements: elements
+  }
+
+  for (const elementId of elementIds) {
+    const element = template.content.getElementById(elementId);
+    if (element) {
+      context[elementId + "$$element"] = element;
     }
   }
 
+  return context;
+}
 
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+  for (const el of elements) {
+    host.appendChild(el);
+  }
+}
+
+function $$mxt$$remove$$(elements: Element[]) {
+  for (const el of elements) {
+    el.remove();
+  }
 }

@@ -44,6 +44,8 @@ export function init(data: any, host?: Element | null) {
     return wrapper;
 }
 
+export const a = init;
+
 
 
 

@@ -1,6 +1,6 @@
 import { HandlerContext } from "..";
 import ts from "typescript";
-import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall } from "../ts/builder";
+import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall, forOf } from "../ts/builder";
 import { ComponentFile } from "../component-file";
 
 
@@ -27,14 +27,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                 ts.createStatement(makeAssignment(constTemplateName + ".innerHTML", templateLiteral))
             );
 
-        }
-    }
 
-    // create init function code
-    for (const templateId in componentFile.templates) {
-        if (componentFile.templates.hasOwnProperty(templateId)) {
-            const template = componentFile.templates[templateId];
-            const constTemplateName = `${template.id}$$template`;
 
             const elements = Object.values(template.dynamicElements);
 
@@ -108,9 +101,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                 addlFuncBody.add(df.build());
 
                                 const options: string[] = [];
-                                if (event.once) { options.push("once") }
-                                if (event.passive) { options.push("passive") }
-                                if (event.capture) { options.push("capture") }
+                                if (event.once) { options.push("once: true") }
+                                if (event.passive) { options.push("passive: true") }
+                                if (event.capture) { options.push("capture: true") }
 
                                 const evFunction = makeCall(elementName + ".addEventListener", eventName, ts.createIdentifier(elementEventFunction));
                                 if (options.length) {
@@ -135,7 +128,81 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
             }
 
             funcBody.add(ts.createIf(ts.createIdentifier("host"), ts.createStatement(makeCall("$$mxt$$appendTo$$", ts.createIdentifier("$$elements"), ts.createIdentifier("host")).build())))
-                .add(ts.createReturn(ts.createIdentifier("component.content")));
+                //.add(ts.createReturn(ts.createIdentifier("component.content")));
+
+                .add(ts.createReturn(
+                ts.createObjectLiteral(
+                    [
+                        ts.createPropertyAssignment("elements", ts.createIdentifier("$$elements")),
+                        ts.createPropertyAssignment(
+                            "appendTo",
+                            ts.createArrowFunction(undefined, undefined, [
+                                ts.createParameter(
+                                    [],
+                                    [],
+                                    undefined,
+                                    "host",
+                                    undefined,
+                                    ts.createTypeReferenceNode("Element", undefined)
+                                )
+                            ], undefined, undefined,
+                                ts.createBlock(
+                                    [
+                                        ts.createStatement(
+                                            makeCall("$$mxt$$appendTo$$", ts.createIdentifier("$$elements"), ts.createIdentifier("host")).build()
+                                        )
+                                    ]
+                                )
+                            )
+                        ),
+                        ts.createPropertyAssignment(
+                            "remove",
+                            ts.createArrowFunction(undefined, undefined, [], undefined, undefined,
+                                ts.createBlock(
+                                    [
+                                        ts.createStatement(
+                                            makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build()
+                                        )
+                                    ]
+                                )
+                            )
+                        ),
+                        ts.createPropertyAssignment(
+                            "dispose",
+                            ts.createArrowFunction(undefined, undefined, [], undefined, undefined,
+                                ts.createBlock(
+                                    [
+                                        ts.createStatement(makeAssignment("disposed", true)),
+                                        ts.createStatement(
+                                            makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build()
+                                        ),
+                                        ts.createStatement(
+                                            makeCall("$$elements.splice", ts.createNumericLiteral("0"), ts.createIdentifier("$$elements.length")).build()
+                                        )
+                                    ]
+                                )
+                            )
+                        )
+                    ], true
+                )
+            ));
+
+            // return {
+            //       elements: $$elements,
+            //     get disposed() { return disposed },
+
+            //       appendTo: (host: Element) => $$mxt$$appendTo$$($$elements, host),
+            //       remove: () => $$mxt$$remove$$($$elements),
+
+            //     dispose: () => {
+            //       disposed = true;
+            //       $$mxt$$remove$$($$elements);
+            //       $$elements.splice(0, $$elements.length);
+            //       tagid_4$$autorun();
+            //       tagid_5$$autorun();
+            //     }
+            //   };
+
 
             funcBody.add(addlFuncBody.build());
 
@@ -171,32 +238,29 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     )
                 ))
 
-                .body(ts.createForOf(undefined, ts.createIdentifier("elementId"), ts.createIdentifier("elementIds"),
-                    ts.createBlock(
+                .body(forOf("elementId").of(ts.createIdentifier("elementIds"))
+                    .body(ts.createBlock(
                         [
                             declareVar("element").const.init(makeCall("template.content.getElementById", ts.createIdentifier("elementId"))).build(),
                             ts.createIf(ts.createIdentifier("element"),
                                 ts.createBlock([
                                     ts.createStatement(makeAssignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
                         ]
-                    )
-                ))
+                    ))
+                )
                 .body(ts.createReturn(ts.createIdentifier("context")))
                 .build())
         .add(
             declareFunction("$$mxt$$appendTo$$")
                 .param("elements", "Element[]")
                 .param("host", "Element")
-                .body(ts.createForOf(undefined, ts.createIdentifier("el"), ts.createIdentifier("elements"), ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("el")).build())))
-                .build()
-        )
+                .body(forOf("el").of(ts.createIdentifier("elements")).body(ts.createStatement(makeCall("host.appendChild", ts.createIdentifier("el")).build()))).build())
         .add(
             declareFunction("$$mxt$$remove$$")
                 .param("elements", "Element[]")
-                .body(ts.createForOf(undefined, ts.createIdentifier("el"), ts.createIdentifier("elements"), ts.createStatement(makeCall("el.remove").build())))
-                .build()
+                .body(forOf("el").of(ts.createIdentifier("elements")).body(ts.createStatement(makeCall("el.remove").build()))).build())
 
 
-        )
     return true;
 }
+

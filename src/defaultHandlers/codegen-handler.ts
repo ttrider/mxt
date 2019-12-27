@@ -1,8 +1,13 @@
-import { HandlerContext } from "..";
+import { HandlerContext, Eventinfo, ElementInfo } from "..";
 import ts from "typescript";
 import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, makeCall, forOf } from "../ts/builder";
+import * as d from "../ts/builder";
+
 import { ComponentFile } from "../component-file";
 
+function eventFunctionName(elementId: string, event: Eventinfo) {
+    return `${elementId}$$${event.name}`
+}
 
 export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
@@ -27,9 +32,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                 ts.createStatement(makeAssignment(constTemplateName + ".innerHTML", templateLiteral))
             );
 
-
-
             const elements = Object.values(template.dynamicElements);
+
+            const eventListeners: Array<{ elementName: string, eventName: string, elementEventFunction: string }> = [];
 
 
 
@@ -61,6 +66,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                     const tokenSet = Object.values(element.attributes);
 
+                    const events = (element.events !== undefined) ? Object.values(element.events) : [];
+
                     const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
                         for (const er of i.externalReferences) {
                             e[er] = null;
@@ -74,56 +81,56 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                             .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)));
                     }
 
-                    if (element.events) {
-                        for (const eventName in element.events) {
-                            if (element.events.hasOwnProperty(eventName)) {
-                                const event = element.events[eventName];
+                    for (const event of events) {
 
-                                const elementEventFunction = `${elementId}$$${eventName}`;
+                        const elementEventFunction = eventFunctionName(elementId, event);
 
-                                const df = declareFunction(elementEventFunction)
-                                    .param("ev", "Event");
-                                if (event.handler) {
-                                    df.body(declareObjectDestruction({ name: event.handler }).const.init(ts.createIdentifier("data")))
-                                        .body(makeCall(event.handler, ts.createIdentifier("ev")).build())
-                                }
-
-                                if (event.preventDefault) {
-                                    df.body(makeCall("ev.preventDefault").build())
-                                }
-                                if (event.stopPropagation) {
-                                    df.body(makeCall("ev.stopPropagation").build())
-                                }
-                                if (event.stopImmediatePropagation) {
-                                    df.body(makeCall("ev.stopImmediatePropagation").build())
-                                }
-
-                                addlFuncBody.add(df.build());
-
-                                const options: string[] = [];
-                                if (event.once) { options.push("once: true") }
-                                if (event.passive) { options.push("passive: true") }
-                                if (event.capture) { options.push("capture: true") }
-
-                                const evFunction = makeCall(elementName + ".addEventListener", eventName, ts.createIdentifier(elementEventFunction));
-                                if (options.length) {
-                                    evFunction.param(ts.createIdentifier("{" + options.join(", ") + "}"));
-                                }
-
-                                funcBody.add(evFunction.build());
-
-                            }
+                        const df = declareFunction(elementEventFunction)
+                            .param("ev", "Event");
+                        if (event.handler) {
+                            df.body(declareObjectDestruction({ name: event.handler }).const.init(ts.createIdentifier("data")))
+                                .body(makeCall(event.handler, ts.createIdentifier("ev")).build())
                         }
+
+                        if (event.preventDefault) {
+                            df.body(makeCall("ev.preventDefault").build())
+                        }
+                        if (event.stopPropagation) {
+                            df.body(makeCall("ev.stopPropagation").build())
+                        }
+                        if (event.stopImmediatePropagation) {
+                            df.body(makeCall("ev.stopImmediatePropagation").build())
+                        }
+
+                        addlFuncBody.add(df.build());
+
+                        const options: string[] = [];
+                        if (event.once) { options.push("once: true") }
+                        if (event.passive) { options.push("passive: true") }
+                        if (event.capture) { options.push("capture: true") }
+
+                        const evFunction = makeCall(elementName + ".addEventListener", event.name, ts.createIdentifier(elementEventFunction));
+                        eventListeners.push({ elementName, eventName: event.name, elementEventFunction });
+                        if (options.length) {
+                            evFunction.param(ts.createIdentifier("{" + options.join(", ") + "}"));
+                        }
+
+                        funcBody.add(evFunction.build());
+
                     }
+
+
 
                     funcBody.add(
                         declareVar(elementAutorun)
                             .const
                             .init(
-                                makeCall("autorun", declareFunction()
-                                    .body(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")))
-                                    .body(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
+                                makeCall("autorun",
+                                    d.ArrowFunction()
+                                        .addBody(declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")).build())
+                                        .addBody(...tokenSet.map(token => makeCall(elementName + ".setAttribute", token.attributeName, makeTemplateLiteral(token.content)).build()))
                                 ).build()));
+
                 }
             }
 
@@ -131,61 +138,34 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                 //.add(ts.createReturn(ts.createIdentifier("component.content")));
 
                 .add(ts.createReturn(
-                ts.createObjectLiteral(
-                    [
-                        ts.createPropertyAssignment("elements", ts.createIdentifier("$$elements")),
-                        ts.createPropertyAssignment(
-                            "appendTo",
-                            ts.createArrowFunction(undefined, undefined, [
-                                ts.createParameter(
-                                    [],
-                                    [],
-                                    undefined,
-                                    "host",
-                                    undefined,
-                                    ts.createTypeReferenceNode("Element", undefined)
-                                )
-                            ], undefined, undefined,
-                                ts.createBlock(
-                                    [
-                                        ts.createStatement(
-                                            makeCall("$$mxt$$appendTo$$", ts.createIdentifier("$$elements"), ts.createIdentifier("host")).build()
-                                        )
-                                    ]
-                                )
+                    ts.createObjectLiteral(
+                        [
+                            ts.createGetAccessor(undefined, undefined, "disposed", [], undefined, ts.createBlock([ts.createReturn(ts.createIdentifier("disposed"))])),
+                            ts.createGetAccessor(undefined, undefined, "elements", [], undefined, ts.createBlock([ts.createReturn(ts.createIdentifier("$$elements"))])),
+                            ts.createPropertyAssignment(
+                                "appendTo",
+                                d.ArrowFunction()
+                                    .addParameter(d.Parameter("host", "Element"))
+                                    .addBody(makeCall("$$mxt$$appendTo$$", ts.createIdentifier("$$elements"), ts.createIdentifier("host")).build())
+                            ),
+                            ts.createPropertyAssignment(
+                                "remove",
+                                d.ArrowFunction().addBody(makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build())
+                            ),
+                            ts.createPropertyAssignment(
+                                "dispose",
+                                d.ArrowFunction()
+                                    .addBody(makeAssignment("disposed", true))
+                                    .addBody(makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build())
+                                    .addBody(makeCall("$$elements.splice", ts.createNumericLiteral("0"), ts.createIdentifier("$$elements.length")).build())
+                                    .addBody(...eventListeners.map(e => makeCall(`${e.elementName}.removeEventListener`, e.eventName, ts.createIdentifier(e.elementEventFunction)).build()))
+                                    .addBody(...elements.map(e => makeCall(`${e.id}$$autorun`).build()))
                             )
-                        ),
-                        ts.createPropertyAssignment(
-                            "remove",
-                            ts.createArrowFunction(undefined, undefined, [], undefined, undefined,
-                                ts.createBlock(
-                                    [
-                                        ts.createStatement(
-                                            makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build()
-                                        )
-                                    ]
-                                )
-                            )
-                        ),
-                        ts.createPropertyAssignment(
-                            "dispose",
-                            ts.createArrowFunction(undefined, undefined, [], undefined, undefined,
-                                ts.createBlock(
-                                    [
-                                        ts.createStatement(makeAssignment("disposed", true)),
-                                        ts.createStatement(
-                                            makeCall("$$mxt$$remove$$", ts.createIdentifier("$$elements")).build()
-                                        ),
-                                        ts.createStatement(
-                                            makeCall("$$elements.splice", ts.createNumericLiteral("0"), ts.createIdentifier("$$elements.length")).build()
-                                        )
-                                    ]
-                                )
-                            )
-                        )
-                    ], true
-                )
-            ));
+                        ], true
+                    )
+                ));
+
+
 
             // return {
             //       elements: $$elements,
@@ -213,6 +193,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     .body(funcBody.build())
                     .export
                     .build());
+
         }
     }
 

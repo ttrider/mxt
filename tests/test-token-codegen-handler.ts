@@ -24,8 +24,8 @@ describe("token", () => {
   </template>`;
 
 
+
     const results = codegenSetup(input);
-   
 
     expect(results).toMatchSnapshot();
 
@@ -51,10 +51,10 @@ describe("token", () => {
   </template>`;
 
     const results = codegenSetup(input);
-    
+
     expect(results).toMatchSnapshot();
   });
- 
+
   test("multiple elements", () => {
     const input =
       `<template id="t01" type="mxt">
@@ -64,7 +64,7 @@ describe("token", () => {
 
     const results = codegenSetup(input);
 
-    logs.push(results); 
+    logs.push(results);
 
     expect(results).toMatchSnapshot();
   })

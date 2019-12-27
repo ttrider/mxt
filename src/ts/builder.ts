@@ -2,6 +2,10 @@ import ts from "typescript";
 import { Element } from "domhandler";
 import { getOuterHTML } from "DomUtils";
 
+export { Parameter } from "./parameter";
+export { TypeNode } from "./type";
+export { ArrowFunction } from "./function";
+
 interface IBuilder {
     build(): ts.Statement
 }
@@ -17,11 +21,63 @@ export declare type StatementItem =
     ;
 
 
-export function isExpression(value: any): value is ts.Expression {
-    return (value && value._expressionBrand !== undefined);
+export function isExpression(node?: ts.Node): node is ts.Expression {
+
+    return node !== undefined && (
+        ts.isArrayLiteralExpression(node)
+        || ts.isObjectLiteralExpression(node)
+        || ts.isPropertyAccessExpression(node)
+        || ts.isElementAccessExpression(node)
+        || ts.isCallExpression(node)
+        || ts.isNewExpression(node)
+        || ts.isTaggedTemplateExpression(node)
+        || ts.isParenthesizedExpression(node)
+        || ts.isFunctionExpression(node)
+        || ts.isDeleteExpression(node)
+        || ts.isTypeOfExpression(node)
+        || ts.isVoidExpression(node)
+        || ts.isAwaitExpression(node)
+        || ts.isPrefixUnaryExpression(node)
+        || ts.isPostfixUnaryExpression(node)
+        || ts.isBinaryExpression(node)
+        || ts.isConditionalExpression(node)
+        || ts.isTemplateExpression(node)
+        || ts.isYieldExpression(node)
+        || ts.isClassExpression(node)
+        || ts.isOmittedExpression(node)
+        || ts.isAsExpression(node)
+        || ts.isNonNullExpression(node)
+        || ts.isJsxExpression(node)
+        || ts.isJSDocTypeExpression(node)
+        || ts.isLiteralExpression(node)
+        || ts.isCallLikeExpression(node)
+        || ts.isCallOrNewExpression(node)
+        || ts.isAssertionExpression(node));
 }
-export function isStatement(value: any): value is ts.Expression {
-    return (value && value._statementBrand !== undefined);
+export function isStatement(node: ts.Node): node is ts.Statement {
+
+    return node !== undefined && (
+        ts.isVariableStatement(node)
+        || ts.isEmptyStatement(node)
+        || ts.isExpressionStatement(node)
+        || ts.isIfStatement(node)
+        || ts.isDoStatement(node)
+        || ts.isWhileStatement(node)
+        || ts.isForStatement(node)
+        || ts.isForInStatement(node)
+        || ts.isForOfStatement(node)
+        || ts.isContinueStatement(node)
+        || ts.isBreakStatement(node)
+        || ts.isBreakOrContinueStatement(node)
+        || ts.isReturnStatement(node)
+        || ts.isWithStatement(node)
+        || ts.isSwitchStatement(node)
+        || ts.isLabeledStatement(node)
+        || ts.isThrowStatement(node)
+        || ts.isTryStatement(node)
+        || ts.isDebuggerStatement(node)
+    );
+
 }
 export function importStatement(from: string, name?: string) {
 
@@ -386,12 +442,3 @@ export function generateCode(node: ts.Node) {
 }
 
 
-
-
-export function ArrowFunction(){
-    const obj = ts.createArrowFunction(undefined, undefined, [], undefined, undefined, ts.createBlock([]));
-
-    obj.
-
-
-}

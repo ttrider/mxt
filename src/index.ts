@@ -54,6 +54,7 @@ interface PluginHandlerMap {
 }
 
 export interface ElementInfo {
+
     name: string,
     attributes: { [name: string]: string },
     content?: string,

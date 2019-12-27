@@ -1,5 +1,5 @@
 import { HandlerContext, ElementInfo, extractExpressions, StyleElementInfo } from "../index";
-import {  Element, DataNode } from "domhandler";
+import { Element, DataNode } from "domhandler";
 import { ComponentFile } from "../component-file";
 
 
@@ -12,9 +12,10 @@ export function parseStyle(context: HandlerContext, componentFile: ComponentFile
     }
 
     const styleElement: StyleElementInfo = {
+        
         name: "style",
         attributes: element.attribs,
-        rules:[]
+        rules: []
     };
 
     if (element.firstChild) {
@@ -30,6 +31,7 @@ export function parseStyle(context: HandlerContext, componentFile: ComponentFile
 function parseLink(context: HandlerContext, componentFile: ComponentFile, element: Element) {
 
     const linkElement: ElementInfo = {
+        
         name: "link",
         attributes: element.attribs,
     };

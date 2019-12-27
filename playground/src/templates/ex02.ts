@@ -7,22 +7,29 @@ export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$elements, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, ["tagid_3"]);
     tagid_3$$element.id = "old";
-    tagid_3$$element.addEventListener("click", tagid_3$$click, {once: true, passive: true, capture: true})
+    tagid_3$$element.addEventListener("click", tagid_3$$click, {once: true, passive: true, capture: true});
     const tagid_3$$autorun = autorun(() => {
         const { color } = data;
-        tagid_3$$element.setAttribute("style", `color: ${color}`)
+        tagid_3$$element.setAttribute("style", `color: ${color}`);
     });
     if (host)
         $$mxt$$appendTo$$($$elements, host);
     return {
-        elements: $$elements,
-        appendTo: (host: Element) => { $$mxt$$appendTo$$($$elements, host); },
-        remove: () => { $$mxt$$remove$$($$elements); },
-        dispose: () => { disposed = true; $$mxt$$remove$$($$elements); $$elements.splice(0, $$elements.length); }
+        get disposed() { return disposed; },
+        get elements() { return $$elements; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$elements, host),
+        remove: () => $$mxt$$remove$$($$elements),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$elements);
+            $$elements.splice(0, $$elements.length);
+            tagid_3$$element.removeEventListener("click", tagid_3$$click);
+            tagid_3$$autorun();
+        }
     };
     function tagid_3$$click(ev: Event) {
         const { doClick } = data;
-        doClick(ev)
+        doClick(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {

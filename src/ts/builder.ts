@@ -299,6 +299,42 @@ export function makeCall(name: string, ...params: any[]) {
     }
 
 }
+
+export function forOf(variable: string) {
+
+    let ofExpression: ts.Expression;
+    const body = statements();
+
+    const context = {
+
+        of: (expression: ts.Expression) => {
+            ofExpression = expression;
+            return context;
+        },
+        body: (...node: Array<StatementItem | StatementItem[]>) => {
+            body.add(...node);
+            return context;
+        },
+
+        build: () => {
+
+            const s =
+                ts.createForOf(undefined,
+                    ts.createVariableDeclarationList(
+                        [ts.createVariableDeclaration(variable)],
+                        ts.NodeFlags.Const),
+                    ofExpression,
+                    ts.createBlock(body.build()));
+
+            return s;
+        }
+    };
+
+    return context;
+}
+
+
+
 export function makeAssignment(target: string, value: any) {
     return ts.createAssignment(ts.createIdentifier(target), getValueExpression(value));
 }
@@ -346,5 +382,16 @@ export function generateCode(node: ts.Node) {
 
     const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed });
     return printer.printNode(ts.EmitHint.Unspecified, node, sf);
+
+}
+
+
+
+
+export function ArrowFunction(){
+    const obj = ts.createArrowFunction(undefined, undefined, [], undefined, undefined, ts.createBlock([]));
+
+    obj.
+
 
 }

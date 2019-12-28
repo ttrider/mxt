@@ -44,11 +44,9 @@ function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        {
-            const element = template.content.getElementById(elementId);
-            if (element) {
-                context[elementId + \\"$$element\\"] = element;
-            }
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + \\"$$element\\"] = element;
         }
     }
     return context;
@@ -113,11 +111,9 @@ function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        {
-            const element = template.content.getElementById(elementId);
-            if (element) {
-                context[elementId + \\"$$element\\"] = element;
-            }
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + \\"$$element\\"] = element;
         }
     }
     return context;
@@ -179,11 +175,9 @@ function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        {
-            const element = template.content.getElementById(elementId);
-            if (element) {
-                context[elementId + \\"$$element\\"] = element;
-            }
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + \\"$$element\\"] = element;
         }
     }
     return context;
@@ -244,11 +238,9 @@ function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        {
-            const element = template.content.getElementById(elementId);
-            if (element) {
-                context[elementId + \\"$$element\\"] = element;
-            }
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + \\"$$element\\"] = element;
         }
     }
     return context;

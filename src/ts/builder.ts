@@ -7,7 +7,8 @@ export { TypeNode } from "./type";
 export { ArrowFunction, GetAccessor, Call, Return } from "./function";
 export { ForOf } from "./for";
 
-export { Literal } from "./literal"
+export { Literal, TemplateLiteral } from "./literal";
+export { Assignment } from "./declare";
 
 interface IBuilder {
     build(): ts.Statement

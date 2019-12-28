@@ -2,7 +2,7 @@ import ts from "typescript";
 
 //export function Identifier()
 
-declare type LiteralArg = boolean | string | number | RegExp | null | undefined | bigint;
+export declare type LiteralArg = boolean | string | number | RegExp | null | undefined | bigint;
 
 export function Literal(value: Array<LiteralArg> | LiteralArg) {
 
@@ -44,4 +44,9 @@ export function Literal(value: Array<LiteralArg> | LiteralArg) {
 
         return ts.createLiteral(ts.createIdentifier(val));
     }
+}
+
+export function TemplateLiteral(content: string) {
+
+    return ts.createIdentifier("`" + content.replace("`", "\`") + "`");
 }

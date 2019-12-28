@@ -3,9 +3,9 @@ const t01$$template = document.createElement("template");
 t01$$template.innerHTML = `
     <div id="tagid_3">Hello MXT!</div>
   `;
-export function t02(data: any, host?: null | undefined | Element) {
+export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
-    const { $$elements, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, ["tagid_3"]);
+    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, ["tagid_3"]);
     tagid_3$$element.id = "old";
     tagid_3$$element.addEventListener("click", tagid_3$$click);
     const tagid_3$$autorun = autorun(() => {
@@ -13,16 +13,16 @@ export function t02(data: any, host?: null | undefined | Element) {
         tagid_3$$element.setAttribute("style", `color: ${color}`);
     });
     if (host)
-        $$mxt$$appendTo$$($$elements, host);
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
         get disposed() { return disposed; },
-        get elements() { return $$elements; },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$elements, host),
-        remove: () => $$mxt$$remove$$($$elements),
+        get elements() { return $$mxt$$elements$$; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {
             disposed = true;
-            $$mxt$$remove$$($$elements);
-            $$elements.splice(0, $$elements.length);
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
             tagid_3$$element.removeEventListener("click", tagid_3$$click);
             tagid_3$$autorun();
         }
@@ -39,13 +39,11 @@ function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]
         elements.push(child);
         child = child.nextElementSibling;
     }
-    const context: any = { $$elements: elements };
+    const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        {
-            const element = template.content.getElementById(elementId);
-            if (element) {
-                context[elementId + "$$element"] = element;
-            }
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + "$$element"] = element;
         }
     }
     return context;

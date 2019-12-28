@@ -1,20 +1,22 @@
 
-import ts from "typescript";
+import ts, { createIdentifier, CallExpression } from "typescript";
 import { isExpression, isStatement } from "./core";
+import { Block } from "./block";
 
 declare type ArrowFunctionBuilder = ts.ArrowFunction & {
     addParameter: (parameter: ts.ParameterDeclaration) => ArrowFunctionBuilder,
     addBody: (...statement: Array<ts.Statement | ts.Expression>) => ArrowFunctionBuilder,
 };
 
-export function ArrowFunction() {
+export function ArrowFunction(...statement: Array<ts.Statement | ts.Expression>) {
+
     let obj = ts.createArrowFunction(
         undefined,
         undefined,
         [],
         undefined,
         undefined,
-        ts.createBlock([]));
+        mergeConciseBody(ts.createBlock([]), ...statement));
 
     return update(obj);
 
@@ -35,6 +37,74 @@ export function ArrowFunction() {
 
         if (parameter.length === 0) return obj;
         return obj = update(ts.updateArrowFunction(obj, obj.modifiers, obj.typeParameters, [...obj.parameters, ...parameter], obj.type, obj.equalsGreaterThanToken, obj.body));
+    }
+}
+
+
+declare type GetAccessorDeclarationBuilder = ts.GetAccessorDeclaration & {
+    addBody: (...statement: Array<ts.Statement | ts.Expression>) => GetAccessorDeclarationBuilder,
+};
+export function GetAccessor(name: string, ...statement: Array<ts.Statement | ts.Expression>) {
+
+    let obj = ts.createGetAccessor(
+        undefined,
+        undefined, name,
+        [], undefined,
+        Block(...statement));
+
+    return update(obj);
+
+    function update(newObj: any): GetAccessorDeclarationBuilder {
+
+        newObj.addBody = addBody;
+
+        return newObj;
+    }
+
+    function addBody(...statement: Array<ts.Statement | ts.Expression>) {
+
+        if (statement.length === 0) return obj;
+        return obj = update(ts.updateGetAccessor(obj, obj.decorators, obj.modifiers, obj.name, obj.parameters, obj.type, Block(obj.body, ...statement)));
+    }
+
+}
+
+export function Return(expression?: ts.Expression|undefined){
+
+    let obj = ts.createReturn(expression);
+
+    return obj;
+}
+
+
+declare type CallBuilder = ts.CallExpression & {
+    addArg: (...args: Array<string | ts.Expression>) => CallBuilder,
+};
+
+export function Call(name: string | ts.Expression, ...args: Array<string | ts.Expression>) {
+
+    if (typeof name === "string") {
+        name = ts.createIdentifier(name);
+    }
+    const a = args.map(item => typeof item === "string" ? ts.createIdentifier(item) : item)
+
+    let obj: CallExpression = ts.createCall(name, [], a);
+
+    return update(obj);
+
+    function update(newObj: any): CallBuilder {
+
+        newObj.addArg = addArg;
+
+        return newObj;
+    }
+
+    function addArg(...args: Array<string | ts.Expression>) {
+
+        const a = args.map(item => typeof item === "string" ? ts.createIdentifier(item) : item)
+
+        if (a.length === 0) return obj;
+        return obj = update(ts.updateCall(obj, obj.expression, obj.typeArguments, [...obj.arguments, ...a]));
     }
 }
 

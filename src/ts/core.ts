@@ -57,3 +57,4 @@ export function isStatement(node: ts.Node): node is ts.Statement {
     );
 
 }
+

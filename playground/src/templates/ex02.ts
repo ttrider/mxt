@@ -3,11 +3,11 @@ const t01$$template = document.createElement("template");
 t01$$template.innerHTML = `
     <div id="tagid_3">Hello MXT!</div>
   `;
-export function t01(data: any, host?: null | undefined | Element) {
+export function t02(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$elements, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, ["tagid_3"]);
     tagid_3$$element.id = "old";
-    tagid_3$$element.addEventListener("click", tagid_3$$click, {once: true, passive: true, capture: true});
+    tagid_3$$element.addEventListener("click", tagid_3$$click);
     const tagid_3$$autorun = autorun(() => {
         const { color } = data;
         tagid_3$$element.setAttribute("style", `color: ${color}`);

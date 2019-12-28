@@ -5,7 +5,7 @@ t01$$template.innerHTML = `
     <div id="tagid_4">Hello MXT!</div>
     <div id="tagid_5">Hello MXT too!</div>
   `;
-export function t01(data: { color: any, title: any }, host?: null | undefined | Element) {
+export function t01(data: any, host?: null | undefined | Element) {
   let disposed = false;
 
   const { $$elements, tagid_4$$element, tagid_5$$element } = $$mxt$$initialize$$(t01$$template, "tagid_4", "tagid_5");

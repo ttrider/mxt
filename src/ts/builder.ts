@@ -4,7 +4,10 @@ import { getOuterHTML } from "DomUtils";
 
 export { Parameter } from "./parameter";
 export { TypeNode } from "./type";
-export { ArrowFunction } from "./function";
+export { ArrowFunction, GetAccessor, Call, Return } from "./function";
+export { ForOf } from "./for";
+
+export { Literal } from "./literal"
 
 interface IBuilder {
     build(): ts.Statement
@@ -336,25 +339,6 @@ export function declareObjectDestruction(...props: Array<{ name: string, as?: st
     }
 }
 
-export function makeCall(name: string, ...params: any[]) {
-
-    const parameters = params.map(getValueExpression);
-
-    const context = {
-        param: (...params: any[]) => {
-            parameters.push(...params.map(getValueExpression));
-        },
-
-        build: buildStatement
-    };
-
-    return context;
-
-    function buildStatement() {
-        return ts.createCall(ts.createIdentifier(name), undefined, parameters);
-    }
-
-}
 
 export function forOf(variable: string) {
 

@@ -8,26 +8,61 @@ t01$$template.innerHTML = \`
     <div id=\\"tagid_5\\">Hello MXT too!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-    const component = document.importNode(t01$$template, true);
-    const tagid_4$$element = component.content.getElementById(\\"tagid_4\\");
-    if (!tagid_4$$element)
-        throw new Error(\\"missing element: @tagid_4\\");
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_4$$element, tagid_5$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_4\\", \\"tagid_5\\"]);
     tagid_4$$element.id = \\"\\";
     const tagid_4$$autorun = autorun(() => {
         const { color } = data;
-        tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`)
+        tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`);
     });
-    const tagid_5$$element = component.content.getElementById(\\"tagid_5\\");
-    if (!tagid_5$$element)
-        throw new Error(\\"missing element: @tagid_5\\");
     tagid_5$$element.id = \\"\\";
     const tagid_5$$autorun = autorun(() => {
         const { title } = data;
-        tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`)
+        tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`);
     });
     if (host)
-        host.appendChild(component.content);
-    return component.content;
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() { return disposed; },
+        get elements() { return $$mxt$$elements$$; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_4$$autorun();
+            tagid_5$$autorun();
+        }
+    };
+}
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
+    }
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        {
+            const element = template.content.getElementById(elementId);
+            if (element) {
+                context[elementId + \\"$$element\\"] = element;
+            }
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
+    }
 }
 "
 `;
@@ -39,18 +74,55 @@ t01$$template.innerHTML = \`
     <div id=\\"tagid_1\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-    const component = document.importNode(t01$$template, true);
-    const tagid_1$$element = component.content.getElementById(\\"tagid_1\\");
-    if (!tagid_1$$element)
-        throw new Error(\\"missing element: @tagid_1\\");
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_1\\"]);
     tagid_1$$element.id = \\"old\\";
     const tagid_1$$autorun = autorun(() => {
         const { color } = data;
-        tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`)
+        tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`);
     });
     if (host)
-        host.appendChild(component.content);
-    return component.content;
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() { return disposed; },
+        get elements() { return $$mxt$$elements$$; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_1$$autorun();
+        }
+    };
+}
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
+    }
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        {
+            const element = template.content.getElementById(elementId);
+            if (element) {
+                context[elementId + \\"$$element\\"] = element;
+            }
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
+    }
 }
 "
 `;
@@ -62,19 +134,56 @@ t01$$template.innerHTML = \`
     <div id=\\"tagid_2\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-    const component = document.importNode(t01$$template, true);
-    const tagid_2$$element = component.content.getElementById(\\"tagid_2\\");
-    if (!tagid_2$$element)
-        throw new Error(\\"missing element: @tagid_2\\");
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_2\\"]);
     tagid_2$$element.id = \\"old\\";
     const tagid_2$$autorun = autorun(() => {
         const { color, title } = data;
-        tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`)
-        tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`)
+        tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`);
+        tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`);
     });
     if (host)
-        host.appendChild(component.content);
-    return component.content;
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() { return disposed; },
+        get elements() { return $$mxt$$elements$$; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_2$$autorun();
+        }
+    };
+}
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
+    }
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        {
+            const element = template.content.getElementById(elementId);
+            if (element) {
+                context[elementId + \\"$$element\\"] = element;
+            }
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
+    }
 }
 "
 `;
@@ -86,18 +195,55 @@ t01$$template.innerHTML = \`
     <div id=\\"tagid_3\\">Hello MXT!</div>
   \`;
 export function t01(data: any, host?: null | undefined | Element) {
-    const component = document.importNode(t01$$template, true);
-    const tagid_3$$element = component.content.getElementById(\\"tagid_3\\");
-    if (!tagid_3$$element)
-        throw new Error(\\"missing element: @tagid_3\\");
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_3\\"]);
     tagid_3$$element.id = \\"old\\";
     const tagid_3$$autorun = autorun(() => {
         const { color, margin } = data;
-        tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`)
+        tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`);
     });
     if (host)
-        host.appendChild(component.content);
-    return component.content;
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() { return disposed; },
+        get elements() { return $$mxt$$elements$$; },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_3$$autorun();
+        }
+    };
+}
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
+    }
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        {
+            const element = template.content.getElementById(elementId);
+            if (element) {
+                context[elementId + \\"$$element\\"] = element;
+            }
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
+    }
 }
 "
 `;

@@ -8,7 +8,7 @@ export { ArrowFunction, GetAccessor, Call, Return } from "./function";
 export { ForOf } from "./for";
 
 export { Literal, TemplateLiteral } from "./literal";
-export { Assignment } from "./declare";
+export { Assignment, Variable, ConstVariable, LetVariable } from "./declare";
 
 interface IBuilder {
     build(): ts.Statement
@@ -239,57 +239,7 @@ export function declareFunction(functionName?: string) {
     }
 }
 
-export function declareVar(name: string, type?: null | string | undefined) {
 
-    let kind: ts.NodeFlags.Const | ts.NodeFlags.Let | undefined = ts.NodeFlags.Const;
-    let initExpression: ts.Expression;
-
-    const context = {
-        get const() { kind = ts.NodeFlags.Const; return context },
-        get let() { kind = ts.NodeFlags.Let; return context },
-        get var() { kind = undefined; return context },
-
-        init: (value: any) => {
-            initExpression = getValueExpression(value);
-            return context;
-        },
-
-        build: buildStatement
-    };
-
-    return context;
-
-    function getType(tp: null | string | undefined) {
-
-        if (tp === undefined) {
-            return ts.createTypeReferenceNode("undefined", undefined)
-        }
-
-        if (tp === null) {
-            return (ts.createNull());
-        }
-
-        return ts.createTypeReferenceNode(tp, undefined);
-    }
-
-    function buildStatement() {
-
-        return ts.createVariableStatement(
-            [],
-            ts.createVariableDeclarationList(
-                [
-                    ts.createVariableDeclaration(
-                        name,
-                        type === undefined ? undefined : getType(type),
-                        initExpression,
-                    ),
-                ],
-                kind
-            ),
-        )
-
-    }
-}
 
 export function declareObjectDestruction(...props: Array<{ name: string, as?: string }>) {
 

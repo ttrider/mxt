@@ -1,9 +1,11 @@
-import { HandlerContext, Eventinfo, ElementInfo, TemplateInfo, DynamicElementInfo, IdInfo } from "..";
+import { HandlerContext, Eventinfo, TemplateInfo, IdInfo } from "..";
 import ts from "typescript";
-import { statements, declareFunction, declareVar, declareObjectDestruction, makeTemplateLiteral, makeAssignment, makeThrow, forOf } from "../ts/builder";
+import { statements, declareFunction, declareObjectDestruction } from "../ts/builder";
 import * as d from "../ts/builder";
+import { getHTML } from "../dom";
 
 import { ComponentFile } from "../component-file";
+
 
 function eventFunctionName(elementId: string, event: Eventinfo) {
     return `${elementId}$$${event.name}`
@@ -33,16 +35,13 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const constTemplateName = names.template(template);
 
-            const templateLiteral = makeTemplateLiteral(template.elements);
-
+            const templateLiteral = d.TemplateLiteral(getHTML(template.elements));
 
             componentFile.initStatements.add(
 
-                declareVar(constTemplateName)
-                    .const
-                    .init(d.Call("document.createElement", d.Literal("template"))),
+                d.ConstVariable(constTemplateName, d.Call("document.createElement", d.Literal("template"))),
 
-                ts.createStatement(makeAssignment(constTemplateName + ".innerHTML", templateLiteral))
+                ts.createStatement(d.Assignment(constTemplateName + ".innerHTML", templateLiteral))
             );
 
             const elements = Object.values(template.dynamicElements);
@@ -56,10 +55,8 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
 
             const funcBody = statements()
-                .add(
-                    declareVar("disposed")
-                        .let
-                        .init(ts.createFalse()))
+
+                .add(d.LetVariable("disposed", false))
 
                 .add(
                     declareObjectDestruction({ name: names.elements }, ...elements.map(e => { return { name: names.elementName(e) } }))
@@ -88,7 +85,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                 if (elementOriginalId !== undefined) {
                     funcBody
-                        .add(ts.createStatement(makeAssignment(`${elementName}.id`, elementOriginalId)));
+                        .add(ts.createStatement(d.Assignment(`${elementName}.id`, elementOriginalId)));
                 }
 
                 for (const event of events) {
@@ -129,17 +126,13 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                 }
 
-
-
                 funcBody.add(
-                    declareVar(elementAutorun)
-                        .const
-                        .init(
-                            d.Call("autorun",
-                                d.ArrowFunction(
-                                    declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")).build(),
-                                    ...tokenSet.map(token => d.Call(elementName + ".setAttribute", d.Literal(token.attributeName), makeTemplateLiteral(token.content))))
-                            )));
+                    d.ConstVariable(elementAutorun, d.Call("autorun",
+                        d.ArrowFunction(
+                            declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")).build(),
+                            ...tokenSet.map(token => d.Call(elementName + ".setAttribute", d.Literal(token.attributeName), d.TemplateLiteral(token.content))))
+                    )))
+                    ;
 
 
 
@@ -165,7 +158,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                             ),
                             ts.createPropertyAssignment(
                                 "dispose",
-                                d.ArrowFunction(makeAssignment("disposed", true),
+                                d.ArrowFunction(d.Assignment("disposed", true),
                                     d.Call(names.remove, names.elements),
                                     d.Call(names.elements + ".splice", d.Literal(0), names.elements + ".length"),
                                     ...eventListeners.map(e => d.Call(`${e.elementName}.removeEventListener`, d.Literal(e.eventName), e.elementEventFunction)),
@@ -199,33 +192,29 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
             declareFunction(names.initialize)
                 .param("template", "HTMLTemplateElement")
                 .param("elementIds", "string[]")
-                .body(declareVar("elements", "Element[]").const.init(ts.createArrayLiteral()))
-                .body(declareVar("child").let.init(ts.createIdentifier("template.content.firstElementChild")))
+                .body(d.ConstVariable("elements", d.Literal([]), "Element[]"))
+                .body(d.LetVariable("child", ts.createIdentifier("template.content.firstElementChild")))
                 .body(ts.createWhile(ts.createIdentifier("child"),
                     ts.createBlock(
                         [
                             ts.createStatement(d.Call("elements.push", "child")),
-                            ts.createStatement(makeAssignment("child", ts.createIdentifier("child.nextElementSibling")))
+                            ts.createStatement(d.Assignment("child", ts.createIdentifier("child.nextElementSibling")))
                         ]
                     )
                 ))
-                .body(declareVar("context", "any").const.init(
-                    ts.createObjectLiteral(
-                        [ts.createPropertyAssignment(names.elements, ts.createIdentifier("elements"))]
-                    )
-                ))
+                .body(d.ConstVariable("context", ts.createObjectLiteral(
+                    [ts.createPropertyAssignment(names.elements, ts.createIdentifier("elements"))]
+                ), "any"))
 
-                .body(forOf("elementId").of(ts.createIdentifier("elementIds"))
-                    .body(ts.createBlock(
-                        [
-                            declareVar("element").const.init(d.Call("template.content.getElementById", "elementId")).build(),
-                            ts.createIf(ts.createIdentifier("element"),
-                                ts.createBlock([
-                                    ts.createStatement(makeAssignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
-                        ]
-                    ))
+                .body(d.ForOf("elementId", "elementIds",
+                    d.ConstVariable("element", d.Call("template.content.getElementById", "elementId")),
+                    ts.createIf(ts.createIdentifier("element"),
+                        ts.createBlock([
+                            ts.createStatement(d.Assignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
+
                 )
-                .body(ts.createReturn(ts.createIdentifier("context")))
+                )
+                .body(d.Return(ts.createIdentifier("context")))
                 .build())
         .add(
             declareFunction(names.appendTo)
@@ -235,7 +224,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
         .add(
             declareFunction(names.remove)
                 .param("elements", "Element[]")
-                .body(forOf("el").of(ts.createIdentifier("elements")).body(ts.createStatement(d.Call("el.remove")))).build())
+                .body(d.ForOf("el", "elements", d.Call("el.remove"))).build())
 
 
     return true;

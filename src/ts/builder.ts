@@ -8,7 +8,19 @@ export { ArrowFunction, GetAccessor, Call, Return } from "./function";
 export { ForOf } from "./for";
 
 export { Literal, TemplateLiteral } from "./literal";
-export { Assignment, Variable, ConstVariable, LetVariable } from "./declare";
+export {
+    ArrayBinding,
+    ArrayBindingVariable,
+    Assignment,
+    ConstObjectBindingVariable,
+    ConstVariable,
+    LetObjectBindingVariable,
+    LetVariable,
+    ObjectBinding,
+    ObjectBindingVariable,
+    PropertyAssignment,
+    Variable,
+} from "./declare";
 
 interface IBuilder {
     build(): ts.Statement

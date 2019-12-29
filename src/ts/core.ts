@@ -30,7 +30,9 @@ export function isExpression(node?: ts.Node): node is ts.Expression {
         || ts.isLiteralExpression(node)
         || ts.isCallLikeExpression(node)
         || ts.isCallOrNewExpression(node)
-        || ts.isAssertionExpression(node));
+        || ts.isAssertionExpression(node)
+        || ts.isArrowFunction(node)
+    );
 }
 export function isStatement(node: ts.Node): node is ts.Statement {
 

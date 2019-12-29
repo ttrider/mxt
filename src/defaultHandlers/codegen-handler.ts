@@ -1,6 +1,6 @@
 import { HandlerContext, Eventinfo, TemplateInfo, IdInfo } from "..";
 import ts from "typescript";
-import { statements, declareFunction, declareObjectDestruction } from "../ts/builder";
+import { statements, declareFunction } from "../ts/builder";
 import * as d from "../ts/builder";
 import { getHTML } from "../dom";
 
@@ -57,12 +57,10 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
             const funcBody = statements()
 
                 .add(d.LetVariable("disposed", false))
-
-                .add(
-                    declareObjectDestruction({ name: names.elements }, ...elements.map(e => { return { name: names.elementName(e) } }))
-                        .const
-                        .init(d.Call(names.initialize, constTemplateName, d.Literal(elements.map(e => e.id)))
-                        ))
+                .add(d.ConstObjectBindingVariable(
+                    [names.elements,
+                    ...elements.map(e => names.elementName(e))],
+                    d.Call(names.initialize, constTemplateName, d.Literal(elements.map(e => e.id)))));
 
             for (const element of elements) {
 
@@ -81,7 +79,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     }
                     return e;
                 }, {}))
-                    .map(er => { return { name: er }; });
 
                 if (elementOriginalId !== undefined) {
                     funcBody
@@ -95,7 +92,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     const df = declareFunction(elementEventFunction)
                         .param("ev", "Event");
                     if (event.handler) {
-                        df.body(declareObjectDestruction({ name: event.handler }).const.init(ts.createIdentifier("data")))
+                        df.body(d.ConstObjectBindingVariable([event.handler], ts.createIdentifier("data")))
                             .body(d.Call(event.handler, "ev"))
                     }
 
@@ -129,13 +126,9 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                 funcBody.add(
                     d.ConstVariable(elementAutorun, d.Call("autorun",
                         d.ArrowFunction(
-                            declareObjectDestruction(...externalReferences).const.init(ts.createIdentifier("data")).build(),
+                            d.ConstObjectBindingVariable(externalReferences, ts.createIdentifier("data")),
                             ...tokenSet.map(token => d.Call(elementName + ".setAttribute", d.Literal(token.attributeName), d.TemplateLiteral(token.content))))
-                    )))
-                    ;
-
-
-
+                    )));
             }
 
 
@@ -146,18 +139,15 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                         [
                             d.GetAccessor("disposed", d.Return(ts.createIdentifier("disposed"))),
                             d.GetAccessor("elements", d.Return(ts.createIdentifier(names.elements))),
-                            ts.createPropertyAssignment(
-                                "appendTo",
+                            ts.createPropertyAssignment("appendTo",
                                 d.ArrowFunction()
                                     .addParameter(d.Parameter("host", "Element"))
                                     .addBody(d.Call(names.appendTo, names.elements, "host"))
                             ),
-                            ts.createPropertyAssignment(
-                                "remove",
+                            d.PropertyAssignment("remove",
                                 d.ArrowFunction(d.Call(names.remove, names.elements))
                             ),
-                            ts.createPropertyAssignment(
-                                "dispose",
+                            d.PropertyAssignment("dispose",
                                 d.ArrowFunction(d.Assignment("disposed", true),
                                     d.Call(names.remove, names.elements),
                                     d.Call(names.elements + ".splice", d.Literal(0), names.elements + ".length"),
@@ -203,7 +193,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     )
                 ))
                 .body(d.ConstVariable("context", ts.createObjectLiteral(
-                    [ts.createPropertyAssignment(names.elements, ts.createIdentifier("elements"))]
+                    [d.PropertyAssignment(names.elements, ts.createIdentifier("elements"))]
                 ), "any"))
 
                 .body(d.ForOf("elementId", "elementIds",

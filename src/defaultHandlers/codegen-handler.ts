@@ -1,6 +1,6 @@
 import { HandlerContext, Eventinfo, TemplateInfo, IdInfo } from "..";
 import ts from "typescript";
-import * as d from "../ts/builder";
+import * as d from "../ts";
 import { getHTML } from "../dom";
 
 import { ComponentFile } from "../component-file";

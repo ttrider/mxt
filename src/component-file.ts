@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import ts from "typescript";
-import * as d from "./ts/builder";
+import * as d from "./ts";
 
 const readFile = util.promisify(fs.readFile);
 

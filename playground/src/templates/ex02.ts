@@ -1,35 +1,39 @@
 import { autorun } from "mobx";
-const t01$$template = document.createElement("template");
-t01$$template.innerHTML = `
-    <div id="tagid_3">Hello MXT!</div>
-  `;
-export function t01(data: any, host?: null | undefined | Element) {
+const ex02$$template = document.createElement("template");
+ex02$$template.innerHTML = `
+    <div id="tagid_2">Hello MXT!</div>
+`;
+export function ex02(data: any, host?: null | undefined | Element) {
     let disposed = false;
-    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, ["tagid_3"]);
-    tagid_3$$element.id = "old";
-    tagid_3$$element.addEventListener("click", tagid_3$$click);
-    const tagid_3$$autorun = autorun(() => {
+    const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(ex02$$template, ["tagid_2"]);
+    tagid_2$$element.id = "";
+    tagid_2$$element.addEventListener("click", tagid_2$$click);
+    const tagid_2$$autorun = autorun(() => {
         const { color } = data;
-        tagid_3$$element.setAttribute("style", `color: ${color}`);
+        tagid_2$$element.setAttribute("style", `color: ${color}`);
     });
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
-        get disposed() { return disposed; },
-        get elements() { return $$mxt$$elements$$; },
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
         appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
         remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {
             disposed = true;
             $$mxt$$remove$$($$mxt$$elements$$);
             $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_3$$element.removeEventListener("click", tagid_3$$click);
-            tagid_3$$autorun();
+            tagid_2$$element.removeEventListener("click", tagid_2$$click);
+            tagid_2$$autorun();
         }
     };
-    function tagid_3$$click(ev: Event) {
-        const { doClick } = data;
-        doClick(ev);
+    function tagid_2$$click(ev: Event) {
+        const { colorClick } = data;
+        colorClick(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {

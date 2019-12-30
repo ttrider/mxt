@@ -1,51 +1,79 @@
 import { autorun } from "mobx";
+const ex03$$template = document.createElement("template");
+ex03$$template.innerHTML = `
 
-const template = `<div id="t01id01">Hello MXT!</div>`;
+    <style>
+    
+        div {
+            background: greenyellow;
+            cursor: pointer;
+            box-sizing: content-box;
+        }
 
-// initialize 
-const te = document.createElement("template");
-te.innerHTML = template;
+        div:hover{
+            border: dashed salmon 1px;
+        }
+        
+    </style>
 
-const ts001 = document.createElement("style");
-ts001.innerHTML = `.ts001 div {background: greenyellow;cursor: pointer;box-sizing: content-box;}
-    .ts001 div:hover{border: dashed salmon 1px;}`;
-document.head.appendChild(ts001);
-
-export function init(data: any, host?: Element | null) {
-
-    const el = document.importNode(te, true);
-
-    const d01 = el.content.getElementById("t01id01");
-    if (!d01) throw new Error("missing element");
-    d01.removeAttribute("id");
-
-
-    // set or update style
-    autorun(() => {
-        d01.setAttribute("style", `color: ${data.color}`);
+    <div id="tagid_3">Hello MXT!</div>
+`;
+export function ex03(data: any, host?: null | undefined | Element) {
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(ex03$$template, ["tagid_3"]);
+    tagid_3$$element.id = "";
+    tagid_3$$element.addEventListener("click", tagid_3$$click);
+    const tagid_3$$autorun = autorun(() => {
+        const { color } = data;
+        tagid_3$$element.setAttribute("style", `color: ${color}`);
     });
-
-    // wiring in the click
-    d01.addEventListener("click", (ev) => {
-
-        data.colorClick();
-
-
-    });
-
-    const wrapper = document.createElement("span");
-    wrapper.setAttribute("class", "ts001");
-    wrapper.appendChild(el.content);
-
-    if (host) {
-        host.appendChild(wrapper);
+    if (host)
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_3$$element.removeEventListener("click", tagid_3$$click);
+            tagid_3$$autorun();
+        }
+    };
+    function tagid_3$$click(ev: Event) {
+        const { colorClick } = data;
+        colorClick(ev);
     }
-
-    return wrapper;
 }
-
-export const a = init;
-
-
-
-
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
+    }
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + "$$element"] = element;
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
+    }
+}

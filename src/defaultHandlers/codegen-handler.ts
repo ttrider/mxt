@@ -4,6 +4,7 @@ import * as d from "../ts";
 import { getHTML } from "../dom";
 
 import { ComponentFile } from "../component-file";
+import { generateCode } from "../ts";
 
 
 function eventFunctionName(elementId: string, event: Eventinfo) {
@@ -157,11 +158,14 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             funcBody.add(...addlFuncBody);
 
-            componentFile.componentStatements.add(
-                d.FunctionDeclaration(template.id, ...funcBody)
-                    .addParameter(d.Parameter("data", "any"), d.Parameter("host", null, undefined, "Element").optional)
-                    .export
-            );
+            const funcDeclaration = d.FunctionDeclaration(template.id, ...funcBody)
+                .addParameter(d.Parameter("data", "any"), d.Parameter("host", null, undefined, "Element").optional)
+                .export;
+
+            // const code = generateCode(funcDeclaration);
+            // console.info(code);
+
+            componentFile.componentStatements.add(funcDeclaration);
 
         }
     }

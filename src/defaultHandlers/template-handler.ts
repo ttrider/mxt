@@ -93,15 +93,17 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
                 const attrValue = tagItem.attribs[attrName];
 
+                // detect event handlers first
+
+                if (processMxtAttribute(attrName, attrValue)) {
+                    continue;
+                }
+
                 // detect and process tokens in attributes
                 if (attrValue) {
                     processAttributeTokens(attrName, attrValue);
                 }
 
-                // detect event handlers
-                if (attrName.startsWith("mxt.")) {
-                    processMxtAttribute(attrName, attrValue);
-                }
             }
         }
         for (const tokenizedAttribute of tokenizedAttributes) {
@@ -114,6 +116,9 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
         function processMxtAttribute(attrName: string, attrValue: string) {
 
+            if (!attrName.startsWith("mxt.")) {
+                return false;
+            }
             // Events
             // mxt.<event>
             // mxt.<event>.preventDefault 
@@ -125,6 +130,12 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 return;
             }
 
+            // event name can come in multiple forms:
+            // "name"
+            // "${name}"
+            // "${(e)=>{ some code here}"
+            // this is not allowed:
+            // "sometext${token}someother text"
             const eventInfo = elementInfo?.events[mxtParts[1]];
             if (eventInfo) {
                 // we have an event!

@@ -1,11 +1,11 @@
 import { observable, computed } from "mobx"
 
-import { t01 } from "./templates/ex01";
-import { t02 } from "./templates/ex02";
-import { init as ex03_init } from "./templates/ex03";
+import { ex01 } from "./templates/ex01";
+import { ex02 } from "./templates/ex02";
+import { ex03 } from "./templates/ex03";
 
 class TestData {
-    @observable r = 128;
+    @observable r = 200;
     @observable g = 18;
     @observable b = 228;
 
@@ -15,7 +15,7 @@ class TestData {
 
     colorClick() {
 
-        this.r += 10;
+        this.r += 20;
         this.g += 15;
         this.b += 35;
 
@@ -45,7 +45,7 @@ if (document) {
     const root_ex01 = document.getElementById("ex01");
     if (root_ex01) {
 
-        data.el = t01(data);
+        data.el = ex01(data);
 
         data.el.appendTo(root_ex01);
 
@@ -54,11 +54,11 @@ if (document) {
     // example 02
     const root_ex02 = document.getElementById("ex02");
     if (root_ex02) {
-        t02(data).appendTo(root_ex02);
+        ex02(data).appendTo(root_ex02);
     }
 
     // example 03
     const root_ex03 = document.getElementById("ex03");
-    ex03_init(data, root_ex03);
+    ex03(data, root_ex03);
 }
 

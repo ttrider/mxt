@@ -102,8 +102,6 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 if (attrName.startsWith("mxt.")) {
                     processMxtAttribute(attrName, attrValue);
                 }
-
-
             }
         }
         for (const tokenizedAttribute of tokenizedAttributes) {
@@ -130,15 +128,21 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
             const eventInfo = elementInfo?.events[mxtParts[1]];
             if (eventInfo) {
                 // we have an event!
+                processMxtEvent(mxtParts);
+            }
+
+
+
+
+            function processMxtEvent(mxtParts: string[]) {
+
                 const name = mxtParts[1];
 
                 const de = getDynamicElement(tagItem);
 
                 let ev = de.events[name];
                 if (!ev) {
-                    ev = de.events[name] = {
-                        name,
-                    }
+                    ev = de.events[name] = { name }
                 };
 
                 if (mxtParts.length === 3) {
@@ -177,7 +181,6 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 }
             }
         }
-
 
         function processAttributeTokens(attrName: string, attrValue: string) {
             const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;

@@ -616,3 +616,27 @@ Processing the set of template files generates the following set of
 
 
     postParse       // AST post Processing
+
+
+
+
+
+    <mxt.if>
+      </mxt.if>
+
+      <mxt.switch condition="">
+        <mxt.case value="" when="">
+        </mxt.case>
+        <mxt.case value="" when="">
+        </mxt.case>
+        <mxt.default>
+        </mxt.default>
+      </mxt.switch>
+
+      <foreach/>
+
+      <if/>
+
+      <ifnot/>
+
+      <mxt.import component="" as="" from ""/>

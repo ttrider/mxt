@@ -103,8 +103,6 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                         df.addBody(d.Call("ev.stopImmediatePropagation"))
                     }
 
-                    const dfdf = d.generateCode(df);
-
                     addlFuncBody.add(df);
 
                     const options: string[] = [];

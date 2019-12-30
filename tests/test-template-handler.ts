@@ -57,7 +57,7 @@ describe("events", () => {
     expect(clickEvent.handler).toBe("doClick");
     expect(clickEvent.preventDefault).toBeTruthy();
     expect(clickEvent.stopPropagation).toBeFalsy();
-    expect(clickEvent.stopImmediatePropagation).toBeFalsy(); 
+    expect(clickEvent.stopImmediatePropagation).toBeFalsy();
   });
 
 
@@ -78,7 +78,7 @@ describe("events", () => {
     expect(clickEvent.handler).toBe("doClick");
     expect(clickEvent.preventDefault).toBeTruthy();
     expect(clickEvent.stopPropagation).toBeTruthy();
-    expect(clickEvent.stopImmediatePropagation).toBeFalsy(); 
+    expect(clickEvent.stopImmediatePropagation).toBeFalsy();
   });
 
   test("click event no handler", () => {
@@ -123,4 +123,48 @@ describe("events", () => {
     expect(dynamicElement).not.toBeUndefined();
     expect(dynamicElement.events).not.toHaveProperty("someevent");
   });
+
+});
+
+describe("mxt.if", () => {
+
+  test("simple if", () => {
+
+    const input =
+      `<template id="t01" type="mxt">
+      <mxt.if condition="${true}">
+        <div>YES!</div>
+      </mxt-if>
+    </template>`;
+
+    const { template, dynamicElement } = templateTestSetup(input, "t01");
+
+  });
+});
+
+describe("mxt.switch", () => {
+
+  test("simple switch", () => {
+
+    const input =
+      `<template id="t01" type="mxt">
+      <mxt.if condition="${true}">
+        <div>YES!</div>
+      </mxt-if>
+    </template>`;
+
+    const { template, dynamicElement } = templateTestSetup(input, "t01");
+
+  });
+
+
+  // <mxt.switch condition="">
+  //       <mxt.case value="" when="">
+  //       </mxt.case>
+  //       <mxt.case value="" when="">
+  //       </mxt.case>
+  //       <mxt.default>
+  //       </mxt.default>
+  //     </mxt.switch>
+
 });

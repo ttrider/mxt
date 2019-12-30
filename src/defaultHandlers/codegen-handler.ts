@@ -91,7 +91,11 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     if (event.handler) {
                         df.addBody(
                             d.ConstObjectBindingVariable([event.handler], ts.createIdentifier("data")),
-                            d.Call(event.handler, "ev"))
+
+                            // bind function
+
+
+                            d.Call(d.Call(`${event.handler}.bind`, "data"), ts.createIdentifier("ev")));
                     }
 
                     if (event.preventDefault) {

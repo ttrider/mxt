@@ -36,7 +36,7 @@ export function t01(data: any, host?: null | undefined | Element) {
     };
     function tagid_1$$click(ev: Event) {
         const { doClick } = data;
-        doClick(ev);
+        doClick.bind(data)(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
@@ -104,7 +104,7 @@ export function t01(data: any, host?: null | undefined | Element) {
     };
     function tagid_2$$click(ev: Event) {
         const { doClick } = data;
-        doClick(ev);
+        doClick.bind(data)(ev);
         ev.preventDefault();
         ev.stopPropagation();
         ev.stopImmediatePropagation();
@@ -175,7 +175,7 @@ export function t01(data: any, host?: null | undefined | Element) {
     };
     function tagid_3$$click(ev: Event) {
         const { doClick } = data;
-        doClick(ev);
+        doClick.bind(data)(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {

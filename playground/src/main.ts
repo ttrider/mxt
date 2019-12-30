@@ -46,7 +46,6 @@ if (document) {
     if (root_ex01) {
 
         data.el = ex01(data);
-
         data.el.appendTo(root_ex01);
 
     }

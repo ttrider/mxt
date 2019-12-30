@@ -72,10 +72,10 @@ export function ex02(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(ex02$$template, [\\"tagid_2\\"]);
     tagid_2$$element.id = \\"\\";
+    tagid_2$$element.addEventListener(\\"click\\", tagid_2$$click);
     const tagid_2$$autorun = autorun(() => {
-        const { color, colorClick } = data;
+        const { color } = data;
         tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-        tagid_2$$element.setAttribute(\\"click\\", \`\${colorClick}\`);
     });
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
@@ -92,9 +92,14 @@ export function ex02(data: any, host?: null | undefined | Element) {
             disposed = true;
             $$mxt$$remove$$($$mxt$$elements$$);
             $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_2$$element.removeEventListener(\\"click\\", tagid_2$$click);
             tagid_2$$autorun();
         }
     };
+    function tagid_2$$click(ev: Event) {
+        const { colorClick } = data;
+        colorClick.bind(data)(ev);
+    }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
     const elements: Element[] = [];
@@ -150,10 +155,10 @@ export function ex03(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(ex03$$template, [\\"tagid_3\\"]);
     tagid_3$$element.id = \\"\\";
+    tagid_3$$element.addEventListener(\\"click\\", tagid_3$$click);
     const tagid_3$$autorun = autorun(() => {
-        const { color, colorClick } = data;
+        const { color } = data;
         tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-        tagid_3$$element.setAttribute(\\"click\\", \`\${colorClick}\`);
     });
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
@@ -170,9 +175,14 @@ export function ex03(data: any, host?: null | undefined | Element) {
             disposed = true;
             $$mxt$$remove$$($$mxt$$elements$$);
             $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_3$$element.removeEventListener(\\"click\\", tagid_3$$click);
             tagid_3$$autorun();
         }
     };
+    function tagid_3$$click(ev: Event) {
+        const { colorClick } = data;
+        colorClick.bind(data)(ev);
+    }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
     const elements: Element[] = [];

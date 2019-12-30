@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import util from "util";
 import ts from "typescript";
-import { statements, importStatement } from "./ts/builder";
+import * as d from "./ts/builder";
 
 const readFile = util.promisify(fs.readFile);
 
@@ -21,11 +21,11 @@ export class ComponentFile {
     templates: { [id: string]: TemplateInfo } = {};
     errors: Error[] = [];
 
-    initStatements = statements();
-    componentStatements = statements();
+    initStatements = d.StatementList();
+    componentStatements = d.StatementList();
 
     importStatements: {
-        [from: string]: { variable: string, as: string }[]
+        [from: string]: { name: string, as: string }[]
     } = {};
 
     private constructor(content: string, filePath: string) {
@@ -35,14 +35,14 @@ export class ComponentFile {
         this.filePath = filePath;
     }
 
-    addImport(identifier: string | { variable: string, as: string } | Array<string | { variable: string, as: string }>, from: string) {
+    addImport(identifier: string | { name: string, as: string } | Array<string | { name: string, as: string }>, from: string) {
 
         if (!Array.isArray(identifier)) {
             identifier = [identifier];
         }
-        const definitions = identifier.map<{ variable: string, as: string }>(i => {
+        const definitions = identifier.map<{ name: string, as: string }>(i => {
             if (typeof i === "string") {
-                i = { variable: i, as: i };
+                i = { name: i, as: i };
             }
             return i;
         });
@@ -61,15 +61,13 @@ export class ComponentFile {
                 fromSet.push(definition);
             } else {
 
-                if (definition.variable != existing.variable) {
-                    throw new Error(`redefinition of the import: '${existing.variable}' by ${definition.variable}`);
+                if (definition.name != existing.name) {
+                    throw new Error(`redefinition of the import: '${existing.name}' by ${definition.name}`);
                 }
             }
         }
         return this;
     }
-
-
 
     getImportStatements() {
 
@@ -78,25 +76,21 @@ export class ComponentFile {
         for (const from in this.importStatements) {
             if (this.importStatements.hasOwnProperty(from)) {
 
-                const ii = importStatement(from);
+                const ii = d.ImportStatement(this.importStatements[from], from);
 
-                for (const i of this.importStatements[from]) {
-                    ii.importMember(i.variable, i.as);
-                }
-
-                items.push(ii.build());
+                items.push(ii);
             }
         }
         return items;
     }
 
     getStatements() {
-        const s = 
-        [
-            ...this.getImportStatements(),
-            ...this.initStatements.build(),
-            ...this.componentStatements.build()
-        ] as ts.Statement[];
+        const s =
+            [
+                ...this.getImportStatements(),
+                ...this.initStatements,
+                ...this.componentStatements
+            ] as ts.Statement[];
         return s;
     }
 

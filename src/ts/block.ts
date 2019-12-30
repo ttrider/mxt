@@ -1,29 +1,28 @@
 import ts, { isBlock } from "typescript";
 import { isExpression } from "./core";
 
-
 export declare type BlockArgs = Array<ts.Statement | ts.Expression | ts.Block | undefined>;
-declare type BlockBuilder = ts.Block & {
-    add: (...statement: Array<ts.Statement | ts.Expression>) => BlockBuilder
-};
 
-export function Block(...statement: BlockArgs) {
 
-    let obj = ts.createBlock(convert(statement));
+declare type StatementListBuilder = ts.Statement[] & {
+    add: (...statement: BlockArgs) => StatementListBuilder;
+    toBlock: (multiLine?: boolean | undefined) => ts.Block;
 
-    return update(obj);
+}
+export function StatementList(...statement: BlockArgs) {
 
-    function update(newObj: any): BlockBuilder {
+    const statements: StatementListBuilder = convert(statement) as StatementListBuilder;
 
-        newObj.add = add;
-        return newObj;
+    statements.toBlock = (multiLine?: boolean | undefined) => {
+        return ts.createBlock(statements, multiLine);
     }
 
-    function add(...statement: BlockArgs) {
-
-        if (statement.length === 0) return obj;
-        return obj = update(ts.updateBlock(obj, convert([obj, ...statement])));
+    statements.add = (...statement: BlockArgs) => {
+        statements.push(...convert(statement));
+        return statements;
     }
+
+    return statements;
 
     function convert(statements: BlockArgs) {
 
@@ -41,4 +40,19 @@ export function Block(...statement: BlockArgs) {
             }, []
         );
     }
+}
+
+
+declare type BlockBuilder = ts.Block & {
+    add: (...statement: BlockArgs) => BlockBuilder
+};
+
+export function Block(...statement: BlockArgs) {
+
+    let obj = ts.createBlock([], true) as BlockBuilder;
+    (obj as any).statements = StatementList(...statement);
+    obj.add = (obj as any).statements.add;
+
+    return obj;
+
 }

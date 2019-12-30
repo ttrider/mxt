@@ -1,4 +1,4 @@
-import ts, { updateArrayBindingPattern } from "typescript";
+import ts from "typescript";
 import { LiteralArg, Literal } from "./literal";
 import { isExpression } from "./core";
 import { TypeNodeArgument, TypeNode } from "./type";
@@ -67,8 +67,6 @@ export function LetVariable(name: string, value?: Array<LiteralArg> | LiteralArg
         return newObj;
     }
 }
-
-
 
 declare type VariableBuilder = ts.VariableStatement & {
 
@@ -227,7 +225,6 @@ export function ArrayBindingVariable(bindings: Array<ts.BindingElement | string>
     return update(obj);
 
     function update(newObj: any): VariableBuilder {
-
 
         Object.defineProperty(newObj, "const", {
             get() {

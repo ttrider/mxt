@@ -60,3 +60,54 @@ export function isStatement(node: ts.Node): node is ts.Statement {
 
 }
 
+
+export declare type NodeArrayBuilder<T extends ts.Node> = ts.NodeArray<T> & {
+    add: (...values: T[]) => NodeArrayBuilder<T>
+};
+
+export function fromNodeArray<T extends ts.Node>(nodeArray: ts.NodeArray<T> | undefined, ...values: T[]) {
+
+    const list = (nodeArray === undefined ? [] : nodeArray) as NodeArrayBuilder<T>;
+
+    list.add = (...values: T[]) => {
+        (list as any).push(...values);
+        return list;
+    }
+
+    return list;
+}
+
+
+declare type ModifiersKeywords = ts.SyntaxKind.AbstractKeyword |
+    ts.SyntaxKind.AsyncKeyword |
+    ts.SyntaxKind.ConstKeyword |
+    ts.SyntaxKind.DeclareKeyword |
+    ts.SyntaxKind.DefaultKeyword |
+    ts.SyntaxKind.ExportKeyword |
+    ts.SyntaxKind.PublicKeyword |
+    ts.SyntaxKind.PrivateKeyword |
+    ts.SyntaxKind.ProtectedKeyword |
+    ts.SyntaxKind.ReadonlyKeyword |
+    ts.SyntaxKind.StaticKeyword;
+
+export declare type ModifiersBuilder = ts.ModifiersArray & {
+    add: (...values: ModifiersKeywords[]) => ModifiersBuilder
+}
+export function modifiersBuilder(host: { modifiers?: ts.ModifiersArray | undefined }) {
+
+    const modifiers = (host.modifiers === undefined ? [] : host.modifiers) as ModifiersBuilder;
+
+    modifiers.add = (...values: ModifiersKeywords[]) => {
+
+        for (const kind of values) {
+            if (!modifiers.find(t => t.kind === kind)) {
+                (modifiers as any).push(ts.createModifier(kind));
+            }
+        }
+        return modifiers;
+    }
+
+    return modifiers;
+
+}
+//modifiers: ts.ModifiersArray | undefined

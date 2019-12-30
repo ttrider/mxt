@@ -1,6 +1,5 @@
 import { HandlerContext, Eventinfo, TemplateInfo, IdInfo } from "..";
 import ts from "typescript";
-import { statements, declareFunction } from "../ts/builder";
 import * as d from "../ts/builder";
 import { getHTML } from "../dom";
 
@@ -48,13 +47,10 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const eventListeners: Array<{ elementName: string, eventName: string, elementEventFunction: string }> = [];
 
+            const addlFuncBody = d.StatementList();
 
 
-
-            const addlFuncBody = statements();
-
-
-            const funcBody = statements()
+            const funcBody = d.StatementList()
 
                 .add(d.LetVariable("disposed", false))
                 .add(d.ConstObjectBindingVariable(
@@ -89,24 +85,27 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
                     const elementEventFunction = eventFunctionName(element.id, event);
 
-                    const df = declareFunction(elementEventFunction)
-                        .param("ev", "Event");
+                    let df = d.FunctionDeclaration(elementEventFunction)
+                        .addParameter(d.Parameter("ev", "Event"))
                     if (event.handler) {
-                        df.body(d.ConstObjectBindingVariable([event.handler], ts.createIdentifier("data")))
-                            .body(d.Call(event.handler, "ev"))
+                        df.addBody(
+                            d.ConstObjectBindingVariable([event.handler], ts.createIdentifier("data")),
+                            d.Call(event.handler, "ev"))
                     }
 
                     if (event.preventDefault) {
-                        df.body(d.Call("ev.preventDefault"))
+                        df.addBody(d.Call("ev.preventDefault"))
                     }
                     if (event.stopPropagation) {
-                        df.body(d.Call("ev.stopPropagation"))
+                        df.addBody(d.Call("ev.stopPropagation"))
                     }
                     if (event.stopImmediatePropagation) {
-                        df.body(d.Call("ev.stopImmediatePropagation"))
+                        df.addBody(d.Call("ev.stopImmediatePropagation"))
                     }
 
-                    addlFuncBody.add(df.build());
+                    const dfdf = d.generateCode(df);
+
+                    addlFuncBody.add(df);
 
                     const options: string[] = [];
                     if (event.once) { options.push("once: true") }
@@ -158,20 +157,13 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     )
                 ));
 
-
-
-
-
-
-            funcBody.add(addlFuncBody.build());
+            funcBody.add(...addlFuncBody);
 
             componentFile.componentStatements.add(
-                declareFunction(template.id)
-                    .param("data")
-                    .param("host", null, undefined, "Element")
-                    .body(funcBody.build())
+                d.FunctionDeclaration(template.id, ...funcBody)
+                    .addParameter(d.Parameter("data", "any"), d.Parameter("host", null, undefined, "Element").optional)
                     .export
-                    .build());
+            );
 
         }
     }
@@ -179,42 +171,44 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
     componentFile.componentStatements
         .add(
-            declareFunction(names.initialize)
-                .param("template", "HTMLTemplateElement")
-                .param("elementIds", "string[]")
-                .body(d.ConstVariable("elements", d.Literal([]), "Element[]"))
-                .body(d.LetVariable("child", ts.createIdentifier("template.content.firstElementChild")))
-                .body(ts.createWhile(ts.createIdentifier("child"),
-                    ts.createBlock(
-                        [
-                            ts.createStatement(d.Call("elements.push", "child")),
-                            ts.createStatement(d.Assignment("child", ts.createIdentifier("child.nextElementSibling")))
-                        ]
+            d.FunctionDeclaration(names.initialize)
+                .addParameter(d.Parameter("template", "HTMLTemplateElement"))
+                .addParameter(d.Parameter("elementIds", "string[]"))
+                .addBody(
+                    d.ConstVariable("elements", d.Literal([]), "Element[]")
+                    , (d.LetVariable("child", ts.createIdentifier("template.content.firstElementChild")))
+                    , (ts.createWhile(ts.createIdentifier("child"),
+                        ts.createBlock(
+                            [
+                                ts.createStatement(d.Call("elements.push", "child")),
+                                ts.createStatement(d.Assignment("child", ts.createIdentifier("child.nextElementSibling")))
+                            ]
+                        )
+                    ))
+                    , (d.ConstVariable("context", ts.createObjectLiteral(
+                        [d.PropertyAssignment(names.elements, ts.createIdentifier("elements"))]
+                    ), "any"))
+
+                    , (d.ForOf("elementId", "elementIds",
+                        d.ConstVariable("element", d.Call("template.content.getElementById", "elementId")),
+                        ts.createIf(ts.createIdentifier("element"),
+                            ts.createBlock([
+                                ts.createStatement(d.Assignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
+
                     )
+                    )
+                    , (d.Return(ts.createIdentifier("context")))
+                )
+        )
+        .add(
+            d.FunctionDeclaration(names.appendTo, d.ForOf("el", "elements", d.Call("host.appendChild", "el")))
+                .addParameter(d.Parameter("elements", "Element[]"))
+                .addParameter(d.Parameter("host", "Element")
                 ))
-                .body(d.ConstVariable("context", ts.createObjectLiteral(
-                    [d.PropertyAssignment(names.elements, ts.createIdentifier("elements"))]
-                ), "any"))
-
-                .body(d.ForOf("elementId", "elementIds",
-                    d.ConstVariable("element", d.Call("template.content.getElementById", "elementId")),
-                    ts.createIf(ts.createIdentifier("element"),
-                        ts.createBlock([
-                            ts.createStatement(d.Assignment("context[elementId + \"$$element\"]", ts.createIdentifier("element")))]))
-
-                )
-                )
-                .body(d.Return(ts.createIdentifier("context")))
-                .build())
         .add(
-            declareFunction(names.appendTo)
-                .param("elements", "Element[]")
-                .param("host", "Element")
-                .body(d.ForOf("el", "elements", d.Call("host.appendChild", "el"))).build())
-        .add(
-            declareFunction(names.remove)
-                .param("elements", "Element[]")
-                .body(d.ForOf("el", "elements", d.Call("el.remove"))).build())
+            d.FunctionDeclaration(names.remove, d.ForOf("el", "elements", d.Call("el.remove")))
+                .addParameter(d.Parameter("elements", "Element[]"))
+        )
 
 
     return true;

@@ -1,5 +1,5 @@
 import ts from "typescript";
-import { TypeNodeArgument,TypeNode } from "./type";
+import { TypeNodeArgument, TypeNode } from "./type";
 
 interface ParameterDeclarationBuilder extends ts.ParameterDeclaration {
     setType: (...types: Array<TypeNodeArgument>) => ParameterDeclarationBuilder;
@@ -49,3 +49,24 @@ export function Parameter(name: string, ...types: Array<TypeNodeArgument>) {
         return obj = update(ts.updateParameter(obj, obj.decorators, obj.modifiers, obj.dotDotDotToken, obj.name, obj.questionToken, TypeNode(...types), obj.initializer));
     }
 }
+
+
+
+
+// declare type ParameterDeclarationListBuilder = ts.ParameterDeclaration[] & {
+//     add: (...parameter: ts.ParameterDeclaration[]) => ParameterDeclarationListBuilder;
+// }
+// export function ParameterDeclarationList(...parameter: ts.ParameterDeclaration[]): ts.ParameterDeclaration[] {
+
+//     const list = [...parameter] as unknown as ParameterDeclarationListBuilder;
+
+//     list.add = (...parameter: ts.ParameterDeclaration[]) => {
+//         list.push(...parameter);
+//         return list;
+//     }
+
+
+//     return list;
+// }
+
+

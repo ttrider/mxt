@@ -23,8 +23,12 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
-        get disposed() { return disposed; },
-        get elements() { return $$mxt$$elements$$; },
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
         appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
         remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {
@@ -82,8 +86,12 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
-        get disposed() { return disposed; },
-        get elements() { return $$mxt$$elements$$; },
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
         appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
         remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {
@@ -141,8 +149,12 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
-        get disposed() { return disposed; },
-        get elements() { return $$mxt$$elements$$; },
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
         appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
         remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {
@@ -199,8 +211,12 @@ export function t01(data: any, host?: null | undefined | Element) {
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
     return {
-        get disposed() { return disposed; },
-        get elements() { return $$mxt$$elements$$; },
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
         appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
         remove: () => $$mxt$$remove$$($$mxt$$elements$$),
         dispose: () => {

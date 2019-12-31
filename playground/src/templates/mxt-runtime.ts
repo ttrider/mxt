@@ -7,11 +7,20 @@ export declare type SegmentInsertPoint = {
 
 export declare type SegmentInsertPointProvider = () => SegmentInsertPoint;
 
+export declare type SegmentComponent = {
+
+    insertPoint: () => SegmentInsertPoint;
+    insert: (host?: SegmentInsertPoint | undefined) => void;
+    remove: () => void;
+    dispose: () => void;
+};
+
 export interface SegmentParameters {
     segmentInsertPoint: SegmentInsertPointProvider,
     elements: {
         [id: string]: ElementParameters
     }
+
 }
 
 export interface ElementParameters {
@@ -53,6 +62,38 @@ export interface EventContext {
 
 }
 
+export interface SegmentContainer {
+    containerInsertPoint: SegmentInsertPointProvider,
+    segments: SegmentComponent[],
+    visible: boolean,
+    disposed: boolean,
+    attached: boolean,
+}
+
+export function initializeSegmentContainer(
+    parentInsertPoint: SegmentInsertPointProvider,
+    ...segments: Array<(insertPoint: SegmentInsertPointProvider) => SegmentComponent>) {
+
+    const container: SegmentContainer = {
+        containerInsertPoint: parentInsertPoint,
+        segments: [],
+        visible: true,
+        disposed: false,
+        attached: false,
+    }
+
+    let currentPoint = parentInsertPoint;
+
+    for (const segment of segments) {
+
+        const newSegment = segment(currentPoint);
+
+        container.segments.push(newSegment);
+        currentPoint = newSegment.insertPoint;
+    }
+
+    return container;
+}
 
 export function initializeSegmentContext(template: HTMLTemplateElement, parameters: SegmentParameters) {
 
@@ -103,7 +144,7 @@ export function initializeSegmentContext(template: HTMLTemplateElement, paramete
     return context;
 }
 
-export function getInsertPoint(context: SegmentContext): SegmentInsertPoint {
+export function getSegmentInsertPoint(context: SegmentContext): SegmentInsertPoint {
 
     if (context.attached && context.visible) {
         if (context.elements.length > 0) {
@@ -116,10 +157,11 @@ export function getInsertPoint(context: SegmentContext): SegmentInsertPoint {
     return context.segmentInsertPoint();
 }
 
-export function insertSegment(context: SegmentContext) {
+
+export function insertSegment(context: SegmentContext, insertPoint?: SegmentInsertPoint) {
     if (context.disposed) return;
 
-    let { element, position } = context.segmentInsertPoint();
+    let { element, position } = insertPoint ?? context.segmentInsertPoint();
 
 
     if (element && context.elements.length > 0) {
@@ -145,6 +187,31 @@ export function removeSegment(context: SegmentContext) {
         el.remove();
     }
     context.attached = false;
+}
+
+export function getContainerInsertPoint(context: SegmentContainer): SegmentInsertPoint {
+
+    if (context.segments.length > 0) {
+        context.segments[context.segments.length - 1].insertPoint();
+    }
+    return context.containerInsertPoint();
+
+}
+
+export function removeContainer(context: SegmentContainer) {
+    for (const segment of context.segments) {
+        segment.remove();
+    }
+}
+
+export function disposeContainer(context: SegmentContainer) {
+    removeContainer(context);
+}
+
+export function updateContainerInsertPoint(context: SegmentContainer, ip?: SegmentInsertPoint) {
+    if (ip) {
+        context.containerInsertPoint = () => ip;
+    }
 }
 
 export function disposeSegment(context: SegmentContext) {

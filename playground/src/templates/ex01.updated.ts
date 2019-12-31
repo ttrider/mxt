@@ -51,7 +51,7 @@ export function ex01(data: any, host?: null | undefined | Element) {
 
         return {
             insertPoint: () => {
-                return mxt.getInsertPoint($$mxt$$);
+                return mxt.getSegmentInsertPoint($$mxt$$);
             },
             insert: () => mxt.insertSegment($$mxt$$),
             remove: () => mxt.removeSegment($$mxt$$),

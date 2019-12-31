@@ -16,48 +16,37 @@ ex03r02$$template.innerHTML = `
     <hr/>
     <div id="tagid_3">After IF</div>
 `;
+
 export function if01(data: any, host?: null | undefined | Element) {
 
-    let disposed = false;
+    const $$mxt$$: mxt.SegmentContainer = mxt.initializeSegmentContainer(
 
-    const segment00 = s00(data, () => { return { element: host, position: "beforeend" } }); //static
-    const segment01 = s01(data, segment00.insertPoint); //conditional
-    const segment02 = s02(data, segment01.insertPoint); //static
+        () => { return { element: host, position: "beforeend" } },
+        (point: mxt.SegmentInsertPointProvider) => s00(data, point),
+        (point: mxt.SegmentInsertPointProvider) => s01(data, point),
+        (point: mxt.SegmentInsertPointProvider) => s02(data, point)
+    );
 
     if (host) {
-        insert();
+        insertComponent();
     }
     return {
-        get disposed() {
-            return disposed;
-        },
-        appendTo: (element: Element) => {
-            host = element;
-            insert();
-        },
-        remove: () => {
-            segment00.remove();
-            segment01.remove();
-            segment02.remove();
-        },
-        dispose: () => {
-            disposed = true;
 
-            segment00.dispose();
-            segment01.dispose();
-            segment02.dispose();
-        }
+        insertPoint: () => mxt.getContainerInsertPoint($$mxt$$),
+        insert: (host?: mxt.SegmentInsertPoint) => insertComponent(host),
+        remove: () => mxt.removeContainer($$mxt$$),
+        dispose: () => mxt.disposeContainer($$mxt$$)
+
+
     };
 
-    function insert() {
+    function insertComponent(element?: mxt.SegmentInsertPoint) {
 
-        const { showElement } = data;
+        mxt.updateContainerInsertPoint($$mxt$$, element);
+
+        const [segment00, segment01, segment02] = $$mxt$$.segments;
+
         segment00.insert();
-        if (showElement) {
-            segment01.insert();
-        } else {
-            segment01.remove();
-        }
         segment02.insert();
 
         autorun(() => {
@@ -71,7 +60,7 @@ export function if01(data: any, host?: null | undefined | Element) {
 
     }
 
-    function s00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider) {
+    function s00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
 
         const $$mxt$$: mxt.SegmentContext = mxt.initializeSegmentContext(ex03r00$$template, {
 
@@ -91,6 +80,9 @@ export function if01(data: any, host?: null | undefined | Element) {
                             handler: function (ev: Event) {
                                 const { toggleClick } = data;
                                 toggleClick.bind(data)(ev);
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                ev.stopImmediatePropagation();
                             },
                             options: { capture: true }
                         }
@@ -100,15 +92,13 @@ export function if01(data: any, host?: null | undefined | Element) {
         });
 
         return {
-            insertPoint: () => {
-                return mxt.getInsertPoint($$mxt$$);
-            },
-            insert: () => mxt.insertSegment($$mxt$$),
+            insertPoint: () => mxt.getSegmentInsertPoint($$mxt$$),
+            insert: (host?: mxt.SegmentInsertPoint) => mxt.insertSegment($$mxt$$, host),
             remove: () => mxt.removeSegment($$mxt$$),
             dispose: () => mxt.disposeSegment($$mxt$$)
         };
     }
-    function s01(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider) {
+    function s01(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
 
         const $$mxt$$: mxt.SegmentContext = mxt.initializeSegmentContext(ex03r01$$template, {
 
@@ -128,6 +118,9 @@ export function if01(data: any, host?: null | undefined | Element) {
                             handler: function (ev: Event) {
                                 const { colorClick } = data;
                                 colorClick.bind(data)(ev);
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                ev.stopImmediatePropagation();
                             },
                             options: { capture: true }
                         }
@@ -137,15 +130,13 @@ export function if01(data: any, host?: null | undefined | Element) {
         });
 
         return {
-            insertPoint: () => {
-                return mxt.getInsertPoint($$mxt$$);
-            },
-            insert: () => mxt.insertSegment($$mxt$$),
+            insertPoint: () => mxt.getSegmentInsertPoint($$mxt$$),
+            insert: (host?: mxt.SegmentInsertPoint) => mxt.insertSegment($$mxt$$, host),
             remove: () => mxt.removeSegment($$mxt$$),
             dispose: () => mxt.disposeSegment($$mxt$$)
         };
     }
-    function s02(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider) {
+    function s02(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
 
         const $$mxt$$: mxt.SegmentContext = mxt.initializeSegmentContext(ex03r02$$template, {
 
@@ -165,6 +156,9 @@ export function if01(data: any, host?: null | undefined | Element) {
                             handler: function (ev: Event) {
                                 const { colorClick } = data;
                                 colorClick.bind(data)(ev);
+                                ev.preventDefault();
+                                ev.stopPropagation();
+                                ev.stopImmediatePropagation();
                             },
                             options: { capture: true }
                         }
@@ -175,9 +169,9 @@ export function if01(data: any, host?: null | undefined | Element) {
 
         return {
             insertPoint: () => {
-                return mxt.getInsertPoint($$mxt$$);
+                return mxt.getSegmentInsertPoint($$mxt$$);
             },
-            insert: () => mxt.insertSegment($$mxt$$),
+            insert: (host?: mxt.SegmentInsertPoint) => mxt.insertSegment($$mxt$$, host),
             remove: () => mxt.removeSegment($$mxt$$),
             dispose: () => mxt.disposeSegment($$mxt$$)
         };

@@ -32,7 +32,7 @@ export function ex01(data: any, host?: null | undefined | Element) {
 
     function s00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider) {
 
-        const $$mxt$$: mxt.SegmentContext = mxt.initializeSegmentContext(ex01$$template, {
+        return mxt.initializeSegmentContext(ex01$$template, {
 
             segmentInsertPoint,
 
@@ -48,14 +48,5 @@ export function ex01(data: any, host?: null | undefined | Element) {
                 }
             }
         });
-
-        return {
-            insertPoint: () => {
-                return mxt.getSegmentInsertPoint($$mxt$$);
-            },
-            insert: () => mxt.insertSegment($$mxt$$),
-            remove: () => mxt.removeSegment($$mxt$$),
-            dispose: () => mxt.disposeSegment($$mxt$$)
-        };
     }
 }

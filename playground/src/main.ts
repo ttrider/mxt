@@ -4,10 +4,12 @@ import { ex01 } from "./templates/ex01";
 import { ex02 } from "./templates/ex02";
 import { ex03 } from "./templates/ex03";
 import { if01 } from "./templates/if01";
+import { if02 } from "./templates/if02";
 
 class TestData {
 
     @observable showElement = true;
+    @observable showSubElement = true;
     @observable r = 200;
     @observable g = 18;
     @observable b = 228;
@@ -32,15 +34,17 @@ class TestData {
         this.g = this.g % 255;
         this.b = this.b % 255;
 
-        if (this.el) {
-            //this.el.dispose();
+        // if (this.el) {
+        //     //this.el.dispose();
 
-            const root_mv = document.getElementById("mv");
-            if (root_mv) {
+        //     const root_mv = document.getElementById("mv");
+        //     if (root_mv) {
 
-                this.el.appendTo(root_mv);
-            }
-        }
+        //         this.el.appendTo(root_mv);
+        //     }
+        // }
+
+        this.showSubElement = !this.showSubElement;
     }
 
     el: any
@@ -54,7 +58,7 @@ if (document) {
     const root_ex01 = document.getElementById("ex01");
     if (root_ex01) {
         data.el = ex01(data);
-        data.el.appendTo(root_ex01);
+        data.el.insert(root_ex01);
     }
 
     // example 02
@@ -70,5 +74,9 @@ if (document) {
     // example 04
     const root_if01 = document.getElementById("if01");
     if01(data, root_if01);
+
+    // example 05
+    const root_if02 = document.getElementById("if02");
+    if02(data, root_if02);
 }
 

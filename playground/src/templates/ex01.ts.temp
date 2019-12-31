@@ -1,31 +1,15 @@
 import { autorun } from "mobx";
-const ex03$$template = document.createElement("template");
-ex03$$template.innerHTML = `
-
-    <style>
-    
-        div {
-            background: greenyellow;
-            cursor: pointer;
-            box-sizing: content-box;
-        }
-
-        div:hover{
-            border: dashed salmon 1px;
-        }
-        
-    </style>
-
-    <div id="tagid_3">Hello MXT!</div>
+const ex01$$template = document.createElement("template");
+ex01$$template.innerHTML = `
+    <div id="tagid_1">Hello MXT!</div>
 `;
-export function ex03(data: any, host?: null | undefined | Element) {
+export function ex01(data: any, host?: null | undefined | Element) {
     let disposed = false;
-    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(ex03$$template, ["tagid_3"]);
-    tagid_3$$element.id = "";
-    tagid_3$$element.addEventListener("click", tagid_3$$click);
-    const tagid_3$$autorun = autorun(() => {
+    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(ex01$$template, ["tagid_1"]);
+    tagid_1$$element.id = "";
+    const tagid_1$$autorun = autorun(() => {
         const { color } = data;
-        tagid_3$$element.setAttribute("style", `color: ${color}`);
+        tagid_1$$element.setAttribute("style", `color: ${color}`);
     });
     if (host)
         $$mxt$$appendTo$$($$mxt$$elements$$, host);
@@ -42,28 +26,20 @@ export function ex03(data: any, host?: null | undefined | Element) {
             disposed = true;
             $$mxt$$remove$$($$mxt$$elements$$);
             $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_3$$element.removeEventListener("click", tagid_3$$click);
-            tagid_3$$autorun();
+            tagid_1$$autorun();
         }
     };
-    function tagid_3$$click(ev: Event) {
-        const { colorClick } = data;
-        colorClick.bind(data)(ev);
-    }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-
-    const content = template.content.cloneNode(true) as DocumentFragment;
-
     const elements: Element[] = [];
-    let child = content.firstElementChild;
+    let child = template.content.firstElementChild;
     while (child) {
         elements.push(child);
         child = child.nextElementSibling;
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        const element = content.getElementById(elementId);
+        const element = template.content.getElementById(elementId);
         if (element) {
             context[elementId + "$$element"] = element;
         }

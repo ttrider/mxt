@@ -92,16 +92,17 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
             if (tagItem.attribs.hasOwnProperty(attrName)) {
 
                 const attrValue = tagItem.attribs[attrName];
+                const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
 
                 // detect event handlers first
 
-                if (processMxtAttribute(attrName, attrValue)) {
+                if (processMxtAttribute(attrName, attrValue, attrState)) {
                     continue;
                 }
 
                 // detect and process tokens in attributes
                 if (attrValue) {
-                    processAttributeTokens(attrName, attrValue);
+                    processAttributeTokens(attrName, attrValue, attrState);
                 }
 
             }
@@ -114,7 +115,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
             processItem(template, item as Element);
         }
 
-        function processMxtAttribute(attrName: string, attrValue: string) {
+        function processMxtAttribute(attrName: string, attrValue: string, attrState: AttributeTokenInfo) {
 
             if (!attrName.startsWith("mxt.")) {
                 return false;
@@ -130,12 +131,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                 return;
             }
 
-            // event name can come in multiple forms:
-            // "name"
-            // "${name}"
-            // "${(e)=>{ some code here}"
-            // this is not allowed:
-            // "sometext${token}someother text"
+
             const eventInfo = elementInfo?.events[mxtParts[1]];
             if (eventInfo) {
                 // we have an event!
@@ -187,14 +183,27 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
                             break;
                     }
                 } else {
-                    ev.handler = attrValue;
+
+                    // event name can come in multiple forms:
+                    // "name"
+                    // "${name}"
+                    // "${(e)=>{ some code here}"
+                    // this is not allowed:
+                    // "sometext${token}someother text"
+
+                    if (attrState.hasTokens && attrState.externalReferences.length > 0) {
+                        // TODO: we need a lot of error checking here
+                        ev.handler = attrState.externalReferences[0];
+                    } else {
+                        ev.handler = attrValue;
+                    }
+
                     tokenizedAttributes.push(attrName);
                 }
             }
         }
 
-        function processAttributeTokens(attrName: string, attrValue: string) {
-            const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
+        function processAttributeTokens(attrName: string, attrValue: string, attrState: AttributeTokenInfo) {
             if (attrState.hasTokens) {
 
                 const el = getDynamicElement(tagItem);

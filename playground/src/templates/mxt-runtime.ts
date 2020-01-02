@@ -146,7 +146,8 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
 
     };
 
-    let child = template.content.firstElementChild;
+    const content = template.content.cloneNode(true) as DocumentFragment;
+    let child = content.firstElementChild;
     while (child) {
         context.elements.push(child);
         child = child.nextElementSibling;
@@ -157,7 +158,7 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
     for (const elementId in elements) {
         if (elements.hasOwnProperty(elementId)) {
             const elementParameters = elements[elementId];
-            const element = template.content.getElementById(elementId);
+            const element = content.getElementById(elementId);
             if (element) {
 
                 const activeElement: ElementContext = {
@@ -281,3 +282,19 @@ interface EventContext {
 }
 
 // #endregion
+
+
+// #region helper methods
+
+export function createTemplateSet(...contents: string[]) {
+
+    return contents.map(
+        content=>{
+            const template = document.createElement("template");
+            template.innerHTML = content;
+            return template;
+        }
+    )
+}
+
+// #endregion helper methods

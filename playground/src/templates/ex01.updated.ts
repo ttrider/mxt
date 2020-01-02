@@ -30,9 +30,9 @@ export function ex01(data: any, host?: null | undefined | Element) {
         }
     };
 
-    function s00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider) {
+    function s00(data: any, segmentInsertPoint: mxt.InsertPointProvider) {
 
-        return mxt.initializeSegmentContext(ex01$$template, {
+        return mxt.createSegment(ex01$$template, {
 
             segmentInsertPoint,
 

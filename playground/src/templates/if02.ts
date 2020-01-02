@@ -31,99 +31,58 @@ export function if02(data: any, host?: null | undefined | Element) {
 
     return component;
 
-    function c00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider, parentContext?: mxt.SegmentContainer): mxt.SegmentComponent {
+    function c00(data: any, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
 
-        const $$mxt$$: mxt.SegmentContainer = mxt.initializeSegmentContainer(
+        return mxt.createContainer(
             parentContext,
             segmentInsertPoint,
-            (point: mxt.SegmentInsertPointProvider) => s00(data, point),
-            (point: mxt.SegmentInsertPointProvider, parent) => c01(data, point, parent),
-            (point: mxt.SegmentInsertPointProvider) => s02(data, point)
-        );
+            [
+                (point: mxt.InsertPointProvider) => s00(data, point),
+                (point: mxt.InsertPointProvider, parent) => c01(data, point, parent),
+                (point: mxt.InsertPointProvider) => s02(data, point)
+            ],
+            (segments) => {
+                segments[0].insert();
+                segments[2].insert();
+            },
+            (segments) => {
 
-        if (host) {
-            insertComponent();
-        }
-        return {
-
-            insertPoint: () => mxt.getContainerInsertPoint($$mxt$$),
-            insert: (host?: mxt.SegmentInsertPoint | Element) => insertComponent(host),
-            remove: () => mxt.removeContainer($$mxt$$),
-            dispose: () => mxt.disposeContainer($$mxt$$)
-
-
-        };
-
-        function insertComponent(element?: mxt.SegmentInsertPoint | Element) {
-            $$mxt$$.attached = true;
-            mxt.updateContainerInsertPoint($$mxt$$, element);
-
-            const [segment00, segment01, segment02] = $$mxt$$.segments;
-
-            segment00.insert();
-            segment02.insert();
-
-            autorun(() => {
                 const { showElement } = data;
                 if (showElement) {
-                    segment01.insert();
+                    segments[1].insert();
                 } else {
-                    segment01.remove();
+                    segments[1].remove();
                 }
-            });
-
-        }
-    }
-
-
-    function c01(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider, parentContext?: mxt.SegmentContainer): mxt.SegmentComponent {
-
-        const $$mxt$$: mxt.SegmentContainer = mxt.initializeSegmentContainer(
-            parentContext,
-            segmentInsertPoint,
-            (point: mxt.SegmentInsertPointProvider) => s03(data, point),
-            (point: mxt.SegmentInsertPointProvider) => s04(data, point)
+            },
         );
 
-        return {
-
-            insertPoint: () => mxt.getContainerInsertPoint($$mxt$$),
-            insert: (host?: mxt.SegmentInsertPoint) => insertComponent(host),
-            remove: () => mxt.removeContainer($$mxt$$),
-            dispose: () => mxt.disposeContainer($$mxt$$)
-
-
-        };
-
-        function insertComponent(element?: mxt.SegmentInsertPoint) {
-            $$mxt$$.attached = true;
-
-            mxt.updateContainerInsertPoint($$mxt$$, element);
-
-            const [segment03, segment04] = $$mxt$$.segments;
-
-            segment03.insert();
-
-            autorun(() => {
-                if ($$mxt$$.parentContext !== undefined) {
-                    if (!$$mxt$$.parentContext.attached) {
-                        return;
-                    }
-                }
-                const { showSubElement } = data;
-                if (showSubElement) {
-                    segment04.insert();
-                } else {
-                    segment04.remove();
-                }
-            });
-
-        }
     }
 
-    function s00(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
+    function c01(data: any, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
 
-        return (mxt.initializeSegmentContext(ex03r00$$template, {
+        return mxt.createContainer(
+            parentContext,
+            segmentInsertPoint,
+
+            [(point: mxt.InsertPointProvider) => s03(data, point),
+            (point: mxt.InsertPointProvider) => s04(data, point)],
+            (segments) => {
+                segments[0].insert();
+            },
+            (segments) => {
+                const { showSubElement } = data;
+                if (showSubElement) {
+                    segments[1].insert();
+                } else {
+                    segments[1].remove();
+                }
+            }
+        );
+    }
+
+    function s00(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+
+        return (mxt.createSegment(ex03r00$$template, {
 
             segmentInsertPoint,
 
@@ -152,9 +111,9 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s02(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
+    function s02(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
-        return (mxt.initializeSegmentContext(ex03r02$$template, {
+        return (mxt.createSegment(ex03r02$$template, {
 
             segmentInsertPoint,
 
@@ -183,9 +142,9 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s03(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
+    function s03(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
-        return (mxt.initializeSegmentContext(ex03r01$$template, {
+        return (mxt.createSegment(ex03r01$$template, {
 
             segmentInsertPoint,
 
@@ -214,9 +173,9 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s04(data: any, segmentInsertPoint: mxt.SegmentInsertPointProvider): mxt.SegmentComponent {
+    function s04(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
-        return (mxt.initializeSegmentContext(ex03r03$$template, {
+        return (mxt.createSegment(ex03r03$$template, {
 
             segmentInsertPoint,
 

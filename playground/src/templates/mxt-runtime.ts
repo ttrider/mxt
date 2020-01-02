@@ -1,86 +1,54 @@
 import { IReactionDisposer, autorun } from "mobx";
 
-export declare type SegmentInsertPoint = {
+export declare type ComponentInsertPosition = {
     element: Element | undefined | null,
     position: InsertPosition
 };
 
-export declare type SegmentInsertPointProvider = () => SegmentInsertPoint;
+export declare type InsertPointProvider = () => ComponentInsertPosition;
 
-export declare type SegmentComponent = {
+export declare type Component = {
 
-    insertPoint: () => SegmentInsertPoint;
-    insert: (host?: SegmentInsertPoint | undefined) => void;
+    insertPoint: () => ComponentInsertPosition;
+    insert: (host?: ComponentInsertPosition | undefined) => void;
     remove: () => void;
     dispose: () => void;
 };
 
-export interface SegmentParameters {
-    segmentInsertPoint: SegmentInsertPointProvider,
-    elements: {
-        [id: string]: ElementParameters
+
+function isInsertPoint(item: ComponentInsertPosition | Element): item is ComponentInsertPosition {
+    return ((item as any).nodeName === undefined);
+}
+function getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentInsertPosition | Element) {
+
+    if (insertPoint === undefined) return undefined;
+
+    if (typeof insertPoint === "function") {
+        return insertPoint;
     }
 
+    if (isInsertPoint(insertPoint)) {
+        return () => insertPoint;
+    }
+
+    return () => { return { element: insertPoint, position: "beforeend" } as ComponentInsertPosition }
 }
 
-export interface ElementParameters {
-    id: string,
-    originalId: string,
+// #region container
 
-    attributeSetter?: (element: Element) => void,
+export function createContainer(
+    parentContext: ContainerContext | undefined,
+    parentInsertPoint: InsertPointProvider,
+    segments: Array<(insertPoint: InsertPointProvider, parentContext?: ContainerContext) => Component>,
+    unconditionalInsert: (segments: Component[]) => void,
+    conditionalInsert: (segments: Component[]) => void) {
 
-    events: EventContext[]
-}
-
-
-export interface SegmentContext {
-
-    visible: boolean;
-    disposed: boolean;
-    attached: boolean;
-
-    readonly segmentInsertPoint: SegmentInsertPointProvider;
-
-    readonly elements: Element[];
-
-    readonly activeElements: { [id: string]: ElementContext }
-}
-
-
-export interface ElementContext {
-
-    element: Element;
-    autorun?: IReactionDisposer;
-    events: EventContext[];
-}
-
-export interface EventContext {
-
-    name: string,
-    handler: (ev: Event) => void,
-    options?: AddEventListenerOptions
-
-}
-
-export interface SegmentContainer {
-    parentContext?: SegmentContainer,
-    containerInsertPoint: SegmentInsertPointProvider,
-    segments: SegmentComponent[],
-    visible: boolean,
-    disposed: boolean,
-    attached: boolean,
-}
-
-export function initializeSegmentContainer(
-    parentContext: SegmentContainer | undefined,
-    parentInsertPoint: SegmentInsertPointProvider,
-    ...segments: Array<(insertPoint: SegmentInsertPointProvider, parentContext?: SegmentContainer) => SegmentComponent>) {
-
-    const container: SegmentContainer = {
+    const context: ContainerContext = {
         parentContext,
+        unconditionalInsert,
+        conditionalInsert,
         containerInsertPoint: parentInsertPoint,
         segments: [],
-        visible: true,
         disposed: false,
         attached: false,
     }
@@ -89,20 +57,88 @@ export function initializeSegmentContainer(
 
     for (const segment of segments) {
 
-        const newSegment = segment(currentPoint, container);
+        const newSegment = segment(currentPoint, context);
 
-        container.segments.push(newSegment);
+        context.segments.push(newSegment);
         currentPoint = newSegment.insertPoint;
     }
 
-    return container;
+
+    return {
+        insertPoint: () => getContainerInsertPoint(context),
+        insert: (insertPosition?: ComponentInsertPosition | Element) => insertComponent(insertPosition),
+        remove: () => removeContainer(context),
+        dispose: () => disposeContainer(context)
+    };
+
+    function getContainerInsertPoint(context: ContainerContext): ComponentInsertPosition {
+
+        if (context.segments.length > 0) {
+            context.segments[context.segments.length - 1].insertPoint();
+        }
+        return context.containerInsertPoint();
+    }
+
+    function insertComponent(insertPosition?: ComponentInsertPosition | Element) {
+        context.attached = true;
+
+        const provider = getInsertPointProvider(insertPosition);
+        if (provider) {
+            context.containerInsertPoint = provider;
+        }
+
+        if (context.unconditionalInsert) {
+            context.unconditionalInsert(context.segments);
+        }
+
+        if (context.conditionalInsert) {
+            context.autorun = autorun(() => {
+                context.conditionalInsert(context.segments);
+            });
+        }
+
+    }
+
+    function removeContainer(context: ContainerContext) {
+        if (context.autorun) {
+            context.autorun();
+        }
+        for (const segment of context.segments) {
+            segment.remove();
+        }
+        context.attached = false;
+    }
+
+    function disposeContainer(context: ContainerContext) {
+        removeContainer(context);
+
+        context.segments.splice(0, context.segments.length - 1);
+
+        context.disposed = true;
+    }
 }
 
-export function initializeSegmentContext(template: HTMLTemplateElement, parameters: SegmentParameters) {
+
+export interface ContainerContext {
+    parentContext?: ContainerContext,
+    unconditionalInsert?: (segments: Component[]) => void,
+    conditionalInsert: (segments: Component[]) => void,
+    autorun?: IReactionDisposer,
+    containerInsertPoint: InsertPointProvider,
+    segments: Component[],
+    disposed: boolean,
+    attached: boolean,
+}
+
+// #endregion container
+
+
+// #region segments
+
+export function createSegment(template: HTMLTemplateElement, parameters: SegmentParameters) {
 
     const context: SegmentContext = {
         segmentInsertPoint: parameters.segmentInsertPoint,
-        visible: true,
         disposed: false,
         attached: false,
         elements: [],
@@ -144,128 +180,104 @@ export function initializeSegmentContext(template: HTMLTemplateElement, paramete
         }
     }
 
-    return createComponent(context);
-}
-
-export function getSegmentInsertPoint(context: SegmentContext): SegmentInsertPoint {
-
-    if (context.attached && context.visible) {
-        if (context.elements.length > 0) {
-            return {
-                element: context.elements[context.elements.length - 1],
-                position: "afterend"
-            }
-        }
-    }
-    return context.segmentInsertPoint();
-}
-
-export function isInsertPoint(item: SegmentInsertPoint | Element): item is SegmentInsertPoint {
-    return ((item as any).nodeName === undefined);
-}
-
-export function getInsertPointProvider(insertPoint?: SegmentInsertPointProvider | SegmentInsertPoint | Element) {
-
-    if (insertPoint === undefined) return undefined;
-
-    if (typeof insertPoint === "function") {
-        return insertPoint;
-    }
-
-    if (isInsertPoint(insertPoint)) {
-        return () => insertPoint;
-    }
-
-    return () => { return { element: insertPoint, position: "beforeend" } as SegmentInsertPoint }
-}
-
-export function insertSegment(context: SegmentContext, insertPoint?: SegmentInsertPoint | Element) {
-    if (context.disposed) return;
-
-    let { element, position } = (getInsertPointProvider(insertPoint) ?? context.segmentInsertPoint)();
-
-
-    if (element && context.elements.length > 0) {
-        let inserted = element.insertAdjacentElement(position, context.elements[0]);
-        if (inserted) {
-            element = inserted;
-            position = "afterend";
-
-            for (let index = 1; index < context.elements.length; index++) {
-                const el = context.elements[index];
-                inserted = element.insertAdjacentElement(position, el);
-                if (inserted) {
-                    element = inserted
-                }
-            }
-        }
-    }
-    context.attached = true;
-}
-
-export function removeSegment(context: SegmentContext) {
-    for (const el of context.elements) {
-        el.remove();
-    }
-    context.attached = false;
-}
-
-export function getContainerInsertPoint(context: SegmentContainer): SegmentInsertPoint {
-
-    if (context.segments.length > 0) {
-        context.segments[context.segments.length - 1].insertPoint();
-    }
-    return context.containerInsertPoint();
-
-}
-
-export function removeContainer(context: SegmentContainer) {
-    for (const segment of context.segments) {
-        segment.remove();
-    }
-    context.attached = false;
-}
-
-export function disposeContainer(context: SegmentContainer) {
-    removeContainer(context);
-}
-
-export function updateContainerInsertPoint(context: SegmentContainer, ip?: SegmentInsertPoint | Element) {
-
-    const provider = getInsertPointProvider(ip);
-
-    if (provider) {
-        context.containerInsertPoint = provider;
-    }
-}
-
-export function disposeSegment(context: SegmentContext) {
-
-    removeSegment(context);
-    context.elements.splice(0, context.elements.length - 1);
-
-    for (const elementId in context.activeElements) {
-        if (context.activeElements.hasOwnProperty(elementId)) {
-            const element = context.activeElements[elementId];
-
-            if (element.autorun) {
-                element.autorun();
-            }
-
-            for (const event of element.events) {
-                removeEventListener(event.name, event.handler);
-            }
-        }
-    }
-
-    context.disposed = true;
-}
-
-export function createComponent(context: SegmentContext) {
     return {
         insertPoint: () => getSegmentInsertPoint(context),
-        insert: (host?: SegmentInsertPoint | Element) => insertSegment(context, host),
+        insert: (host?: ComponentInsertPosition | Element) => insertSegment(context, host),
         remove: () => removeSegment(context),
         dispose: () => disposeSegment(context)
     };
+
+    function getSegmentInsertPoint(context: SegmentContext): ComponentInsertPosition {
+
+        if (context.attached && context.attached) {
+            if (context.elements.length > 0) {
+                return {
+                    element: context.elements[context.elements.length - 1],
+                    position: "afterend"
+                }
+            }
+        }
+        return context.segmentInsertPoint();
+    }
+    function insertSegment(context: SegmentContext, insertPoint?: ComponentInsertPosition | Element) {
+        if (context.disposed) return;
+
+        let { element, position } = (getInsertPointProvider(insertPoint) ?? context.segmentInsertPoint)();
+
+
+        if (element && context.elements.length > 0) {
+            let inserted = element.insertAdjacentElement(position, context.elements[0]);
+            if (inserted) {
+                element = inserted;
+                position = "afterend";
+
+                for (let index = 1; index < context.elements.length; index++) {
+                    const el = context.elements[index];
+                    inserted = element.insertAdjacentElement(position, el);
+                    if (inserted) {
+                        element = inserted
+                    }
+                }
+            }
+        }
+        context.attached = true;
+    }
+    function removeSegment(context: SegmentContext) {
+        for (const el of context.elements) {
+            el.remove();
+        }
+        context.attached = false;
+    }
+    function disposeSegment(context: SegmentContext) {
+
+        removeSegment(context);
+        context.elements.splice(0, context.elements.length - 1);
+
+        for (const elementId in context.activeElements) {
+            if (context.activeElements.hasOwnProperty(elementId)) {
+                const element = context.activeElements[elementId];
+
+                if (element.autorun) {
+                    element.autorun();
+                }
+
+                for (const event of element.events) {
+                    removeEventListener(event.name, event.handler);
+                }
+            }
+        }
+
+        context.disposed = true;
+    }
 }
+interface SegmentParameters {
+    segmentInsertPoint: InsertPointProvider,
+    elements: {
+        [id: string]: ElementParameters
+    }
+}
+interface ElementParameters {
+    id: string,
+    originalId: string,
+    attributeSetter?: (element: Element) => void,
+    events: EventContext[]
+}
+interface SegmentContext {
+    disposed: boolean;
+    attached: boolean;
+    readonly segmentInsertPoint: InsertPointProvider;
+    readonly elements: Element[];
+    readonly activeElements: { [id: string]: ElementContext }
+}
+interface ElementContext {
+    element: Element;
+    autorun?: IReactionDisposer;
+    events: EventContext[];
+}
+interface EventContext {
+    name: string,
+    handler: (ev: Event) => void,
+    options?: AddEventListenerOptions
+}
+
+// #endregion

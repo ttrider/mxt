@@ -52,18 +52,15 @@ export function ex03(data: any, host?: null | undefined | Element) {
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-
-    const content = template.content.cloneNode(true) as DocumentFragment;
-
     const elements: Element[] = [];
-    let child = content.firstElementChild;
+    let child = template.content.firstElementChild;
     while (child) {
         elements.push(child);
         child = child.nextElementSibling;
     }
     const context: any = { $$mxt$$elements$$: elements };
     for (const elementId of elementIds) {
-        const element = content.getElementById(elementId);
+        const element = template.content.getElementById(elementId);
         if (element) {
             context[elementId + "$$element"] = element;
         }

@@ -21,9 +21,9 @@ ex03r03$$template.innerHTML = `
     <div id="tagid_4">Yes, it is TRUE and TRUE</div>
 `;
 
-export function if02(data: any, host?: null | undefined | Element) {
+export function if03(data: any, host?: null | undefined | Element) {
 
-    const component = c00(data, () => { return { element: host, position: "beforeend" } });
+    const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
 
     if (host) {
         component.insert();
@@ -31,15 +31,15 @@ export function if02(data: any, host?: null | undefined | Element) {
 
     return component;
 
-    function c00(data: any, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
 
         return mxt.createContainer(
             parentContext,
             segmentInsertPoint,
             [
-                (point: mxt.InsertPointProvider) => s00(data, point),
-                (point: mxt.InsertPointProvider, parent) => c01(data, point, parent),
-                (point: mxt.InsertPointProvider) => s02(data, point)
+                (point: mxt.InsertPointProvider) => s00(dataContext, point),
+                (point: mxt.InsertPointProvider, parent) => c01(dataContext, point, parent),
+                (point: mxt.InsertPointProvider) => s02(dataContext, point)
             ],
             (segments) => {
                 segments[0].insert();
@@ -47,7 +47,8 @@ export function if02(data: any, host?: null | undefined | Element) {
             },
             (segments) => {
 
-                const { showElement } = data;
+                const { showElement } = dataContext.$data;
+                //const $data = dataContext.$data;
                 if (showElement) {
                     segments[1].insert();
                 } else {
@@ -58,19 +59,19 @@ export function if02(data: any, host?: null | undefined | Element) {
 
     }
 
-    function c01(data: any, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
 
         return mxt.createContainer(
             parentContext,
             segmentInsertPoint,
 
-            [(point: mxt.InsertPointProvider) => s03(data, point),
-            (point: mxt.InsertPointProvider) => s04(data, point)],
+            [(point: mxt.InsertPointProvider) => s03(dataContext, point),
+            (point: mxt.InsertPointProvider) => s04(dataContext, point)],
             (segments) => {
                 segments[0].insert();
             },
             (segments) => {
-                const { showSubElement } = data;
+                const { showSubElement } = dataContext.$data;
                 if (showSubElement) {
                     segments[1].insert();
                 } else {
@@ -80,7 +81,7 @@ export function if02(data: any, host?: null | undefined | Element) {
         );
     }
 
-    function s00(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return (mxt.createSegment(ex03r00$$template, {
 
@@ -98,8 +99,8 @@ export function if02(data: any, host?: null | undefined | Element) {
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { toggleClick } = data;
-                                toggleClick.bind(data)(ev);
+                                const { toggleClick } = dataContext.$data;
+                                toggleClick.bind(dataContext.$data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
                                 ev.stopImmediatePropagation();
@@ -111,7 +112,7 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s02(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s02(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return (mxt.createSegment(ex03r02$$template, {
 
@@ -122,15 +123,15 @@ export function if02(data: any, host?: null | undefined | Element) {
                     id: "tagid_3",
                     originalId: "",
                     attributeSetter: (element: Element) => {
-                        const { color } = data;
+                        const { color } = dataContext.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
                     events: [
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { colorClick } = data;
-                                colorClick.bind(data)(ev);
+                                const { colorClick } = dataContext.$data;
+                                colorClick.bind(dataContext.$data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
                                 ev.stopImmediatePropagation();
@@ -142,7 +143,7 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s03(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s03(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return (mxt.createSegment(ex03r01$$template, {
 
@@ -153,14 +154,14 @@ export function if02(data: any, host?: null | undefined | Element) {
                     id: "tagid_2",
                     originalId: "",
                     attributeSetter: (element: Element) => {
-                        const { color } = data;
+                        const { color } = dataContext.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
                     events: [
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { colorClick } = data;
+                                const { colorClick } = dataContext.$data;
                                 colorClick.bind(data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
@@ -173,7 +174,7 @@ export function if02(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s04(data: any, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s04(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return (mxt.createSegment(ex03r03$$template, {
 
@@ -184,15 +185,15 @@ export function if02(data: any, host?: null | undefined | Element) {
                     id: "tagid_4",
                     originalId: "",
                     attributeSetter: (element: Element) => {
-                        const { color } = data;
+                        const { color } = dataContext.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
                     events: [
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { colorClick } = data;
-                                colorClick.bind(data)(ev);
+                                const { colorClick } = dataContext.$data;
+                                colorClick.bind(dataContext.$data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
                                 ev.stopImmediatePropagation();

@@ -58,7 +58,7 @@ if (document) {
     const root_ex01 = document.getElementById("ex01");
     if (root_ex01) {
         data.el = ex01(data);
-        data.el.insert(root_ex01);
+        data.el.appendTo(root_ex01);
     }
 
     // example 02

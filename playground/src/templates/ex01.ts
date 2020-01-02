@@ -1,37 +1,58 @@
 import { autorun } from "mobx";
-import * as mxt from "./mxt-runtime";
 const ex01$$template = document.createElement("template");
 ex01$$template.innerHTML = `
     <div id="tagid_1">Hello MXT!</div>
 `;
-
 export function ex01(data: any, host?: null | undefined | Element) {
-
-    const component = s00(data, () => { return { element: host, position: "beforeend" } });
-
-    if (host) {
-        component.insert();
+    let disposed = false;
+    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(ex01$$template, ["tagid_1"]);
+    tagid_1$$element.id = "";
+    const tagid_1$$autorun = autorun(() => {
+        const { color } = data;
+        tagid_1$$element.setAttribute("style", `color: ${color}`);
+    });
+    if (host)
+        $$mxt$$appendTo$$($$mxt$$elements$$, host);
+    return {
+        get disposed() {
+            return disposed;
+        },
+        get elements() {
+            return $$mxt$$elements$$;
+        },
+        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
+        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
+        dispose: () => {
+            disposed = true;
+            $$mxt$$remove$$($$mxt$$elements$$);
+            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
+            tagid_1$$autorun();
+        }
+    };
+}
+function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
+    const elements: Element[] = [];
+    let child = template.content.firstElementChild;
+    while (child) {
+        elements.push(child);
+        child = child.nextElementSibling;
     }
-
-    return component;
-
-    function s00(data: any, segmentInsertPoint: mxt.InsertPointProvider) {
-
-        return mxt.createSegment(ex01$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_1: {
-                    id: "tagid_1",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { color } = data;
-                        element.setAttribute("style", `color: ${color}`);
-                    },
-                    events: []
-                }
-            }
-        });
+    const context: any = { $$mxt$$elements$$: elements };
+    for (const elementId of elementIds) {
+        const element = template.content.getElementById(elementId);
+        if (element) {
+            context[elementId + "$$element"] = element;
+        }
+    }
+    return context;
+}
+function $$mxt$$appendTo$$(elements: Element[], host: Element) {
+    for (const el of elements) {
+        host.appendChild(el);
+    }
+}
+function $$mxt$$remove$$(elements: Element[]) {
+    for (const el of elements) {
+        el.remove();
     }
 }

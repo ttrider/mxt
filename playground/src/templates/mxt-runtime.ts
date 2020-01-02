@@ -1,5 +1,19 @@
 import { IReactionDisposer, autorun } from "mobx";
 
+
+export interface DataContext {
+
+    $data: any,
+    $root: any,
+    $parent?: DataContext,
+
+    $collection?: any,
+    $key?: any,
+    $item?: any,
+    $index?: number,
+
+}
+
 export declare type ComponentInsertPosition = {
     element: Element | undefined | null,
     position: InsertPosition
@@ -289,12 +303,23 @@ interface EventContext {
 export function createTemplateSet(...contents: string[]) {
 
     return contents.map(
-        content=>{
+        content => {
             const template = document.createElement("template");
             template.innerHTML = content;
             return template;
         }
     )
+}
+
+export function createDataContext(data: any | DataContext): DataContext {
+
+    if (data.$root !== undefined && data.$data !== undefined) {
+        return data;
+    }
+    return {
+        $root: data,
+        $data: data
+    }
 }
 
 // #endregion helper methods

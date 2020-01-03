@@ -1,0 +1,23 @@
+<template id="if01" type="mxt">
+    <mxt.import name="if01" from="./if01" as="test00" />
+    <div style="color: ${color}">Before Component - 1</div>
+    <hr />
+    <mxt.component name="test00" />
+    <hr />
+    <div style="color: ${color}">After Component - 1 </div>
+    <hr />
+    <div style="color: ${color}">Before Component - 2</div>
+    <hr />
+    <mxt.component name="test00" with="${inner}" />
+    <hr />
+    <div style="color: ${color}">After Component - 2</div>
+    <hr />
+    <div style="color: ${color}">Before Component - 3</div>
+    <hr />
+    <mxt.with data="${inner}">
+        <mxt.component name="test00" />
+    </mxt.with>
+    <hr />
+    <div style="color: ${color}">After Component - 3</div>
+
+</template>

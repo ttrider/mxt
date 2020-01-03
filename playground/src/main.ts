@@ -41,6 +41,15 @@ console.info("remove(extandable, \"p1\");");
 remove(extandable, "p1");
 
 
+class InnerData {
+
+    parent: TestData
+
+    @computed get color() {
+        return "#" + this.parent.g.toString(16) + this.parent.b.toString(16) + this.parent.r.toString(16);
+    }
+}
+
 class TestData {
 
     @observable switchindex = 0;
@@ -49,6 +58,8 @@ class TestData {
     @observable r = 200;
     @observable g = 18;
     @observable b = 228;
+
+    @observable inner: InnerData;
 
     @computed get color() {
         return "#" + this.r.toString(16) + this.g.toString(16) + this.b.toString(16);
@@ -89,6 +100,13 @@ class TestData {
     }
 
     el: any
+
+    constructor() {
+
+        this.inner = new InnerData();
+        this.inner.parent = this;
+
+    }
 }
 
 const data = new TestData();

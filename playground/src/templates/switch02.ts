@@ -8,7 +8,6 @@ const $$mxt$$ = mxt.createTemplateSet(
     `<div id="tagid_4">Greater then 2</div>`,
 );
 
-
 export function switch02(data: any, host?: null | undefined | Element) {
 
     const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });

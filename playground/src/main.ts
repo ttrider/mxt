@@ -7,6 +7,7 @@ import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
 import { switch01 } from "./templates/switch01";
 import { switch02 } from "./templates/switch02";
+import { component00 } from "./templates/component00";
 
 let extandable = observable({
 
@@ -48,6 +49,23 @@ class InnerData {
     @computed get color() {
         return "#" + this.parent.g.toString(16) + this.parent.b.toString(16) + this.parent.r.toString(16);
     }
+
+    @computed get showElement() { return this.parent.showElement; }
+    @computed get showSubElement() { return this.parent.showSubElement; }
+
+}
+
+class InnerData2 {
+
+    parent: TestData
+
+    @computed get color() {
+        return "#" + this.parent.b.toString(16) + this.parent.r.toString(16) + this.parent.g.toString(16);
+    }
+
+    @computed get showElement() { return this.parent.showElement; }
+    @computed get showSubElement() { return this.parent.showSubElement; }
+
 }
 
 class TestData {
@@ -60,6 +78,7 @@ class TestData {
     @observable b = 228;
 
     @observable inner: InnerData;
+    @observable inner2: InnerData2;
 
     @computed get color() {
         return "#" + this.r.toString(16) + this.g.toString(16) + this.b.toString(16);
@@ -106,6 +125,8 @@ class TestData {
         this.inner = new InnerData();
         this.inner.parent = this;
 
+        this.inner2 = new InnerData2();
+        this.inner2.parent = this;
     }
 }
 
@@ -143,5 +164,9 @@ if (document) {
 
     const root_switch02 = document.getElementById("switch02");
     switch02(data, root_switch02);
+
+    const root_component00 = document.getElementById("component00");
+    component00(data, root_component00);
+
 }
 

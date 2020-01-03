@@ -1,0 +1,23 @@
+<template id="component00" type="mxt">
+    <mxt.component name="if01" from="./if01" />
+    <mxt.component name="if01" from="./if01" with="${inner}" />
+    <mxt.component name="if01" from="./if01" with="${inner2}" />
+</template>
+
+
+<mxt.import name="if01" from="./if01" as="f0000" />
+
+<template id="component01" type="mxt">
+    <mxt.component name="f0000" />
+    <mxt.component name="f0000" with="${inner}" />
+    <mxt.component name="f0000" with="${inner2}" />
+</template>
+
+
+<template id="component02" type="mxt">
+    <mxt.component name="f0000" />
+    <mxt.with data="${inner}">
+        <mxt.component name="f0000" />
+    </mxt.with>
+    <mxt.component name="f0000" with="${inner2}" />
+</template>

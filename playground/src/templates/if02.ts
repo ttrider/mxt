@@ -21,8 +21,12 @@ ex03r03$$template.innerHTML = `
     <div id="tagid_4">Yes, it is TRUE and TRUE</div>
 `;
 
-export function if02(data: any, host?: null | undefined | Element) {
+export function if02(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
 
+    if (typeof host === "function") {
+        return c00(data, host);
+    }
+    
     const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
 
     if (host) {

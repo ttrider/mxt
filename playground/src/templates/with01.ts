@@ -1,5 +1,5 @@
-import { autorun } from "mobx";
 import * as mxt from "./mxt-runtime";
+import { if01 as test00 } from "./if01";
 
 const ex03r00$$template = document.createElement("template");
 ex03r00$$template.innerHTML = `

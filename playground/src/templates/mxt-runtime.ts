@@ -45,9 +45,9 @@ declare type ConditionalComponent = {
 function isInsertPoint(item: ComponentInsertPosition | Element): item is ComponentInsertPosition {
     return ((item as any).nodeName === undefined);
 }
-function getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentInsertPosition | Element) {
+export function getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentInsertPosition | Element, defaultProvider?: InsertPointProvider) {
 
-    if (insertPoint === undefined) return undefined;
+    if (insertPoint === undefined) return defaultProvider;
 
     if (typeof insertPoint === "function") {
         return insertPoint;
@@ -58,6 +58,23 @@ function getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentIns
     }
 
     return () => { return { element: insertPoint, position: "beforeend" } as ComponentInsertPosition }
+}
+
+export function getInsertPoint(insertPoint?: InsertPointProvider | ComponentInsertPosition | Element): ComponentInsertPosition {
+
+    if (insertPoint !== undefined) {
+
+        if (typeof insertPoint === "function") {
+            return insertPoint();
+        }
+
+        if (isInsertPoint(insertPoint)) {
+
+            return insertPoint;
+        }
+    }
+
+    return { element: insertPoint, position: "beforeend" };
 }
 
 // #region container
@@ -376,15 +393,33 @@ export function createTemplateSet(...contents: string[]) {
     )
 }
 
-export function createDataContext(data: any | DataContext): DataContext {
+export function createDataContext(data: any | DataContext, params?: { parent: DataContext }): DataContext {
 
     if (data.$root !== undefined && data.$data !== undefined) {
         return data;
     }
-    return {
-        $root: data,
-        $data: data
+
+    if (params) {
+        const { parent } = params;
+
+        const context: DataContext = {
+            $root: parent.$root,
+            $data: data,
+            $parent: parent
+        }
+
+        return context;
+
+    } else {
+        return {
+            $root: data,
+            $data: data,
+
+        }
     }
+
+
+
 }
 
 // #endregion helper methods

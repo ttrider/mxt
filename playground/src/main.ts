@@ -1,13 +1,48 @@
-import { observable, computed } from "mobx"
+import { observable, autorun, extendObservable, remove, computed } from "mobx"
 
 import { ex01 } from "./templates/ex01";
 import { ex02 } from "./templates/ex02";
 import { ex03 } from "./templates/ex03";
 import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
+import { switch01 } from "./templates/switch01";
+
+let extandable = observable({
+
+    p0: 0,
+    p1: 10,
+    p2: 100
+});
+
+autorun(() => {
+    console.info("=========================");
+
+    for (const key in extandable) {
+        if (extandable.hasOwnProperty(key)) {
+            const value = extandable[key];
+
+            console.info(`${key} = ${value}`);
+        }
+    }
+    console.info("=========================");
+});
+
+console.info("extandable.p0 = 2;");
+extandable.p0 = 2;
+
+console.info("extandable.p2 = 3;");
+extandable.p2 = 3;
+
+console.info("extendObservable(extandable, { ex01: 1, ex02: 2 });");
+extendObservable(extandable, { ex01: 1, ex02: 2 });
+
+console.info("remove(extandable, \"p1\");");
+remove(extandable, "p1");
+
 
 class TestData {
 
+    @observable switchindex = 0;
     @observable showElement = true;
     @observable showSubElement = true;
     @observable r = 200;
@@ -16,6 +51,11 @@ class TestData {
 
     @computed get color() {
         return "#" + this.r.toString(16) + this.g.toString(16) + this.b.toString(16);
+    }
+
+    switchClick() {
+
+        this.switchindex = (this.switchindex + 1) % 4;
     }
 
     toggleClick() {
@@ -78,5 +118,8 @@ if (document) {
     // example 05
     const root_if02 = document.getElementById("if02");
     if02(data, root_if02);
+
+    const root_switch01 = document.getElementById("switch01");
+    switch01(data, root_switch01);
 }
 

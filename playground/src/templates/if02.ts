@@ -37,26 +37,20 @@ export function if02(data: any, host?: null | undefined | Element) {
             parentContext,
             segmentInsertPoint,
             [
-                (point: mxt.InsertPointProvider) => s00(dataContext, point),
-                (point: mxt.InsertPointProvider, parent) => c01(dataContext, point, parent),
-                (point: mxt.InsertPointProvider) => s02(dataContext, point)
+                (point: mxt.InsertPointProvider) => { return { component: s00(dataContext, point) } },
+                (point: mxt.InsertPointProvider) => {
+                    return {
+                        component: c01(dataContext, point),
+                        condition: ($on: any) => $on
+                    }
+                },
+                (point: mxt.InsertPointProvider) => { return { component: s02(dataContext, point) } },
             ],
-            (segments) => {
-                segments[0].insert();
-                segments[2].insert();
-            },
-            (segments) => {
-
+            () => {
                 const { showElement } = dataContext.$data;
-                //const $data = dataContext.$data;
-                if (showElement) {
-                    segments[1].insert();
-                } else {
-                    segments[1].remove();
-                }
-            },
+                return showElement;
+            }
         );
-
     }
 
     function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
@@ -64,19 +58,18 @@ export function if02(data: any, host?: null | undefined | Element) {
         return mxt.createContainer(
             parentContext,
             segmentInsertPoint,
-
-            [(point: mxt.InsertPointProvider) => s03(dataContext, point),
-            (point: mxt.InsertPointProvider) => s04(dataContext, point)],
-            (segments) => {
-                segments[0].insert();
-            },
-            (segments) => {
+            [
+                (point: mxt.InsertPointProvider) => { return { component: s03(dataContext, point) } },
+                (point: mxt.InsertPointProvider) => {
+                    return {
+                        component: s04(dataContext, point),
+                        condition: ($on: any) => $on
+                    }
+                },
+            ],
+            () => {
                 const { showSubElement } = dataContext.$data;
-                if (showSubElement) {
-                    segments[1].insert();
-                } else {
-                    segments[1].remove();
-                }
+                return showSubElement;
             }
         );
     }

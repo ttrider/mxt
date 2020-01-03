@@ -31,21 +31,19 @@ export function if01(data: any, host?: null | undefined | Element) {
             parentContext,
             segmentInsertPoint,
             [
-                (point: mxt.InsertPointProvider) => s00(dataContext, point),
-                (point: mxt.InsertPointProvider) => s01(dataContext, point),
-                (point: mxt.InsertPointProvider) => s02(dataContext, point)
+                (point: mxt.InsertPointProvider) => { return { component: s00(dataContext, point) } },
+                (point: mxt.InsertPointProvider) => {
+                    return {
+                        component: s01(dataContext, point),
+                        condition: ($on: any) => $on
+
+                    }
+                },
+                (point: mxt.InsertPointProvider) => { return { component: s02(dataContext, point) } }
             ],
-            (segments) => {
-                segments[0].insert();
-                segments[2].insert();
-            },
-            (segments) => {
+            () => {
                 const { showElement } = dataContext.$data;
-                if (showElement) {
-                    segments[1].insert();
-                } else {
-                    segments[1].remove();
-                }
+                return showElement;
             }
         );
     }

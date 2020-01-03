@@ -6,6 +6,7 @@ import { ex03 } from "./templates/ex03";
 import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
 import { switch01 } from "./templates/switch01";
+import { switch02 } from "./templates/switch02";
 
 let extandable = observable({
 
@@ -121,5 +122,8 @@ if (document) {
 
     const root_switch01 = document.getElementById("switch01");
     switch01(data, root_switch01);
+
+    const root_switch02 = document.getElementById("switch02");
+    switch02(data, root_switch02);
 }
 

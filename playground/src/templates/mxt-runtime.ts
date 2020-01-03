@@ -30,6 +30,18 @@ export declare type Component = {
 };
 
 
+declare type ComponentConfig = {
+    component: Component,
+    condition?: (($on: any) => boolean) | "default",
+    conditionOrder?: number
+};
+
+declare type ConditionalComponent = {
+    component: Component,
+    condition: ($on: any) => boolean,
+    conditionOrder: number
+};
+
 function isInsertPoint(item: ComponentInsertPosition | Element): item is ComponentInsertPosition {
     return ((item as any).nodeName === undefined);
 }
@@ -53,30 +65,54 @@ function getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentIns
 export function createContainer(
     parentContext: ContainerContext | undefined,
     parentInsertPoint: InsertPointProvider,
-    segments: Array<(insertPoint: InsertPointProvider, parentContext?: ContainerContext) => Component>,
-    unconditionalInsert: (segments: Component[]) => void,
-    conditionalInsert: (segments: Component[]) => void) {
+    components: Array<(insertPoint: InsertPointProvider, parentContext?: ContainerContext) => ComponentConfig>,
+    switchCondition?: () => any) {
 
     const context: ContainerContext = {
         parentContext,
-        unconditionalInsert,
-        conditionalInsert,
         containerInsertPoint: parentInsertPoint,
-        segments: [],
+        switchCondition,
+        staticComponents: [],
+        conditionalComponents: [],
+        defaultconditionalComponents: [],
         disposed: false,
         attached: false,
     }
 
     let currentPoint = parentInsertPoint;
 
-    for (const segment of segments) {
 
-        const newSegment = segment(currentPoint, context);
+    const componentConfigs: ComponentConfig[] = [];
 
-        context.segments.push(newSegment);
-        currentPoint = newSegment.insertPoint;
+    for (const component of components) {
+        const componentConfig = component(currentPoint, context);
+        componentConfigs.push(componentConfig);
+        currentPoint = componentConfig.component.insertPoint;
+        context.lastComponent = componentConfig.component;
     }
 
+    componentConfigs.reduce((context, componentConfig) => {
+
+        if (componentConfig.condition === undefined) {
+            context.staticComponents.push(componentConfig.component);
+        } else if (componentConfig.condition === "default") {
+            context.defaultconditionalComponents.push(componentConfig.component);
+        } else if (typeof componentConfig.condition === "function") {
+
+            context.conditionalComponents.push(
+                {
+                    component: componentConfig.component,
+                    condition: componentConfig.condition,
+                    conditionOrder: componentConfig.conditionOrder ?? 0
+
+                });
+        }
+
+        return context;
+    }, context);
+
+    // sort conditions
+    context.conditionalComponents = context.conditionalComponents.sort((i) => i.conditionOrder ? i.conditionOrder : 0);
 
     return {
         insertPoint: () => getContainerInsertPoint(context),
@@ -87,8 +123,8 @@ export function createContainer(
 
     function getContainerInsertPoint(context: ContainerContext): ComponentInsertPosition {
 
-        if (context.segments.length > 0) {
-            context.segments[context.segments.length - 1].insertPoint();
+        if (context.lastComponent) {
+            return context.lastComponent.insertPoint();
         }
         return context.containerInsertPoint();
     }
@@ -101,33 +137,58 @@ export function createContainer(
             context.containerInsertPoint = provider;
         }
 
-        if (context.unconditionalInsert) {
-            context.unconditionalInsert(context.segments);
+        for (const component of context.staticComponents) {
+            component.insert();
         }
 
-        if (context.conditionalInsert) {
+        if (context.conditionalComponents.length > 0 || context.defaultconditionalComponents.length > 0) {
             context.autorun = autorun(() => {
-                context.conditionalInsert(context.segments);
-            });
-        }
 
+                const $on = (context.switchCondition === undefined) ? undefined : context.switchCondition();
+
+                let hasDefault = true;
+                for (const component of context.conditionalComponents) {
+
+                    if (component.condition($on)) {
+                        hasDefault = false;
+                        component.component.insert();
+                    } else {
+                        component.component.remove();
+                    }
+                }
+
+                if (hasDefault) {
+                    for (const component of context.defaultconditionalComponents) {
+                        component.insert();
+                    }
+                }
+                else {
+                    for (const component of context.defaultconditionalComponents) {
+                        component.remove();
+                    }
+                }
+
+            });
+
+        }
     }
 
     function removeContainer(context: ContainerContext) {
         if (context.autorun) {
             context.autorun();
         }
-        for (const segment of context.segments) {
-            segment.remove();
-        }
+
+        context.conditionalComponents.forEach(i => i.component.remove());
+        context.defaultconditionalComponents.forEach(i => i.remove());
+        context.staticComponents.forEach(i => i.remove());
         context.attached = false;
     }
 
     function disposeContainer(context: ContainerContext) {
         removeContainer(context);
-
-        context.segments.splice(0, context.segments.length - 1);
-
+        context.conditionalComponents = [];
+        context.defaultconditionalComponents = [];
+        context.staticComponents = [];
         context.disposed = true;
     }
 }
@@ -135,11 +196,15 @@ export function createContainer(
 
 export interface ContainerContext {
     parentContext?: ContainerContext,
-    unconditionalInsert?: (segments: Component[]) => void,
-    conditionalInsert: (segments: Component[]) => void,
     autorun?: IReactionDisposer,
     containerInsertPoint: InsertPointProvider,
-    segments: Component[],
+    lastComponent?: Component,
+    switchCondition?: () => any,
+
+    staticComponents: Component[],
+    conditionalComponents: ConditionalComponent[],
+    defaultconditionalComponents: Component[],
+
     disposed: boolean,
     attached: boolean,
 }

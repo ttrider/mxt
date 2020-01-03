@@ -5,12 +5,11 @@ const $$mxt$$ = mxt.createTemplateSet(
     `<div id="tagid_1">Click to switch</div>`,
     `<div id="tagid_2">Switch index 0</div>`,
     `<div id="tagid_3">Switch index 1</div>`,
-    `<div id="tagid_4">Switch index 2</div>`,
-    `<div id="tagid_5">Switch index default</div>`,
+    `<div id="tagid_4">Greater then 2</div>`,
 );
 
 
-export function switch01(data: any, host?: null | undefined | Element) {
+export function switch02(data: any, host?: null | undefined | Element) {
 
     const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
 
@@ -57,15 +56,9 @@ export function switch01(data: any, host?: null | undefined | Element) {
                     return {
                         component: s03(dataContext, point),
                         conditionOrder: 2,
-                        condition: ($on:any) => $on == "2"
+                        condition: ($on:any) => $on > 2
                     }
-                },
-                (point: mxt.InsertPointProvider) => {
-                    return {
-                        component: s04(dataContext, point),
-                        condition: "default"
-                    }
-                },
+                }
             ],
             () => {
                 const { switchindex } = dataContext.$data;
@@ -159,24 +152,4 @@ export function switch01(data: any, host?: null | undefined | Element) {
             }
         }));
     }
-    function s04(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return (mxt.createSegment($$mxt$$[4], {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_5: {
-                    id: "tagid_5",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                    },
-                    events: [
-                    ]
-                }
-            }
-        }));
-    }
-
-
 }

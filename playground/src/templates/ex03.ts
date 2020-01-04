@@ -5,13 +5,13 @@ ex03$$template.innerHTML = `
     <style>
     
         div {
-            background: #f0f0f0;
+            background: greenyellow;
             cursor: pointer;
             box-sizing: content-box;
         }
 
         div:hover{
-            background: #e0e0f0;
+            border: dashed salmon 1px;
         }
         
     </style>

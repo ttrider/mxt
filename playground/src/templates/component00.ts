@@ -14,10 +14,9 @@ export function component00(data: any, host?: null | undefined | Element | mxt.I
 
     return component;
 
-    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.createContainer(
-            parentContext,
             segmentInsertPoint,
             [
                 (point: mxt.InsertPointProvider) => {

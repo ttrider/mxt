@@ -80,13 +80,11 @@ export function getInsertPoint(insertPoint?: InsertPointProvider | ComponentInse
 // #region container
 
 export function createContainer(
-    parentContext: ContainerContext | undefined,
     parentInsertPoint: InsertPointProvider,
     components: Array<(insertPoint: InsertPointProvider, parentContext?: ContainerContext) => ComponentConfig>,
     switchCondition?: () => any) {
 
     const context: ContainerContext = {
-        parentContext,
         containerInsertPoint: parentInsertPoint,
         switchCondition,
         staticComponents: [],
@@ -212,7 +210,6 @@ export function createContainer(
 
 
 export interface ContainerContext {
-    parentContext?: ContainerContext,
     autorun?: IReactionDisposer,
     containerInsertPoint: InsertPointProvider,
     lastComponent?: Component,

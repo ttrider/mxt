@@ -35,10 +35,9 @@ export function if02(data: any, host?: null | undefined | Element | mxt.InsertPo
 
     return component;
 
-    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.createContainer(
-            parentContext,
             segmentInsertPoint,
             [
                 (point: mxt.InsertPointProvider) => { return { component: s00(dataContext, point) } },
@@ -57,10 +56,9 @@ export function if02(data: any, host?: null | undefined | Element | mxt.InsertPo
         );
     }
 
-    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.createContainer(
-            parentContext,
             segmentInsertPoint,
             [
                 (point: mxt.InsertPointProvider) => { return { component: s03(dataContext, point) } },

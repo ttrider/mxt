@@ -22,23 +22,21 @@ export function switch02(data: any, host?: null | undefined | Element| mxt.Inser
 
     return component;
 
-    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.createContainer(
-            parentContext,
             segmentInsertPoint,
             [
                 (point: mxt.InsertPointProvider) => { return { component: s00(dataContext, point) } },
-                (point: mxt.InsertPointProvider, parent) => { return { component: c01(dataContext, point, parent) } },
+                (point: mxt.InsertPointProvider) => { return { component: c01(dataContext, point) } },
             ]
         );
 
     }
 
-    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider, parentContext?: mxt.ContainerContext): mxt.Component {
+    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.createContainer(
-            parentContext,
             segmentInsertPoint,
             [
                 (point: mxt.InsertPointProvider) => {

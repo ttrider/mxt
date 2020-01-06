@@ -1,27 +1,27 @@
 import * as mxt from "./mxt-runtime";
 
 const $$mxt$$ = mxt.createTemplateSet(
-    `<table>
-    <th>
-    <td>something</td>
-    </th>
+    `<table border="1">
+    <tr>
+    <th>something</th>
+    </tr>
     <tr>
         <td id="tagid_1">
         </td>
     </tr>
 </table>`,
-    `before`,
-    `text`,
-    `after`
+    `<span>before</span>`,
+    `<span>text</span>`,
+    `<span>after</span>`
 );
 
-function if03(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
+export function if03(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
 
     if (typeof host === "function") {
-        return c00(data, host);
+        return s00(data, host);
     }
 
-    const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
+    const component = s00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
 
     if (host) {
         component.insert();
@@ -37,6 +37,15 @@ function s00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointPr
         segmentInsertPoint,
 
         elements: {
+            "tagid_1": {
+                id: "tagid_1",
+                originalId: "",
+                events: [],
+                components:[
+                    (point: mxt.InsertPointProvider) => { return { component: c00(dataContext, point) } },
+                ]
+
+            }
         }
     }));
 }

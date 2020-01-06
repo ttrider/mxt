@@ -235,6 +235,7 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
         disposed: false,
         attached: false,
         elements: [],
+        components: [],
         activeElements: {}
 
     };
@@ -267,8 +268,26 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
                     })
                 }
 
-                for (const event of elementParameters.events) {
-                    element.addEventListener(event.name, event.handler, event.options);
+                if (elementParameters.events) {
+                    for (const event of elementParameters.events) {
+                        element.addEventListener(event.name, event.handler, event.options);
+                    }
+                }
+
+                if (elementParameters.components) {
+
+                    let currentPoint: InsertPointProvider = () => {
+                        return {
+                            element,
+                            position: "beforeend"
+                        }
+                    };
+
+                    for (const component of elementParameters.components) {
+                        const componentConfig = component(currentPoint);
+                        context.components.push(componentConfig.component);
+                        currentPoint = componentConfig.component.insertPoint;
+                    }
                 }
             }
         }
@@ -314,10 +333,17 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
                 }
             }
         }
+
+        for (const component of context.components) {
+            component.insert();
+        }
         context.attached = true;
     }
     function removeSegment(context: SegmentContext) {
         for (const el of context.elements) {
+            el.remove();
+        }
+        for (const el of context.components) {
             el.remove();
         }
         context.attached = false;
@@ -335,8 +361,10 @@ export function createSegment(template: HTMLTemplateElement, parameters: Segment
                     element.autorun();
                 }
 
-                for (const event of element.events) {
-                    removeEventListener(event.name, event.handler);
+                if (element.events) {
+                    for (const event of element.events) {
+                        removeEventListener(event.name, event.handler);
+                    }
                 }
             }
         }
@@ -354,19 +382,21 @@ interface ElementParameters {
     id: string,
     originalId: string,
     attributeSetter?: (element: Element) => void,
-    events: EventContext[]
+    events?: EventContext[],
+    components?: Array<(insertPoint: InsertPointProvider) => ComponentConfig>
 }
 interface SegmentContext {
     disposed: boolean;
     attached: boolean;
     readonly segmentInsertPoint: InsertPointProvider;
     readonly elements: Element[];
+    readonly components: Component[];
     readonly activeElements: { [id: string]: ElementContext }
 }
 interface ElementContext {
     element: Element;
     autorun?: IReactionDisposer;
-    events: EventContext[];
+    events?: EventContext[];
 }
 interface EventContext {
     name: string,

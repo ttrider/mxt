@@ -1,4 +1,4 @@
-import { IReactionDisposer, autorun } from "mobx";
+import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject } from "mobx";
 
 
 export interface DataContext {
@@ -76,6 +76,169 @@ export function getInsertPoint(insertPoint?: InsertPointProvider | ComponentInse
 
     return { element: insertPoint, position: "beforeend" };
 }
+
+// #region loop
+
+// export function createloop(
+//     dataContext: DataContext,
+//     parentInsertPoint: InsertPointProvider,
+//     over: () => any,
+//     componentConfig: (insertPoint: InsertPointProvider) => ComponentConfig) {
+
+//     const context: LoopContext = {
+//         containerInsertPoint: parentInsertPoint,
+//         over,
+//         componentConfigFactory: componentConfig,
+
+//         disposed: false,
+//         attached: false,
+//     }
+
+//     let currentPoint = parentInsertPoint;
+
+//     context.over = over();
+//     // over can be:
+//     // Observable array
+//     // Observable object
+//     // Observable Map
+//     // Simple, static array
+//     // Simple, static object
+
+//     const componentConfigs: ComponentConfig[] = [];
+
+
+//     if (isObservableArray(context.over)) {
+//     } else if (isObservableMap(context.over)) {
+//     } else if (isObservableObject(context.over)) {
+//     } else if (Array.isArray(context.over)) {
+
+//         for (let index = 0; index < context.over.length; index++) {
+//             const value = context.over[index];
+//             const valueContext = createDataContext(value, { parent: dataContext, key: index.toString(), index: index });
+
+//             const cc = componentConfig(valueContext, currentPoint);
+//             componentConfigs.push(cc);
+//             currentPoint = cc.component.insertPoint;
+//             context.lastComponent = cc.component;
+//         }
+//     } else {
+//         // regular object
+//         let index = 0;
+//         for (const key in context.over) {
+//             if (context.over.hasOwnProperty(key)) {
+//                 const value = context.over[key];
+//                 const valueContext = createDataContext(value, { parent: dataContext, key: key, index: index++ });
+
+//                 const cc = componentConfig(valueContext, currentPoint);
+//                 componentConfigs.push(cc);
+//                 currentPoint = cc.component.insertPoint;
+//                 context.lastComponent = cc.component;
+//             }
+//         }
+
+//     }
+
+
+//     return {
+//         insertPoint: () => getContainerInsertPoint(context),
+//         insert: (insertPosition?: ComponentInsertPosition | Element) => insertComponent(insertPosition),
+//         remove: () => removeContainer(context),
+//         dispose: () => disposeContainer(context)
+//     };
+
+//     function getContainerInsertPoint(context: ContainerContext): ComponentInsertPosition {
+
+//         if (context.lastComponent) {
+//             return context.lastComponent.insertPoint();
+//         }
+//         return context.containerInsertPoint();
+//     }
+
+//     function insertComponent(insertPosition?: ComponentInsertPosition | Element) {
+//         context.attached = true;
+
+//         const provider = getInsertPointProvider(insertPosition);
+//         if (provider) {
+//             context.containerInsertPoint = provider;
+//         }
+
+//         for (const component of context.staticComponents) {
+//             component.insert();
+//         }
+
+//         if (context.conditionalComponents.length > 0 || context.defaultconditionalComponents.length > 0) {
+//             context.autorun = autorun(() => {
+
+//                 const $on = (context.switchCondition === undefined) ? undefined : context.switchCondition();
+
+//                 let hasDefault = true;
+//                 for (const component of context.conditionalComponents) {
+
+//                     if (component.condition($on)) {
+//                         hasDefault = false;
+//                         component.component.insert();
+//                     } else {
+//                         component.component.remove();
+//                     }
+//                 }
+
+//                 if (hasDefault) {
+//                     for (const component of context.defaultconditionalComponents) {
+//                         component.insert();
+//                     }
+//                 }
+//                 else {
+//                     for (const component of context.defaultconditionalComponents) {
+//                         component.remove();
+//                     }
+//                 }
+
+//             });
+
+//         }
+//     }
+
+//     function removeContainer(context: ContainerContext) {
+//         if (context.autorun) {
+//             context.autorun();
+//         }
+
+//         context.conditionalComponents.forEach(i => i.component.remove());
+//         context.defaultconditionalComponents.forEach(i => i.remove());
+//         context.staticComponents.forEach(i => i.remove());
+//         context.attached = false;
+//     }
+
+//     function disposeContainer(context: ContainerContext) {
+//         removeContainer(context);
+//         context.conditionalComponents = [];
+//         context.defaultconditionalComponents = [];
+//         context.staticComponents = [];
+//         context.disposed = true;
+//     }
+// }
+
+export interface LoopContext {
+    lastComponent?: Component,
+
+    containerInsertPoint: InsertPointProvider,
+    over: any,
+    componentConfigFactory: (insertPoint: InsertPointProvider) => ComponentConfig,
+    disposed: boolean,
+    attached: boolean,
+}
+
+export function createloop(
+    dataContext: DataContext,
+    parentInsertPoint: InsertPointProvider,
+    over: () => any,
+    componentConfig: (insertPoint: InsertPointProvider) => ComponentConfig) {
+
+}
+
+
+
+// #endregion loop
 
 // #region container
 
@@ -224,7 +387,6 @@ export interface ContainerContext {
 }
 
 // #endregion container
-
 
 // #region segments
 
@@ -382,6 +544,7 @@ interface ElementParameters {
     id: string,
     originalId: string,
     attributeSetter?: (element: Element) => void,
+    textSetter?: (element: Element) => void,
     events?: EventContext[],
     components?: Array<(insertPoint: InsertPointProvider) => ComponentConfig>
 }
@@ -405,7 +568,6 @@ interface EventContext {
 }
 
 // #endregion
-
 
 // #region helper methods
 

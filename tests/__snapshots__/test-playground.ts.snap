@@ -136,17 +136,15 @@ const ex03$$template = document.createElement(\\"template\\");
 ex03$$template.innerHTML = \`
 
     <style>
-    
         div {
-            background: greenyellow;
+            background: #f0f0f0;
             cursor: pointer;
             box-sizing: content-box;
         }
 
-        div:hover{
-            border: dashed salmon 1px;
+        div:hover {
+            background: #e0e0f0;
         }
-        
     </style>
 
     <div id=\\"tagid_3\\">Hello MXT!</div>

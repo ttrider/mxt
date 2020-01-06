@@ -42,6 +42,17 @@ extendObservable(extandable, { ex01: 1, ex02: 2 });
 console.info("remove(extandable, \"p1\");");
 remove(extandable, "p1");
 
+class Item {
+    title: string;
+    subTitle: string;
+    link?: string;
+}
+
+class Property {
+    description: string;
+    value: string;
+}
+
 
 class InnerData {
 
@@ -119,7 +130,28 @@ class TestData {
         this.showSubElement = !this.showSubElement;
     }
 
-    el: any
+    el: any;
+
+
+    @observable items: Item[] = [
+        { title: "Item 1", subsubTitle: "This is the item 1", link: "http://smile.amazon.com" },
+        { title: "Item 2", subsubTitle: "This is the item 2", link: "http://smile.amazon.com" },
+        { title: "Item 3", subsubTitle: "This is the item 3", link: "http://smile.amazon.com" },
+        { title: "Item 4", subsubTitle: "This is the item 4", link: "http://smile.amazon.com" },
+        { title: "Item 5", subsubTitle: "This is the item 5", link: "http://smile.amazon.com" },
+        { title: "Item 6", subsubTitle: "This is the item 6", link: "http://smile.amazon.com" },
+    ];
+
+    @observable properties: { [name: string]: Property } =
+        {
+            "property 1": { description: "This is the property 1", value: "10001" },
+            "property 2": { description: "This is the property 2", value: "20002" },
+            "property 3": { description: "This is the property 3", value: "30003" },
+            "property 4": { description: "This is the property 4", value: "40004" },
+            "property 5": { description: "This is the property 5", value: "50005" },
+        }
+        ;
+
 
     constructor() {
 

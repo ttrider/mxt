@@ -1,0 +1,32 @@
+<template id="if01" type="mxt">
+    <mxt.import name="if01" from="./if01" as="test00" />
+
+    <div>Array Loop:</div>
+    <table style="border: 1px solid blue">
+        <mxt.foreach data="${items}">
+            <tr>
+                <td>${name}</td>
+                <td>${subTitle}</td>
+            </tr>
+            <tr>
+                <td colspan="2">${link}</td>
+            </tr>
+        </mxt.foreach>
+    </table>
+
+    <hr/>
+
+    <div>Property Loop:</div>
+    <table style="border: 1px solid rgb(0, 251, 255)">
+        <mxt.foreach data="${properties}">
+            <tr style="background: ${$$index%2?`#f0f0f0`:`#fefefe`}">
+                <td>${$$key}</td>
+                <td>${value}</td>
+            </tr>
+            <tr>
+                <td colspan="2">${description}</td>
+            </tr>
+        </mxt.foreach>
+    </table>
+
+</template>

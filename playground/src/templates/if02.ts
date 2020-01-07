@@ -87,7 +87,7 @@ export function if02(data: any, host?: null | undefined | Element | mxt.InsertPo
                     id: "tagid_1",
                     originalId: "",
                     attributeSetter: (element: Element) => {
-                        const { inner } = data;
+                        const { inner } = dataContext.$data;
                         element.setAttribute("style", `color: ${inner.color}`);
                     },
                     events: [

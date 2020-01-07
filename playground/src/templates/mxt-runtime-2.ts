@@ -17,18 +17,11 @@ export declare type Component = {
 
 
 export class Context {
- 
+
     private disposed: boolean;
     private attached: boolean;
     private insertPoint: InsertPointProvider;
     private lastInsertPosition?: InsertPointProvider;
-    private parent?: Context;
-    private collection?: any;
-    private key?: any;
-    private item?: any;
-    private index?: number;
-    private data: any;
-
     private switchCondition?: () => boolean;
     private switchAutorun?: IReactionDisposer;
 
@@ -41,8 +34,6 @@ export class Context {
 
 
     constructor(params: CreateCommonParams) {
-
-       
         this.insertPoint = params.insertPointProvider;
         this.disposed = false;
         this.attached = false;
@@ -279,10 +270,18 @@ export class Context {
 
             const componentConfigs: ComponentConfig[] = [];
 
-            for (const component of params.components) {
-                const componentConfig = component(currentPoint);
-                componentConfigs.push(componentConfig);
-                currentPoint = componentConfig.component.siblingInsertPoint;
+
+            for (const componentInfo of params.components) {
+
+                const dataContext = (typeof componentInfo.dataContext === "function") ? componentInfo.dataContext() : componentInfo.dataContext;
+
+                const component = componentInfo.componentFactory(dataContext, currentPoint);
+                componentConfigs.push({
+                    component,
+                    condition: componentInfo.condition,
+                    conditionOrder: componentInfo.conditionOrder
+                });
+                currentPoint = component.siblingInsertPoint;
                 context.lastInsertPosition = currentPoint;
             }
 
@@ -338,7 +337,12 @@ function isContainerParams(params: CreateParams): params is CreateCommonParams &
 
 interface CreateContainerParams {
     switchCondition?: () => any,
-    components: Array<(insertPoint: InsertPointProvider) => ComponentConfig>
+    components: Array<{
+        dataContext: DataContext | (() => DataContext),
+        componentFactory: (dataContext: DataContext, ipp: InsertPointProvider) => Component,
+        condition?: (($on: any) => boolean) | "default",
+        conditionOrder?: number
+    }>
 }
 
 

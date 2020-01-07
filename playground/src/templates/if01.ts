@@ -29,14 +29,20 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
         return mxt.Context.create({
             insertPointProvider: segmentInsertPoint,
             components: [
-                (point) => { return { component: s00(dataContext, point) } },
-                (point) => {
-                    return {
-                        component: s01(dataContext, point),
-                        condition: ($on: any) => $on
-                    }
+                {
+                    componentFactory: s00,
+                    dataContext,
                 },
-                (point) => { return { component: s02(dataContext, point) } }
+                {
+                    componentFactory: s01,
+                    dataContext,
+                    condition: ($on: any) => $on
+                },
+                {
+                    componentFactory: s02,
+                    dataContext,
+                },
+
             ],
             switchCondition: () => {
                 const { showElement } = dataContext.$data;

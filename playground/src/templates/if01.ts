@@ -55,7 +55,7 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
                 {
                     id: "tagid_1",
                     originalId: "",
-                    attributeSetter: (element: Element) => {
+                    attributeSetter: (element) => {
                         const { color } = dataContext.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
@@ -84,8 +84,8 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
 
             attachTo: [{
                 id: "tagid_2",
-                originalId: "",
-                attributeSetter: (element: Element) => {
+
+                attributeSetter: (element) => {
                     const { color } = dataContext.$data;
                     element.setAttribute("style", `color: ${color}`);
                 },
@@ -109,6 +109,7 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
     function s02(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.Context.create({
+
             template: $$mxt$$[2],
             insertPointProvider: segmentInsertPoint,
 

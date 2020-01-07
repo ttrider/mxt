@@ -46,7 +46,7 @@ export function ex03(data: any, host?: null | undefined | Element) {
     };
     function tagid_3$$click(ev: Event) {
         const { colorClick } = data;
-        colorClick.bind(data)(ev);
+        colorClick(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {

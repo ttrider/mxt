@@ -24,7 +24,6 @@ describe("token", () => {
   </template>`;
 
 
-
     const results = codegenSetup(input);
 
     expect(results).toMatchSnapshot();

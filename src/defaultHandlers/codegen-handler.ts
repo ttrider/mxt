@@ -35,7 +35,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
             const constTemplateName = names.template(template);
 
-            const templateLiteral = d.TemplateLiteral(getHTML(template.elements));
+            const templateLiteral = d.Literal(getHTML(template.elements));
 
             componentFile.initStatements.add(
 

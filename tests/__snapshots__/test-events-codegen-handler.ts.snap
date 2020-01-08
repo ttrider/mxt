@@ -3,9 +3,7 @@
 exports[`events handler 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_1\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_1\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_1\\"]);
@@ -71,9 +69,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`events handler and propagation functions 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_2\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_2\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_2\\"]);
@@ -142,9 +138,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`events handler with options 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_3\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_3\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_3\\"]);
@@ -210,9 +204,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`events no handler 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_4\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_4\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_4$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_4\\"]);

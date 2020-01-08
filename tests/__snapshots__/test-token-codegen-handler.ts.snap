@@ -3,10 +3,7 @@
 exports[`token multiple elements 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_4\\">Hello MXT!</div>
-    <div id=\\"tagid_5\\">Hello MXT too!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_4\\\\\\">Hello MXT!</div>\\\\n    <div id=\\\\\\"tagid_5\\\\\\">Hello MXT too!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_4$$element, tagid_5$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_4\\", \\"tagid_5\\"]);
@@ -72,9 +69,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`token single element, attribute, token 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_1\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_1\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_1\\"]);
@@ -134,9 +129,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`token single element, multiple attributes,tokens 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_2\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_2\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_2\\"]);
@@ -197,9 +190,7 @@ function $$mxt$$remove$$(elements: Element[]) {
 exports[`token single element, multiple tokens per attribute 1`] = `
 "import { autorun } from \\"mobx\\";
 const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_3\\">Hello MXT!</div>
-  \`;
+t01$$template.innerHTML = \\"\\\\n    <div id=\\\\\\"tagid_3\\\\\\">Hello MXT!</div>\\\\n  \\";
 export function t01(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_3\\"]);

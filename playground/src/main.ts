@@ -5,7 +5,7 @@ import { ex02 } from "./templates/ex02";
 import { ex03 } from "./templates/ex03";
 import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
-import { if03 } from "./templates/if03";
+import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import { switch02 } from "./templates/switch02";
 import { component00 } from "./templates/component00";
@@ -189,11 +189,11 @@ if (document) {
     if01(data, root_if01);
 
     // example 05
-    // const root_if02 = document.getElementById("if02");
-    // if02(data, root_if02);
+    const root_if02 = document.getElementById("if02");
+    if02(data, root_if02);
 
-    // const root_if03 = document.getElementById("if03");
-    // if03(data, root_if03);
+    const root_if03 = document.getElementById("if03");
+    if03(data, root_if03);
 
     // const root_switch01 = document.getElementById("switch01");
     // switch01(data, root_switch01);

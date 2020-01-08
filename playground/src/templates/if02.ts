@@ -1,203 +1,131 @@
-import * as mxt from "./mxt-runtime";
+import * as mxt from "./mxt-runtime-3";
 
-const ex03r00$$template = document.createElement("template");
-ex03r00$$template.innerHTML = `
-    <hr/>
-    <div id="tagid_1">Before IF</div>   
-`;
-const ex03r01$$template = document.createElement("template");
-ex03r01$$template.innerHTML = `
-    <hr/>
-    <div id="tagid_2">Yes, it is TRUE</div>
-`;
-const ex03r02$$template = document.createElement("template");
-ex03r02$$template.innerHTML = `
-    <hr/>
-    <div id="tagid_3">After IF</div>
-`;
-const ex03r03$$template = document.createElement("template");
-ex03r03$$template.innerHTML = `
-    <div id="tagid_4">Yes, it is TRUE and TRUE</div>
-`;
-
-export function if02(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
-
-    if (typeof host === "function") {
-        return c00(data, host);
-    }
-    
-    const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
-
-    if (host) {
-        component.insert();
-    }
-
-    return component;
-
-    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return mxt.createContainer(
-            segmentInsertPoint,
-            [
-                (point: mxt.InsertPointProvider) => { return { component: s00(dataContext, point) } },
-                (point: mxt.InsertPointProvider) => {
-                    return {
-                        component: c01(dataContext, point),
-                        condition: ($on: any) => $on
+const { if02 } =
+    mxt.register(
+        { "if02": 0 },
+        [
+            ($pf$) => {
+                return {
+                    parts: [
+                        $pf$[1],
+                        { part: $pf$[2], when: ($on: any, $dc$) => $on },
+                        $pf$[4]
+                    ],
+                    switch: ($dc$) => {
+                        const { showElement } = $dc$.$data;
+                        return showElement;
                     }
-                },
-                (point: mxt.InsertPointProvider) => { return { component: s02(dataContext, point) } },
-            ],
-            () => {
-                const { showElement } = dataContext.$data;
-                return showElement;
-            }
-        );
-    }
-
-    function c01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return mxt.createContainer(
-            segmentInsertPoint,
-            [
-                (point: mxt.InsertPointProvider) => { return { component: s03(dataContext, point) } },
-                (point: mxt.InsertPointProvider) => {
-                    return {
-                        component: s04(dataContext, point),
-                        condition: ($on: any) => $on
+                }
+            },
+            ($pf$) => {
+                return {
+                    template: `<hr/><div id="tagid_1">Before IF</div>`,
+                    attachTo: [
+                        {
+                            id: "tagid_1",
+                            attrs: ($dc$) => {
+                                const { color } = $dc$.$data;
+                                return {
+                                    "style": `color: ${color}`
+                                }
+                            },
+                            events: [
+                                {
+                                    name: "click",
+                                    handler: function (ev: Event, $dc$) {
+                                        const { toggleClick } = $dc$.$data;
+                                        toggleClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                    },
+                                    flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            ($pf$) => {
+                return {
+                    parts: [
+                        $pf$[3],
+                        { part: $pf$[5], when: ($on: any, $dc$) => $on }
+                    ],
+                    switch: ($dc$) => {
+                        const { showSubElement } = $dc$.$data;
+                        return showSubElement;
                     }
-                },
-            ],
-            () => {
-                const { showSubElement } = dataContext.$data;
-                return showSubElement;
-            }
-        );
-    }
-
-    function s00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return (mxt.createSegment(ex03r00$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_1: {
-                    id: "tagid_1",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { inner } = dataContext.$data;
-                        element.setAttribute("style", `color: ${inner.color}`);
-                    },
-                    events: [
+                }
+            },
+            ($pf$) => {
+                return {
+                    template: `<hr/><div id="tagid_2">Yes, it is TRUE</div>`,
+                    attachTo: [{
+                        id: "tagid_2",
+                        attrs: ($dc$) => {
+                            const { color } = $dc$.$data;
+                            return { "style": `color: ${color}` }
+                        },
+                        events: [
+                            {
+                                name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
+                                handler: (ev, $dc$) => {
+                                    const { colorClick } = $dc$.$data;
+                                    colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                }
+                            }
+                        ]
+                    }]
+                }
+            },
+            ($pf$) => {
+                return {
+                    template: `<hr/><div id="tagid_3">After IF</div>`,
+                    attachTo: [
                         {
-                            name: "click",
-                            handler: function (ev: Event) {
-                                const { toggleClick } = dataContext.$data;
-                                toggleClick.bind(dataContext.$data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
+                            id: "tagid_3",
+
+                            attrs: ($dc$) => {
+                                const { color } = $dc$.$data;
+                                return { "style": `color: ${color}` }
                             },
-                            options: { capture: true }
+                            events: [
+                                {
+                                    name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
+                                    handler: (ev, $dc$) => {
+                                        const { colorClick } = $dc$.$data;
+                                        colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                    }
+
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            ($pf$) => {
+                return {
+                    template: "<div id=\"tagid_4\">Yes, it is TRUE and TRUE</div>",
+                    attachTo: [
+                        {
+                            id: "tagid_4",
+
+                            attrs: ($dc$) => {
+                                const { color } = $dc$.$data;
+                                return { "style": `color: ${color}` }
+                            },
+                            events: [
+                                {
+                                    name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
+                                    handler: (ev, $dc$) => {
+                                        const { colorClick } = $dc$.$data;
+                                        colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                    }
+
+                                }
+                            ]
                         }
                     ]
                 }
             }
-        }));
-    }
-    function s02(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return (mxt.createSegment(ex03r02$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_3: {
-                    id: "tagid_3",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { color } = dataContext.$data;
-                        element.setAttribute("style", `color: ${color}`);
-                    },
-                    events: [
-                        {
-                            name: "click",
-                            handler: function (ev: Event) {
-                                const { colorClick } = dataContext.$data;
-                                colorClick.bind(dataContext.$data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
-                            },
-                            options: { capture: true }
-                        }
-                    ]
-                }
-            }
-        }));
-    }
-    function s03(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return (mxt.createSegment(ex03r01$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_2: {
-                    id: "tagid_2",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { color } = dataContext.$data;
-                        element.setAttribute("style", `color: ${color}`);
-                    },
-                    events: [
-                        {
-                            name: "click",
-                            handler: function (ev: Event) {
-                                const { colorClick } = dataContext.$data;
-                                colorClick.bind(data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
-                            },
-                            options: { capture: true }
-                        }
-                    ]
-                }
-            }
-        }));
-    }
-    function s04(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
-
-        return (mxt.createSegment(ex03r03$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_4: {
-                    id: "tagid_4",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { color } = dataContext.$data;
-                        element.setAttribute("style", `color: ${color}`);
-                    },
-                    events: [
-                        {
-                            name: "click",
-                            handler: function (ev: Event) {
-                                const { colorClick } = dataContext.$data;
-                                colorClick.bind(dataContext.$data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
-                            },
-                            options: { capture: true }
-                        }
-                    ]
-                }
-            }
-        }));
-    }
-
-}
+        ]
+    );
+export { if02 };

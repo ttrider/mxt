@@ -315,7 +315,7 @@ export class Context {
                     if (params.parts.hasOwnProperty(itemId)) {
                         const element = content.getElementById(itemId);
                         if (element) {
-                            context.partSets.push(params.parts[itemId](dc, () => { return { element, position: "afterend" } }));
+                            context.partSets.push(params.parts[itemId](dc, () => { return { element, position: "beforeend" } }));
                         }
                     }
                 }

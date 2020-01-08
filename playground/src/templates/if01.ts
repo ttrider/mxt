@@ -52,12 +52,9 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
                             name: "click",
                             handler: function (ev: Event) {
                                 const { toggleClick } = dc.$data;
-                                toggleClick.bind(dc.$data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
+                                toggleClick.bind(dc.$data)(ev, dc.$data, dc);
                             },
-                            options: { capture: true }
+                            flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
                         }
                     ]
                 }
@@ -80,14 +77,11 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
                 events: [
                     {
                         name: "click",
-                        handler: function (ev: Event) {
+                        handler: (ev: Event) => {
                             const { colorClick } = dc.$data;
-                            colorClick.bind(dc.$data)(ev);
-                            ev.preventDefault();
-                            ev.stopPropagation();
-                            ev.stopImmediatePropagation();
+                            colorClick.bind(dc.$data)(ev, dc.$data, dc);
                         },
-                        options: { capture: true }
+                        flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
                     }
                 ]
             }]
@@ -104,7 +98,6 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
             attachTo: [
                 {
                     id: "tagid_3",
-                    originalId: "",
                     attributeSetter: (element: Element) => {
                         const { color } = dc.$data;
                         element.setAttribute("style", `color: ${color}`);
@@ -112,14 +105,12 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
                     events: [
                         {
                             name: "click",
-                            handler: function (ev: Event) {
+                            handler: (ev: Event) => {
                                 const { colorClick } = dc.$data;
-                                colorClick.bind(dc.$data)(ev);
-                                ev.preventDefault();
-                                ev.stopPropagation();
-                                ev.stopImmediatePropagation();
+                                colorClick.bind(dc.$data)(ev, dc.$data, dc);
                             },
-                            options: { capture: true }
+                            // preventDefault | stopPropagation | stopImmediatePropagation | capture
+                            flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
                         }
                     ]
                 }

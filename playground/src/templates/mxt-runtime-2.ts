@@ -1,5 +1,14 @@
 import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject, keys } from "mobx";
 
+export enum EventOptions {
+    preventDefault = 0x0001,
+    stopPropagation = 0x0002,
+    stopImmediatePropagation = 0x0004,
+    once = 0x0008,
+    passive = 0x0010,
+    capture = 0x0020
+}
+
 export declare type InsertPointProvider = () => ComponentInsertPosition;
 
 export declare type ComponentInsertPosition = {
@@ -156,7 +165,7 @@ export class Context {
 
                 if (element.events) {
                     for (const event of element.events) {
-                        removeEventListener(event.name, event.handler);
+                        removeEventListener(event.name, event.handler, event.options);
                     }
                 }
             }
@@ -242,12 +251,7 @@ export class Context {
                     lastChild = child;
                     child = child.nextElementSibling;
                 }
-                context.lastInsertPosition = () => {
-                    return {
-                        element: lastChild,
-                        position: "afterend"
-                    }
-                }
+                context.lastInsertPosition = () => { return { element: lastChild, position: "afterend" } };
             }
 
             if (params.attachTo) {
@@ -259,8 +263,8 @@ export class Context {
                     if (element) {
 
                         const activeElement: ElementContext = {
-                            element,
-                            events: item.events
+                            element
+
                         }
 
                         if (item.originalId) {
@@ -275,29 +279,41 @@ export class Context {
                             })
                         }
 
-                        if (item.events) {
-                            for (const event of item.events) {
-                                element.addEventListener(event.name, event.handler, event.options);
-                            }
+                        if (item.events !== undefined && item.events.length > 0) {
+
+                            activeElement.events = item.events.map((e) => {
+                                const flags = e.flags ?? 0;
+
+                                const eventContext: EventContext = {
+                                    name: e.name,
+                                    handler: (ev: Event) => {
+                                        e.handler(ev);
+                                        if (flags & 0x0001) ev.preventDefault();
+                                        if (flags & 0x0002) ev.stopPropagation();
+                                        if (flags & 0x0004) ev.stopImmediatePropagation();
+                                    },
+                                    options: {
+                                        once: !!(flags & 0x0008),
+                                        passive: !!(flags & 0x0010),
+                                        capture: !!(flags & 0x0020),
+                                    }
+                                };
+
+                                element.addEventListener(eventContext.name, eventContext.handler, eventContext.options);
+
+                                return eventContext;
+                            });
                         }
                     }
                 }
             }
 
             if (params.parts) {
-
                 for (const itemId in params.parts) {
                     if (params.parts.hasOwnProperty(itemId)) {
                         const element = content.getElementById(itemId);
                         if (element) {
-                            const part = params.parts[itemId];
-                            context.partSets.push(part(params.dc,
-                                () => {
-                                    return {
-                                        element,
-                                        position: "afterend"
-                                    }
-                                }));
+                            context.partSets.push(params.parts[itemId](params.dc, () => { return { element, position: "afterend" } }));
                         }
                     }
                 }
@@ -368,13 +384,13 @@ interface ElementParams {
     id: string,
     originalId?: string,
     attributeSetter?: (element: Element) => void,
-    events?: EventContext[],
+    events?: EventParams[],
     components?: PartParams[]
 }
 interface EventParams {
     name: string,
     handler: (ev: Event) => void,
-    options?: AddEventListenerOptions
+    flags?: number
 }
 
 interface ElementContext {

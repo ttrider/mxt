@@ -1,4 +1,3 @@
-import { autorun } from "mobx";
 import * as mxt from "./mxt-runtime";
 
 const ex03r00$$template = document.createElement("template");

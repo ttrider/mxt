@@ -43,9 +43,11 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
             attachTo: [
                 {
                     id: "tagid_1",
-                    attributeSetter: (element) => {
+                    attrs: () => {
                         const { color } = dc.$data;
-                        element.setAttribute("style", `color: ${color}`);
+                        return {
+                            "style": `color: ${color}`
+                        }
                     },
                     events: [
                         {
@@ -70,9 +72,11 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
             attachTo: [{
                 id: "tagid_2",
 
-                attributeSetter: (element) => {
+                attrs: () => {
                     const { color } = dc.$data;
-                    element.setAttribute("style", `color: ${color}`);
+                    return {
+                        "style": `color: ${color}`
+                    }
                 },
                 events: [
                     {
@@ -98,9 +102,12 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
             attachTo: [
                 {
                     id: "tagid_3",
-                    attributeSetter: (element: Element) => {
+
+                    attrs: () => {
                         const { color } = dc.$data;
-                        element.setAttribute("style", `color: ${color}`);
+                        return {
+                            "style": `color: ${color}`
+                        }
                     },
                     events: [
                         {

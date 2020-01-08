@@ -1,6 +1,6 @@
 import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject, keys } from "mobx";
 
-export enum EventOptions {
+enum EventOptions {
     preventDefault = 0x0001,
     stopPropagation = 0x0002,
     stopImmediatePropagation = 0x0004,
@@ -18,7 +18,7 @@ export declare type ComponentInsertPosition = {
 
 export declare type Component = {
 
-    siblingInsertPoint: () => ComponentInsertPosition;
+    appendPos: () => ComponentInsertPosition;
     insert: (host?: ComponentInsertPosition | undefined) => void;
     remove: () => void;
     dispose: () => void;
@@ -51,7 +51,7 @@ class PartSet implements PartActions {
         for (const item of params.parts) {
             if (typeof item === "function") {
                 const partInst = item(dc, currentPoint);
-                currentPoint = partInst.siblingInsertPoint;
+                currentPoint = partInst.appendPos;
                 this.parts.push(partInst);
             } else {
 
@@ -62,7 +62,7 @@ class PartSet implements PartActions {
                         item.dc;
 
                 const partInst = item.part(dataContext, currentPoint);
-                currentPoint = partInst.siblingInsertPoint;
+                currentPoint = partInst.appendPos;
 
                 if (item.when === undefined) {
                     this.parts.push(partInst);
@@ -138,7 +138,8 @@ export class Context {
     private insertPoint: InsertPointProvider;
     private lastInsertPosition?: InsertPointProvider;
     private elements?: Element[];
-    private readonly activeElements?: { [id: string]: ElementContext };
+    private events: EventContext[] = [];
+    private disposers?: Array<() => void>;
 
     private partSets: PartActions[] = [];
 
@@ -153,24 +154,9 @@ export class Context {
     private dispose() {
 
         this.remove();
-        this.elements?.splice(-1);
-
-        for (const elementId in this.activeElements) {
-            if (this.activeElements.hasOwnProperty(elementId)) {
-                const element = this.activeElements[elementId];
-
-                if (element.autorun) {
-                    element.autorun();
-                }
-
-                if (element.events) {
-                    for (const event of element.events) {
-                        removeEventListener(event.name, event.handler, event.options);
-                    }
-                }
-            }
-        }
-
+        this.elements = [];
+        this.disposers?.forEach(d => d());
+        this.events.forEach(e => e.element.removeEventListener(e.name, e.handler, e.options));
         this.partSets = [];
         this.disposed = true;
     }
@@ -215,11 +201,7 @@ export class Context {
             }
         }
 
-
-
         this.partSets.forEach(ps => ps.insert());
-
-
 
         this.attached = true;
     }
@@ -262,29 +244,44 @@ export class Context {
 
                     if (element) {
 
-                        const activeElement: ElementContext = {
-                            element
-
-                        }
-
                         if (item.originalId) {
                             element.id = item.originalId;
                         } else {
                             element.removeAttribute("id");
                         }
 
-                        if (item.attributeSetter !== undefined) {
-                            activeElement.autorun = autorun(() => {
-                                if (item.attributeSetter) item.attributeSetter(element);
-                            })
+                        if (item.attrs !== undefined || item.value !== undefined) {
+                            context.disposers = context.disposers ?? [];
+                            context.disposers.push(
+                                autorun(() => {
+
+                                    if (item.attrs !== undefined) {
+                                        const attrs = item.attrs();
+                                        for (const key in attrs) {
+                                            if (attrs.hasOwnProperty(key)) {
+                                                const value = attrs[key];
+                                                if (value) {
+                                                    element.setAttribute(key, value.toString());
+                                                } else {
+                                                    element.removeAttribute(key);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    if (item.value !== undefined) {
+                                        const value = item.value();
+                                        element.nodeValue = value ? value.toString() : null;
+                                    }
+                                }));
                         }
 
-                        if (item.events !== undefined && item.events.length > 0) {
-
-                            activeElement.events = item.events.map((e) => {
+                        if (item.events !== undefined) {
+                            for (let index = 0; index < item.events.length; index++) {
+                                const e = item.events[index];
                                 const flags = e.flags ?? 0;
-
                                 const eventContext: EventContext = {
+                                    element,
                                     name: e.name,
                                     handler: (ev: Event) => {
                                         e.handler(ev);
@@ -300,9 +297,8 @@ export class Context {
                                 };
 
                                 element.addEventListener(eventContext.name, eventContext.handler, eventContext.options);
-
-                                return eventContext;
-                            });
+                                context.events.push(eventContext);
+                            }
                         }
                     }
                 }
@@ -326,7 +322,7 @@ export class Context {
         }
 
         return {
-            siblingInsertPoint: () => context.getSiblingInsertPoint(),
+            appendPos: () => context.getSiblingInsertPoint(),
             insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
             remove: () => context.remove(),
             dispose: () => context.dispose()
@@ -383,9 +379,10 @@ declare type ConditionalPart = {
 interface ElementParams {
     id: string,
     originalId?: string,
-    attributeSetter?: (element: Element) => void,
-    events?: EventParams[],
-    components?: PartParams[]
+    //attributeSetter?: (element: Element) => void,
+    attrs?: () => { [name: string]: any },
+    value?: () => any,
+    events?: EventParams[]
 }
 interface EventParams {
     name: string,
@@ -393,15 +390,11 @@ interface EventParams {
     flags?: number
 }
 
-interface ElementContext {
-    element: Element;
-    autorun?: IReactionDisposer;
-    events?: EventContext[];
-}
 interface EventContext {
-    name: string,
-    handler: (ev: Event) => void,
-    options?: AddEventListenerOptions
+    element: Element;
+    name: string;
+    handler: (ev: Event) => void;
+    options?: AddEventListenerOptions;
 }
 
 export interface DataContext {

@@ -129,3 +129,4 @@ const { if02 } =
         ]
     );
 export { if02 };
+export default if02;

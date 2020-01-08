@@ -8,7 +8,7 @@ import { if02 } from "./templates/if02";
 import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import { switch02 } from "./templates/switch02";
-import { component00 } from "./templates/component00";
+import component00 from "./templates/component00";
 
 let extandable = observable({
 

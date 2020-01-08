@@ -80,7 +80,9 @@ const { if01 } =
                                     name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
                                     handler: (ev, $dc$) => {
                                         const { colorClick } = $dc$.$data;
-                                        colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                        //colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                        //colorClick.call($dc$.$data, $dc$.$data, $dc$);
+                                        colorClick(ev, $dc$.$data, $dc$);
                                     }
 
                                 }
@@ -92,8 +94,4 @@ const { if01 } =
         ]
     );
 export { if01 };
-
-
-// export function if01(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
-//     return mxt.createComponent(data, host, $$[0]);
-// }
+export default if01;

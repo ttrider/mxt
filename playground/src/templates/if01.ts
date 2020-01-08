@@ -11,66 +11,48 @@ const $$mxt$$ = mxt.createTemplateSet(
 
 export function if01(data: any, host?: null | undefined | Element | mxt.InsertPointProvider) {
 
-    if (typeof host === "function") {
-        return c00(data, host);
-    }
+    return mxt.createComponent(data, host, c00);
 
-    const component = c00(mxt.createDataContext(data), () => { return { element: host, position: "beforeend" } });
-
-    if (host) {
-        component.insert();
-    }
-
-    return component;
-
-
-    function c00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function c00(dc: mxt.DataContext, ipp: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.Context.create({
-            insertPointProvider: segmentInsertPoint,
-            components: [
+            dc,
+            ipp,
+            parts: [
+                s00,
                 {
-                    componentFactory: s00,
-                    dataContext,
+                    part: s01,
+                    when: ($on: any) => $on
                 },
-                {
-                    componentFactory: s01,
-                    dataContext,
-                    condition: ($on: any) => $on
-                },
-                {
-                    componentFactory: s02,
-                    dataContext,
-                },
-
+                s02
             ],
-            switchCondition: () => {
-                const { showElement } = dataContext.$data;
+            switch: () => {
+                const { showElement } = dc.$data;
                 return showElement;
             }
         });
     }
 
-    function s00(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s00(dc: mxt.DataContext, ipp: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.Context.create({
+            dc,
             template: $$mxt$$[0],
-            insertPointProvider: segmentInsertPoint,
+            ipp,
 
             attachTo: [
                 {
                     id: "tagid_1",
-                    originalId: "",
                     attributeSetter: (element) => {
-                        const { color } = dataContext.$data;
+                        const { color } = dc.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
                     events: [
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { toggleClick } = dataContext.$data;
-                                toggleClick.bind(dataContext.$data)(ev);
+                                const { toggleClick } = dc.$data;
+                                toggleClick.bind(dc.$data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
                                 ev.stopImmediatePropagation();
@@ -82,25 +64,25 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
             ]
         });
     }
-    function s01(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s01(dc: mxt.DataContext, ipp: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.Context.create({
+            dc,
             template: $$mxt$$[1],
-            insertPointProvider: segmentInsertPoint,
-
+            ipp,
             attachTo: [{
                 id: "tagid_2",
 
                 attributeSetter: (element) => {
-                    const { color } = dataContext.$data;
+                    const { color } = dc.$data;
                     element.setAttribute("style", `color: ${color}`);
                 },
                 events: [
                     {
                         name: "click",
                         handler: function (ev: Event) {
-                            const { colorClick } = dataContext.$data;
-                            colorClick.bind(dataContext.$data)(ev);
+                            const { colorClick } = dc.$data;
+                            colorClick.bind(dc.$data)(ev);
                             ev.preventDefault();
                             ev.stopPropagation();
                             ev.stopImmediatePropagation();
@@ -112,27 +94,27 @@ export function if01(data: any, host?: null | undefined | Element | mxt.InsertPo
         });
     }
 
-    function s02(dataContext: mxt.DataContext, segmentInsertPoint: mxt.InsertPointProvider): mxt.Component {
+    function s02(dc: mxt.DataContext, ipp: mxt.InsertPointProvider): mxt.Component {
 
         return mxt.Context.create({
-
+            dc,
             template: $$mxt$$[2],
-            insertPointProvider: segmentInsertPoint,
+            ipp,
 
             attachTo: [
                 {
                     id: "tagid_3",
                     originalId: "",
                     attributeSetter: (element: Element) => {
-                        const { color } = dataContext.$data;
+                        const { color } = dc.$data;
                         element.setAttribute("style", `color: ${color}`);
                     },
                     events: [
                         {
                             name: "click",
                             handler: function (ev: Event) {
-                                const { colorClick } = dataContext.$data;
-                                colorClick.bind(dataContext.$data)(ev);
+                                const { colorClick } = dc.$data;
+                                colorClick.bind(dc.$data)(ev);
                                 ev.preventDefault();
                                 ev.stopPropagation();
                                 ev.stopImmediatePropagation();

@@ -1,4 +1,5 @@
-import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject, keys } from "mobx";
+import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject, keys, Lambda } from "mobx";
+import { isObservableValue } from "mobx/lib/internal";
 
 
 
@@ -101,6 +102,109 @@ class PartSet implements PartActions {
     dispose() {
         this.remove();
     }
+}
+
+class LoopSet implements PartActions {
+
+    forEach: (dc: DataContext) => any;
+    part: PartFactory;
+    parts: Component[] = [];
+    disposer?: Lambda;
+
+    constructor(params: LoopParams, private dc: DataContext, public ipp: InsertPointProvider) {
+        this.forEach = params.forEach;
+        this.part = params.part;
+    }
+
+    insert() {
+
+        const loopOver = this.forEach(this.dc);
+
+
+        if (isObservableArray(loopOver)) {
+
+            this.disposer = loopOver.observe((change) => {
+
+                console.info("array change detected");
+                console.info(change.object);
+                console.info(change.index);
+                console.info(change.type);
+
+            }, true);
+
+        } else if (isObservableMap(loopOver)) {
+
+            this.disposer = loopOver.observe((change) => {
+
+                console.info("map change detected");
+                console.info(change.object);
+                console.info(change.name);
+                console.info(change.type);
+
+            });
+
+            // } else if (isObservableValue(loopOver)) {
+
+            //     this.disposer = loopOver.observe((change) => {
+
+            //         console.info("change detected");
+            //         console.info(change.object);
+            //         console.info(change.oldValue);
+            //         console.info(change.newValue);
+            //         console.info(change.type);
+
+            //     }, true);
+
+        } else if (Array.isArray(loopOver)) {
+            // static array
+
+            let currentPoint = this.ipp;
+
+            for (let index = 0; index < loopOver.length; index++) {
+                const ldc = this.dc.createIteration(loopOver[index], loopOver, index.toString(), index);
+                const cc = this.part(ldc, currentPoint);
+                this.parts.push(cc);
+                currentPoint = cc.appendPos;
+                cc.insert();
+            }
+
+            this.ipp = currentPoint;
+
+        } else {
+            // regular object
+
+            let currentPoint = this.ipp;
+
+            let index = 0;
+            for (const key in loopOver) {
+                if (loopOver.hasOwnProperty(key)) {
+                    const value = loopOver[key];
+
+                    const ldc = this.dc.createIteration(value, loopOver, key, index++);
+                    const cc = this.part(ldc, currentPoint);
+                    this.parts.push(cc);
+                    currentPoint = cc.appendPos;
+                    cc.insert();
+                }
+            }
+
+            this.ipp = currentPoint;
+        }
+    }
+
+    remove() {
+
+        if (this.disposer) {
+            this.disposer();
+        }
+
+        this.parts.forEach(p => p.remove())
+    }
+
+    dispose() {
+        this.remove();
+    }
+
 }
 
 class Context {
@@ -254,7 +358,6 @@ class DataContext {
     $parent?: DataContext;
     $collection?: any;
     $key?: any;
-    $item?: any;
     $index?: number;
 
     constructor(data: any, parent?: DataContext) {
@@ -265,6 +368,13 @@ class DataContext {
 
     create(data: any) {
         return new DataContext(data, this);
+    }
+    createIteration(data: any, collection: any, key: any, index: number) {
+        const dc = new DataContext(data, this);
+        dc.$collection = collection;
+        dc.$key = key;
+        dc.$index = index;
+        return dc;
     }
 }
 
@@ -394,7 +504,7 @@ function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams)
 
                                 if (item.value !== undefined) {
                                     const value = item.value(context.dc);
-                                    element.nodeValue = value ? value.toString() : null;
+                                    element.innerText = value ? value.toString() : null;
                                 }
                             }));
                     }
@@ -442,6 +552,10 @@ function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams)
         const ps = new PartSet(params, dc, ipp);
         context.lastInsertPosition = ps.ipp;
         context.partSets.push(ps);
+    } else if (isLoopParams(params)) {
+        const ps = new LoopSet(params, dc, ipp);
+        context.lastInsertPosition = ps.ipp;
+        context.partSets.push(ps);
     }
 
     return {
@@ -458,12 +572,16 @@ function isTemplateParams(params: CreateParams): params is TemplateParams {
 function isPartsParams(params: CreateParams): params is PartsParams {
     return (params as any).parts !== undefined;
 }
+function isLoopParams(params: CreateParams): params is LoopParams {
+    return (params as any).forEach !== undefined;
+}
 
 
 declare type CreateParams =
     (
         TemplateParams |
-        PartsParams
+        PartsParams |
+        LoopParams
     );
 
 interface TemplateParams {
@@ -479,6 +597,7 @@ interface AttachParams {
     value?: (dc: DataContext) => any,
     events?: EventParams[]
 }
+
 
 interface EventParams {
     name: string,
@@ -507,4 +626,9 @@ interface PartParams {
     part: PartFactory,
     when?: (($on: any, dc: DataContext) => boolean) | "default",
     order?: number
+}
+
+interface LoopParams {
+    forEach: (dc: DataContext) => any,
+    part: PartFactory
 }

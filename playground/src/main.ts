@@ -9,6 +9,7 @@ import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import { switch02 } from "./templates/switch02";
 import component00 from "./templates/component00";
+import loop01 from "./templates/loop01";
 
 let extandable = observable({
 
@@ -50,7 +51,7 @@ class Item {
 
 class Property {
     description: string;
-    value: string;
+    value: number;
 }
 
 
@@ -142,14 +143,14 @@ class TestData {
         { title: "Item 6", subsubTitle: "This is the item 6", link: "http://smile.amazon.com" },
     ];
 
-    @observable properties: { [name: string]: Property } =
-        {
-            "property 1": { description: "This is the property 1", value: "10001" },
-            "property 2": { description: "This is the property 2", value: "20002" },
-            "property 3": { description: "This is the property 3", value: "30003" },
-            "property 4": { description: "This is the property 4", value: "40004" },
-            "property 5": { description: "This is the property 5", value: "50005" },
-        }
+    properties =
+        observable.map({
+            "property 1": { description: "This is the property 1", value: 10001 },
+            "property 2": { description: "This is the property 2", value: 20002 },
+            "property 3": { description: "This is the property 3", value: 30003 },
+            "property 4": { description: "This is the property 4", value: 40004 },
+            "property 5": { description: "This is the property 5", value: 50005 },
+        })
         ;
 
 
@@ -160,12 +161,18 @@ class TestData {
 
         this.inner2 = new InnerData2();
         this.inner2.parent = this;
+
+
     }
 }
 
 const data = new TestData();
 
 if (document) {
+
+    const l01 = document.getElementById("loop01");
+    loop01(data, l01);
+
 
     // example 01
     // const root_ex01 = document.getElementById("ex01");
@@ -185,15 +192,15 @@ if (document) {
     // ex03(data, root_ex03);
 
     // example 04
-    const root_if01 = document.getElementById("if01");
-    if01(data, root_if01);
+    // const root_if01 = document.getElementById("if01");
+    // if01(data, root_if01);
 
-    // example 05
-    const root_if02 = document.getElementById("if02");
-    if02(data, root_if02);
+    // // example 05
+    // const root_if02 = document.getElementById("if02");
+    // if02(data, root_if02);
 
-    const root_if03 = document.getElementById("if03");
-    if03(data, root_if03);
+    // const root_if03 = document.getElementById("if03");
+    // if03(data, root_if03);
 
     // const root_switch01 = document.getElementById("switch01");
     // switch01(data, root_switch01);
@@ -201,8 +208,21 @@ if (document) {
     // const root_switch02 = document.getElementById("switch02");
     // switch02(data, root_switch02);
 
-    const root_component00 = document.getElementById("component00");
-    component00(data, root_component00);
+    // const root_component00 = document.getElementById("component00");
+    // component00(data, root_component00);
+
+
+    // let pn = 0;
+
+    // setInterval(() => {
+
+
+    //     const p = data.properties;
+    //     p.set(pn.toString(), { description: pn.toString(), value: pn });
+    //     pn++;
+    //     //data.properties["property 3"].value++;
+
+    // }, 1000);
 
 }
 

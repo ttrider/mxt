@@ -125,6 +125,34 @@ class LoopSet implements PartActions {
 
             this.disposer = loopOver.observe((change) => {
 
+                if (change.type == "splice") {
+                    if (change.removedCount > 0) {
+                        
+                        // remove parts
+                        // if the last part removed, update ipp to the last visible
+                        // update indexes in DataContex
+                    }
+
+                    if (change.addedCount > 0) {
+
+                        // get parts[index-1]
+                        // create and insert new parts, chained after the parts[index-1]
+                        // re-insert parts[index+addedCount] chaned after the last one
+                        // update indexes in DataContext
+                    }
+                }
+
+
+                // splice	index	starting index of the splice.Splices are also fired by push, unshift, replace etc.√
+                // removedCount	amount of items being removed	√	√
+                // added	array with items being added	√	√
+                // removed	array with items that were removed
+                // addedCount	amount of items that were added
+
+                // update	index	index of the single entry that is being updated	√
+                // newValue	the newValue that is / will be assigned	√	√
+                // oldValue	the old value that was replaced
+
                 console.info("array change detected");
                 console.info(change.object);
                 console.info(change.index);

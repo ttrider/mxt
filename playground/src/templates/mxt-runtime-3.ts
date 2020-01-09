@@ -24,7 +24,8 @@ class PartSet implements PartActions {
         for (const item of params.parts) {
             if (typeof item === "function") {
                 const partInst = item(dc, currentPoint);
-                currentPoint = partInst.appendPos;
+                //currentPoint = partInst.context.appendPos.bind(partInst.context);
+                currentPoint = partInst.context.tail;
                 this.parts.push(partInst);
             } else {
 
@@ -35,7 +36,8 @@ class PartSet implements PartActions {
                         item.dc;
 
                 const partInst = item.part(dataContext, currentPoint);
-                currentPoint = partInst.appendPos;
+                currentPoint = partInst.context.tail;
+                //currentPoint = partInst.context.appendPos.bind(partInst.context);
 
                 if (item.when === undefined) {
                     this.parts.push(partInst);
@@ -127,7 +129,7 @@ class LoopSet implements PartActions {
 
                 if (change.type == "splice") {
                     if (change.removedCount > 0) {
-                        
+
                         // remove parts
                         // if the last part removed, update ipp to the last visible
                         // update indexes in DataContex
@@ -192,7 +194,8 @@ class LoopSet implements PartActions {
                 const ldc = this.dc.createIteration(loopOver[index], loopOver, index.toString(), index);
                 const cc = this.part(ldc, currentPoint);
                 this.parts.push(cc);
-                currentPoint = cc.appendPos;
+                currentPoint = cc.context.tail;
+                //currentPoint = cc.context.appendPos.bind(cc.context)
                 cc.insert();
             }
 
@@ -211,7 +214,8 @@ class LoopSet implements PartActions {
                     const ldc = this.dc.createIteration(value, loopOver, key, index++);
                     const cc = this.part(ldc, currentPoint);
                     this.parts.push(cc);
-                    currentPoint = cc.appendPos;
+                    currentPoint = cc.context.tail;
+                    //currentPoint = cc.context.appendPos.bind(cc.context)
                     cc.insert();
                 }
             }
@@ -246,6 +250,10 @@ class Context {
     disposers?: Array<() => void>;
 
     partSets: PartActions[] = [];
+
+    tail: () => ComponentInsertPosition = () => {
+        return this.appendPos2();
+    }
 
     constructor(dc: DataContext, ipp: InsertPointProvider) {
         this.dc = dc;
@@ -329,7 +337,7 @@ class Context {
         }
     }
 
-    appendPos(): ComponentInsertPosition {
+    appendPos2(): ComponentInsertPosition {
 
         if (this.attached) {
             if (this.lastInsertPosition) {
@@ -338,6 +346,7 @@ class Context {
         }
         return this.insertPoint();
     }
+
 
 
 }
@@ -352,10 +361,11 @@ declare type ComponentInsertPosition = {
 
 declare type Component = {
 
-    appendPos: () => ComponentInsertPosition;
+    // appendPos: () => ComponentInsertPosition;
     insert: (host?: ComponentInsertPosition | undefined) => void;
     remove: () => void;
     dispose: () => void;
+    context: Context;
 };
 
 
@@ -463,6 +473,8 @@ function createComponent(
     const ipp = (host !== undefined && typeof host === "function") ? host : () => { return { element: host, position: "beforeend" as InsertPosition } };
 
     const component = componentFactory(dc, ipp);
+
+    
 
     if (host) {
         component.insert();
@@ -587,10 +599,15 @@ function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams)
     }
 
     return {
-        appendPos: () => context.appendPos(),
-        insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
-        remove: () => context.remove(),
-        dispose: () => context.dispose()
+        // appendPos: () => context.appendPos(),
+        // appendPos: context.appendPos.bind(context),
+        // insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
+        insert: context.insert.bind(context),
+        // remove: () => context.remove(),
+        remove: context.remove.bind(context),
+        // dispose: () => context.dispose()
+        dispose: context.dispose.bind(context),
+        context
     };
 }
 

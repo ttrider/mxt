@@ -11,37 +11,37 @@ import { switch02 } from "./templates/switch02";
 import component00 from "./templates/component00";
 import loop01 from "./templates/loop01";
 
-let extandable = observable({
+// let extandable = observable({
 
-    p0: 0,
-    p1: 10,
-    p2: 100
-});
+//     p0: 0,
+//     p1: 10,
+//     p2: 100
+// });
 
-autorun(() => {
-    console.info("=========================");
+// autorun(() => {
+//     console.info("=========================");
 
-    for (const key in extandable) {
-        if (extandable.hasOwnProperty(key)) {
-            const value = extandable[key];
+//     for (const key in extandable) {
+//         if (extandable.hasOwnProperty(key)) {
+//             const value = extandable[key];
 
-            console.info(`${key} = ${value}`);
-        }
-    }
-    console.info("=========================");
-});
+//             console.info(`${key} = ${value}`);
+//         }
+//     }
+//     console.info("=========================");
+// });
 
-console.info("extandable.p0 = 2;");
-extandable.p0 = 2;
+// console.info("extandable.p0 = 2;");
+// extandable.p0 = 2;
 
-console.info("extandable.p2 = 3;");
-extandable.p2 = 3;
+// console.info("extandable.p2 = 3;");
+// extandable.p2 = 3;
 
-console.info("extendObservable(extandable, { ex01: 1, ex02: 2 });");
-extendObservable(extandable, { ex01: 1, ex02: 2 });
+// console.info("extendObservable(extandable, { ex01: 1, ex02: 2 });");
+// extendObservable(extandable, { ex01: 1, ex02: 2 });
 
-console.info("remove(extandable, \"p1\");");
-remove(extandable, "p1");
+// console.info("remove(extandable, \"p1\");");
+// remove(extandable, "p1");
 
 class Item {
     title: string;
@@ -170,11 +170,11 @@ const data = new TestData();
 
 if (document) {
 
-    const l01 = document.getElementById("loop01");
-    loop01(data, l01);
+    // const l01 = document.getElementById("loop01");
+    // loop01(data, l01);
 
 
-    // example 01
+    //example 01
     // const root_ex01 = document.getElementById("ex01");
     // if (root_ex01) {
     //     data.el = ex01(data);
@@ -191,11 +191,11 @@ if (document) {
     // const root_ex03 = document.getElementById("ex03");
     // ex03(data, root_ex03);
 
-    // example 04
-    // const root_if01 = document.getElementById("if01");
-    // if01(data, root_if01);
+    //example 04
+    const root_if01 = document.getElementById("if01");
+    const if01component = if01(data, root_if01);
 
-    // // example 05
+    // example 05
     // const root_if02 = document.getElementById("if02");
     // if02(data, root_if02);
 

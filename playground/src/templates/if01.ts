@@ -34,7 +34,7 @@ const { if01 } =
                                     name: "click",
                                     handler: function (ev: Event, $dc$) {
                                         const { toggleClick } = $dc$.$data;
-                                        toggleClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                        toggleClick.call($dc$.$data, ev, $dc$.$data, $dc$);
                                     },
                                     flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
                                 }
@@ -57,7 +57,7 @@ const { if01 } =
                                 name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
                                 handler: (ev, $dc$) => {
                                     const { colorClick } = $dc$.$data;
-                                    colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+                                    colorClick.call($dc$.$data, ev, $dc$.$data, $dc$);
                                 }
                             }
                         ]
@@ -80,11 +80,8 @@ const { if01 } =
                                     name: "click", flags: 0x0001 | 0x0002 | 0x0004 | 0x0020,
                                     handler: (ev, $dc$) => {
                                         const { colorClick } = $dc$.$data;
-                                        //colorClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
-                                        //colorClick.call($dc$.$data, $dc$.$data, $dc$);
-                                        colorClick(ev, $dc$.$data, $dc$);
+                                        colorClick.call($dc$.$data, ev, $dc$.$data, $dc$);
                                     }
-
                                 }
                             ]
                         }

@@ -1,11 +1,11 @@
-import { IReactionDisposer, autorun, isObservableArray, isObservableMap, Lambda } from "mobx";
+import { IReactionDisposer, autorun, isObservableArray, isObservableMap, Lambda, observable } from "mobx";
 
 class Context {
     dc: DataContext;
     disposed: boolean;
     attached: boolean;
     head: InsertPointProvider;
-    tail?: InsertPointProvider;
+    tail: InsertPointProvider;
 
     getTail: () => ComponentInsertPosition = () => {
         if (this.attached) {
@@ -334,30 +334,16 @@ class PartsContext extends Context {
 
 class LoopContext extends Context {
 
-    constructor(params: LoopParams, dc: DataContext, ipp: InsertPointProvider) {
-        super(dc, ipp);
-    }
-}
-
-
-
-
-class LoopSet implements PartActions {
-
     forEach: (dc: DataContext) => any;
     part: PartFactory;
-    parts: Component[] = [];
+    parts: Context[] = [];
     disposer?: Lambda;
-    tail: InsertPointProvider;
 
+    constructor(params: LoopParams, dc: DataContext, ipp: InsertPointProvider) {
+        super(dc, ipp);
 
-
-    constructor(params: LoopParams, context: Context, ipp: InsertPointProvider) {
         this.forEach = params.forEach;
         this.part = params.part;
-        this.tail = ipp;
-
-        const dc = context.dc;
 
         const loopOver = this.forEach(dc);
 
@@ -367,43 +353,29 @@ class LoopSet implements PartActions {
 
                 if (change.type == "splice") {
                     if (change.removedCount > 0) {
-                        if (change.removedCount === this.parts.length) {
-                            // we need to remove everything
-                            this.parts.forEach(p => p.remove());
-                            this.parts = [];
-                        }
-
-                        // remove parts
-                        // if the last part removed, update ipp to the last visible
-                        // update indexes in DataContex
+                        this.removeParts(change.index, change.removedCount);
                     }
 
                     if (change.addedCount > 0) {
+                        this.addParts(loopOver, change.index, change.added);
+                    }
+                } else {
 
-                        // get parts[index-1]
-                        // create and insert new parts, chained after the parts[index-1]
-                        // re-insert parts[index+addedCount] chaned after the last one
-                        // update indexes in DataContext
+
+                    const ldc = this.dc.createIteration(change.newValue, loopOver, change.index);
+                    const cc = this.part(ldc, this.parts[change.index].head);
+
+                    if (change.index + 1 < this.parts.length) {
+                        this.parts[change.index + 1].head = cc.getTail;
+                    } else {
+                        this.tail = cc.getTail;
+                    }
+
+                    this.parts[change.index] = cc;
+                    if (this.attached) {
+                        cc.insert();
                     }
                 }
-
-
-                // splice	index	starting index of the splice.Splices are also fired by push, unshift, replace etc.√
-                // removedCount	amount of items being removed	√	√
-                // added	array with items being added	√	√
-                // removed	array with items that were removed
-                // addedCount	amount of items that were added
-
-                // update	index	index of the single entry that is being updated	√
-                // newValue	the newValue that is / will be assigned	√	√
-                // oldValue	the old value that was replaced
-
-                console.info("array change detected");
-                console.info(change.object);
-                console.info(change.index);
-                console.info(change.type);
-                this.tail = ipp;
-
             }, true);
 
         } else if (isObservableMap(loopOver)) {
@@ -469,7 +441,78 @@ class LoopSet implements PartActions {
         }
     }
 
-    insert() { }
+    private removeParts(index: number, count: number) {
+
+        if (count === this.parts.length) {
+            // we need to remove everything
+            this.parts.forEach(p => p.dispose());
+            this.parts = [];
+            this.tail = this.head;
+            return;
+        }
+
+        const removed = this.parts.splice(index, count);
+        const topHead = removed[0].head;
+
+        if (index < this.parts.length) {
+            this.parts[index].updateHead(topHead);
+            for (let i = index; i < this.parts.length; i++) {
+                this.parts[i].dc.$index = i;
+            }
+
+        } else {
+            this.tail = topHead;
+        }
+        removed.forEach(p => p.dispose());
+    }
+
+    private addParts(loopOver: any, index: number, items: any[]) {
+
+        if (this.parts.length === 0) {
+            // empty - just add
+
+            
+
+        }
+
+
+
+        let currentPoint = index === 0 ? this.head : this.parts[index - 1].tail;
+
+        let parts = items.map((item, i) => {
+
+            const ldc = this.dc.createIteration(item, loopOver, index + i);
+            const cc = this.part(ldc, currentPoint);
+            currentPoint = cc.getTail;
+            return cc;
+        });
+
+        // this.parts.splice(index, 0, ...parts);
+        // let i = index + parts.length;
+
+        // if (i<this.parts.length)
+        // {
+
+        // }
+
+        this.parts[index].updateHead(currentPoint);
+
+        for (let i = index + parts.length; i < this.parts.length; i++) {
+            this.parts[i].dc.$index = i;
+        }
+
+        if (this.attached) {
+            parts.forEach(p => p.insert());
+        }
+    }
+
+
+
+    insert() {
+        if (!super.insert()) return;
+        this.parts.forEach(p => p.insert());
+        return true;
+    }
 
     remove() {
 
@@ -478,11 +521,14 @@ class LoopSet implements PartActions {
         }
 
         this.parts.forEach(p => p.remove())
+
+        super.remove();
     }
 
     dispose() {
         this.remove();
         this.parts = [];
+        super.dispose();
     }
 
 }
@@ -545,11 +591,11 @@ class DataContext {
     create(data: any) {
         return new DataContext(data, this);
     }
-    createIteration(data: any, collection: any, key: any, index: number) {
-        const dc = new DataContext(data, this);
+    createIteration(data: any, collection: any, index: number, key?: any) {
+        const dc = new DataContext(observable(data), this);
         dc.$collection = collection;
-        dc.$key = key;
-        dc.$index = index;
+        dc.$index = observable(index);
+        dc.$key = key !== undefined ? observable(key) : dc.$index;
         return dc;
     }
 }

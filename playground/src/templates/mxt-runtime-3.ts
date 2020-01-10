@@ -1,20 +1,234 @@
 import { IReactionDisposer, autorun, isObservableArray, isObservableMap, Lambda } from "mobx";
 
+class Context {
+    dc: DataContext;
+    disposed: boolean;
+    attached: boolean;
+    head: InsertPointProvider;
+    tail?: InsertPointProvider;
 
-class PartSet implements PartActions {
+    getTail: () => ComponentInsertPosition = () => {
+        if (this.attached) {
+            if (this.tail) {
+                return this.tail();
+            }
+        }
+        return this.head();
+    }
 
-    private dc: DataContext;
+    constructor(dc: DataContext, ipp: InsertPointProvider) {
+        this.dc = dc;
+        this.head = ipp;
+        this.tail = ipp;
+        this.disposed = false;
+        this.attached = false;
+    }
+
+    updateHead(ipp?: Element | ComponentInsertPosition | InsertPointProvider | undefined | null) {
+
+        if (!ipp) {
+            return;
+        }
+        if (typeof ipp === "function") {
+            this.head = ipp;
+        } else if (isInsertPoint(ipp)) {
+            this.head = () => ipp;
+        } else {
+            this.head = () => { return { element: ipp, position: "beforeend" } as ComponentInsertPosition }
+        }
+
+        function isInsertPoint(item: ComponentInsertPosition | Element): item is ComponentInsertPosition {
+            return ((item as any).nodeName === undefined);
+        }
+    }
+
+    dispose() {
+        this.remove();
+        this.disposed = true;
+    }
+
+    remove() {
+        this.attached = false;
+    }
+
+    insert() {
+        if (this.disposed) return;
+        this.attached = true;
+        return true;
+    }
+
+}
+
+class TemplateContext extends Context {
+
+    elements: Element[] = [];
+    events: EventContext[] = [];
+    disposers: Array<() => void> = [];
+    parts: PartActions[] = [];
+
+    constructor(params: TemplateParams, dc: DataContext, ipp: InsertPointProvider) {
+        super(dc, ipp);
+
+        if (typeof params.template === "string") {
+            const content = params.template;
+            params.template = document.createElement("template");
+            params.template.innerHTML = content;
+        }
+
+        let currentIpp = ipp;
+
+        const content = params.template.content.cloneNode(true) as DocumentFragment;
+        let child = content.firstElementChild;
+        if (child) {
+            let lastChild = child;
+            while (child) {
+                this.elements.push(child);
+                lastChild = child;
+                child = child.nextElementSibling;
+            }
+            currentIpp = () => { return { element: lastChild, position: "afterend" } };
+        }
+
+        if (params.attachTo) {
+
+            for (const item of params.attachTo) {
+
+                const element = content.getElementById(item.id);
+
+                if (element) {
+
+                    if (item.originalId) {
+                        element.id = item.originalId;
+                    } else {
+                        element.removeAttribute("id");
+                    }
+
+                    if (item.attrs !== undefined || item.value !== undefined) {
+                        this.disposers = this.disposers ?? [];
+                        this.disposers.push(
+                            autorun(() => {
+
+                                if (item.attrs !== undefined) {
+                                    const attrs = item.attrs(this.dc);
+                                    for (const key in attrs) {
+                                        if (attrs.hasOwnProperty(key)) {
+                                            const value = attrs[key];
+                                            if (value) {
+                                                element.setAttribute(key, value.toString());
+                                            } else {
+                                                element.removeAttribute(key);
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (item.value !== undefined) {
+                                    const value = item.value(this.dc);
+                                    element.innerText = value ? value.toString() : null;
+                                }
+                            }));
+                    }
+
+                    if (item.events !== undefined) {
+                        for (let index = 0; index < item.events.length; index++) {
+                            const e = item.events[index];
+                            const flags = e.flags ?? 0;
+                            const eventContext: EventContext = {
+                                element,
+                                name: e.name,
+                                handler: (ev: Event) => {
+                                    e.handler(ev, this.dc);
+                                    if (flags & 0x0001) ev.preventDefault();
+                                    if (flags & 0x0002) ev.stopPropagation();
+                                    if (flags & 0x0004) ev.stopImmediatePropagation();
+                                },
+                                options: {
+                                    once: !!(flags & 0x0008),
+                                    passive: !!(flags & 0x0010),
+                                    capture: !!(flags & 0x0020),
+                                }
+                            };
+
+                            element.addEventListener(eventContext.name, eventContext.handler, eventContext.options);
+                            this.events.push(eventContext);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (params.parts) {
+            for (const itemId in params.parts) {
+                if (params.parts.hasOwnProperty(itemId)) {
+                    const element = content.getElementById(itemId);
+                    if (element) {
+                        this.parts.push(params.parts[itemId](dc, () => { return { element, position: "beforeend" } }));
+                    }
+                }
+            }
+        }
+
+        this.tail = currentIpp;
+    }
+
+    insert() {
+        if (!super.insert()) return;
+
+        let { element, position } = this.head();
+
+        if (element && this.elements && this.elements.length > 0) {
+            let inserted = element.insertAdjacentElement(position, this.elements[0]);
+            if (inserted) {
+                element = inserted;
+                position = "afterend";
+
+                for (let index = 1; index < this.elements.length; index++) {
+                    const el = this.elements[index];
+                    inserted = element.insertAdjacentElement(position, el);
+                    if (inserted) {
+                        element = inserted
+                    }
+                }
+            }
+        }
+
+        this.parts.forEach(ps => ps.insert());
+
+        return true;
+    }
+
+    dispose() {
+        this.elements = [];
+        this.disposers.forEach(d => d());
+        this.events.forEach(e => e.element.removeEventListener(e.name, e.handler, e.options));
+        this.parts = [];
+        super.dispose();
+    }
+
+    remove() {
+        if (this.elements) {
+            for (const el of this.elements) {
+                el.remove();
+            }
+        }
+
+        this.parts.forEach(ps => ps.remove());
+        super.remove();
+    }
+}
+
+class PartsContext extends Context {
+
     private switch?: (dc: DataContext) => any;
     private disposer?: IReactionDisposer;
     private parts: Component[] = [];
     private caseParts?: ConditionalPart[];
     private defParts?: Component[];
-    public tail: InsertPointProvider;
 
 
     constructor(params: PartsParams, dc: DataContext, ipp: InsertPointProvider) {
+        super(dc, ipp);
 
-        this.dc = dc;
         if (params.switch) {
             this.switch = params.switch;
         }
@@ -25,6 +239,7 @@ class PartSet implements PartActions {
         const caseParts: ConditionalPart[] = [];
 
         for (const item of params.parts) {
+
             if (typeof item === "function") {
                 const partInst = item(dc, currentPoint);
                 currentPoint = partInst.getTail;
@@ -65,6 +280,8 @@ class PartSet implements PartActions {
     }
 
     insert() {
+        if (!super.insert()) return;
+
         this.parts.forEach(i => i.insert());
 
         if (this.caseParts !== undefined && this.caseParts.length > 0) {
@@ -93,6 +310,7 @@ class PartSet implements PartActions {
                 }
             });
         }
+        return true;
     }
 
     remove() {
@@ -101,15 +319,28 @@ class PartSet implements PartActions {
             this.disposer();
         }
 
-        this.parts.forEach(p => p.remove())
-        this.defParts?.forEach(p => p.remove())
-        this.caseParts?.forEach(p => p.part.remove())
+        this.parts.forEach(p => p.remove());
+        this.defParts?.forEach(p => p.remove());
+        this.caseParts?.forEach(p => p.part.remove());
+
+        super.remove();
     }
 
     dispose() {
         this.remove();
+        this.dispose();
     }
 }
+
+class LoopContext extends Context {
+
+    constructor(params: LoopParams, dc: DataContext, ipp: InsertPointProvider) {
+        super(dc, ipp);
+    }
+}
+
+
+
 
 class LoopSet implements PartActions {
 
@@ -256,113 +487,7 @@ class LoopSet implements PartActions {
 
 }
 
-class Context {
-    dc: DataContext;
-    disposed: boolean;
-    attached: boolean;
-    head: InsertPointProvider;
-    tail?: InsertPointProvider;
-    elements?: Element[];
-    events: EventContext[] = [];
-    disposers?: Array<() => void>;
 
-    partSets: PartActions[] = [];
-
-    getTail: () => ComponentInsertPosition = () => {
-        if (this.attached) {
-            if (this.tail) {
-                return this.tail();
-            }
-        }
-        return this.head();
-    }
-
-    constructor(dc: DataContext, ipp: InsertPointProvider) {
-        this.dc = dc;
-        this.head = ipp;
-        this.disposed = false;
-        this.attached = false;
-    }
-
-
-    dispose() {
-
-        this.remove();
-        this.elements = [];
-        this.disposers?.forEach(d => d());
-        this.events.forEach(e => e.element.removeEventListener(e.name, e.handler, e.options));
-        this.partSets = [];
-        this.disposed = true;
-    }
-
-    remove() {
-        if (this.elements) {
-            for (const el of this.elements) {
-                el.remove();
-            }
-        }
-
-        this.partSets.forEach(ps => ps.remove());
-        this.attached = false;
-    }
-
-    insert(insertPosition?: ComponentInsertPosition | undefined) {
-        if (this.disposed) return;
-
-        this.attached = true;
-
-        const provider = this.getInsertPointProvider(insertPosition);
-        if (provider) {
-            this.head = provider;
-        }
-
-        let { element, position } = this.head();
-
-
-        if (element && this.elements && this.elements.length > 0) {
-            let inserted = element.insertAdjacentElement(position, this.elements[0]);
-            if (inserted) {
-                element = inserted;
-                position = "afterend";
-
-                for (let index = 1; index < this.elements.length; index++) {
-                    const el = this.elements[index];
-                    inserted = element.insertAdjacentElement(position, el);
-                    if (inserted) {
-                        element = inserted
-                    }
-                }
-            }
-        }
-
-        this.partSets.forEach(ps => ps.insert());
-
-        this.attached = true;
-    }
-
-    getInsertPointProvider(insertPoint?: InsertPointProvider | ComponentInsertPosition | Element, defaultProvider?: InsertPointProvider) {
-
-        if (insertPoint === undefined) return defaultProvider;
-
-        if (typeof insertPoint === "function") {
-            return insertPoint;
-        }
-
-        if (isInsertPoint(insertPoint)) {
-            return () => insertPoint;
-        }
-
-        return () => { return { element: insertPoint, position: "beforeend" } as ComponentInsertPosition }
-
-        function isInsertPoint(item: ComponentInsertPosition | Element): item is ComponentInsertPosition {
-            return ((item as any).nodeName === undefined);
-        }
-    }
-
-
-
-
-}
 
 
 declare type InsertPointProvider = () => ComponentInsertPosition;
@@ -376,7 +501,7 @@ declare type ComponentInsertPosition = {
 
 declare type Component = {
 
-    insert: (host?: ComponentInsertPosition | undefined) => void;
+    insert: (host?: Element | ComponentInsertPosition | undefined | null) => void;
     remove: () => void;
     dispose: () => void;
 };
@@ -442,8 +567,18 @@ export function register(components: { [name: string]: number }, parts: Array<($
             if (params[index] === undefined) {
                 params[index] = partParams(pf);
             }
+            const cp = params[index];
 
-            return create(dc, ipp, params[index]);
+            if (isTemplateParams(cp)) {
+                return new TemplateContext(cp, dc, ipp);
+            }
+            if (isPartsParams(cp)) {
+                return new PartsContext(cp, dc, ipp);
+            }
+            //if (isLoopParams(cp)) 
+            {
+                return new LoopContext(cp, dc, ipp);
+            }
         });
     }
 
@@ -469,8 +604,8 @@ function isDataContext(data: any): data is DataContext {
 
 function createComponent(
     data: any | DataContext,
-    host: null | undefined | Element | undefined | InsertPointProvider,
-    componentFactory: (dataContext: DataContext, segmentInsertPoint: InsertPointProvider) => Component
+    host: null | undefined | Element | InsertPointProvider,
+    componentFactory: (dataContext: DataContext, segmentInsertPoint: InsertPointProvider) => Context
 ): Component {
 
     if (data === undefined) throw new Error("data parameter is undefined");
@@ -488,7 +623,11 @@ function createComponent(
     const context = componentFactory(dc, ipp);
 
     const component = {
-        insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
+        insert: (insertPoint?: Element | ComponentInsertPosition | undefined | null) => {
+
+            context.updateHead(insertPoint);
+            context.insert();
+        },
         remove: () => context.remove(),
         dispose: () => context.dispose()
     };
@@ -499,124 +638,6 @@ function createComponent(
     }
 
     return component;
-}
-
-function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams) {
-
-    const context = new Context(dc, ipp);
-    context.tail = context.head;
-
-    if (isTemplateParams(params)) {
-
-        if (typeof params.template === "string") {
-            const content = params.template;
-            params.template = document.createElement("template");
-            params.template.innerHTML = content;
-        }
-
-        const content = params.template.content.cloneNode(true) as DocumentFragment;
-        let child = content.firstElementChild;
-        if (child) {
-            context.elements = [];
-            let lastChild = child;
-            while (child) {
-                context.elements.push(child);
-                lastChild = child;
-                child = child.nextElementSibling;
-            }
-            context.tail = () => { return { element: lastChild, position: "afterend" } };
-        }
-
-        if (params.attachTo) {
-
-            for (const item of params.attachTo) {
-
-                const element = content.getElementById(item.id);
-
-                if (element) {
-
-                    if (item.originalId) {
-                        element.id = item.originalId;
-                    } else {
-                        element.removeAttribute("id");
-                    }
-
-                    if (item.attrs !== undefined || item.value !== undefined) {
-                        context.disposers = context.disposers ?? [];
-                        context.disposers.push(
-                            autorun(() => {
-
-                                if (item.attrs !== undefined) {
-                                    const attrs = item.attrs(context.dc);
-                                    for (const key in attrs) {
-                                        if (attrs.hasOwnProperty(key)) {
-                                            const value = attrs[key];
-                                            if (value) {
-                                                element.setAttribute(key, value.toString());
-                                            } else {
-                                                element.removeAttribute(key);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (item.value !== undefined) {
-                                    const value = item.value(context.dc);
-                                    element.innerText = value ? value.toString() : null;
-                                }
-                            }));
-                    }
-
-                    if (item.events !== undefined) {
-                        for (let index = 0; index < item.events.length; index++) {
-                            const e = item.events[index];
-                            const flags = e.flags ?? 0;
-                            const eventContext: EventContext = {
-                                element,
-                                name: e.name,
-                                handler: (ev: Event) => {
-                                    e.handler(ev, context.dc);
-                                    if (flags & 0x0001) ev.preventDefault();
-                                    if (flags & 0x0002) ev.stopPropagation();
-                                    if (flags & 0x0004) ev.stopImmediatePropagation();
-                                },
-                                options: {
-                                    once: !!(flags & 0x0008),
-                                    passive: !!(flags & 0x0010),
-                                    capture: !!(flags & 0x0020),
-                                }
-                            };
-
-                            element.addEventListener(eventContext.name, eventContext.handler, eventContext.options);
-                            context.events.push(eventContext);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (params.parts) {
-            for (const itemId in params.parts) {
-                if (params.parts.hasOwnProperty(itemId)) {
-                    const element = content.getElementById(itemId);
-                    if (element) {
-                        context.partSets.push(params.parts[itemId](dc, () => { return { element, position: "beforeend" } }));
-                    }
-                }
-            }
-        }
-
-    } else if (isPartsParams(params)) {
-        const ps = new PartSet(params, dc, ipp);
-        context.tail = ps.tail;
-        context.partSets.push(ps);
-    } else if (isLoopParams(params)) {
-        const ps = new LoopSet(params, context, ipp);
-        context.tail = ps.tail;
-        context.partSets.push(ps);
-    }
-
-    return context;
 }
 
 function isTemplateParams(params: CreateParams): params is TemplateParams {

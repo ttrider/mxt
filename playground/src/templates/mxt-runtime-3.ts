@@ -473,7 +473,26 @@ class LoopContext extends Context {
 
             
 
+
+
+            return;
         }
+
+        if (this.parts.length <= index) {
+            // append to the end
+
+
+            return;
+        }
+
+        if (index === 0) {
+            // insert at the front
+
+
+            return;
+        }
+
+        // insert in between
 
 
 

@@ -193,23 +193,23 @@ if (document) {
 
     //example 04
     const root_if01 = document.getElementById("if01");
-    const if01component = if01(data, root_if01);
+    if01(data, root_if01);
 
     // example 05
-    // const root_if02 = document.getElementById("if02");
-    // if02(data, root_if02);
+    const root_if02 = document.getElementById("if02");
+    if02(data, root_if02);
 
-    // const root_if03 = document.getElementById("if03");
-    // if03(data, root_if03);
+    const root_if03 = document.getElementById("if03");
+    if03(data, root_if03);
 
-    // const root_switch01 = document.getElementById("switch01");
-    // switch01(data, root_switch01);
+    const root_switch01 = document.getElementById("switch01");
+    switch01(data, root_switch01);
 
-    // const root_switch02 = document.getElementById("switch02");
-    // switch02(data, root_switch02);
+    const root_switch02 = document.getElementById("switch02");
+    switch02(data, root_switch02);
 
-    // const root_component00 = document.getElementById("component00");
-    // component00(data, root_component00);
+    const root_component00 = document.getElementById("component00");
+    component00(data, root_component00);
 
 
     // let pn = 0;

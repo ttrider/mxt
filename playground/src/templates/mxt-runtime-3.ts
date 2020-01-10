@@ -1,31 +1,33 @@
-import { IReactionDisposer, autorun, isObservableArray, isObservableMap, isObservableObject, keys, Lambda } from "mobx";
-import { isObservableValue } from "mobx/lib/internal";
-
-
-
+import { IReactionDisposer, autorun, isObservableArray, isObservableMap, Lambda } from "mobx";
 
 
 class PartSet implements PartActions {
 
+    private dc: DataContext;
     private switch?: (dc: DataContext) => any;
     private disposer?: IReactionDisposer;
     private parts: Component[] = [];
-    private caseParts: ConditionalPart[] = [];
-    private defParts: Component[] = [];
-    public ipp: InsertPointProvider;
+    private caseParts?: ConditionalPart[];
+    private defParts?: Component[];
+    public tail: InsertPointProvider;
 
 
-    constructor(params: PartsParams, private dc: DataContext, ipp: InsertPointProvider) {
+    constructor(params: PartsParams, dc: DataContext, ipp: InsertPointProvider) {
 
-        this.switch = params.switch;
+        this.dc = dc;
+        if (params.switch) {
+            this.switch = params.switch;
+        }
 
         let currentPoint = ipp;
+
+        const defParts: Component[] = [];
+        const caseParts: ConditionalPart[] = [];
 
         for (const item of params.parts) {
             if (typeof item === "function") {
                 const partInst = item(dc, currentPoint);
-                //currentPoint = partInst.context.appendPos.bind(partInst.context);
-                currentPoint = partInst.context.tail;
+                currentPoint = partInst.getTail;
                 this.parts.push(partInst);
             } else {
 
@@ -36,15 +38,14 @@ class PartSet implements PartActions {
                         item.dc;
 
                 const partInst = item.part(dataContext, currentPoint);
-                currentPoint = partInst.context.tail;
-                //currentPoint = partInst.context.appendPos.bind(partInst.context);
+                currentPoint = partInst.getTail;
 
                 if (item.when === undefined) {
                     this.parts.push(partInst);
                 } else if (item.when === "default") {
-                    this.defParts.push(partInst);
+                    defParts.push(partInst);
                 } else {
-                    this.caseParts.push({
+                    caseParts.push({
                         part: partInst,
                         when: item.when,
                         order: item.order ?? 0
@@ -54,37 +55,41 @@ class PartSet implements PartActions {
         }
 
         // sort conditions
-        if (this.caseParts.length > 0) {
-            this.caseParts = this.caseParts.sort(i => i.order);
+        if (caseParts.length > 0) {
+            this.caseParts = caseParts.sort(i => i.order);
+            this.defParts = defParts;
         } else {
-            this.parts.push(...this.defParts);
-            this.defParts = [];
+            this.parts.push(...defParts);
         }
-        this.ipp = currentPoint;
+        this.tail = currentPoint;
     }
 
     insert() {
         this.parts.forEach(i => i.insert());
 
-        if (this.caseParts.length > 0) {
+        if (this.caseParts !== undefined && this.caseParts.length > 0) {
 
             this.disposer = autorun(() => {
 
-                const $on = (this.switch === undefined) ? undefined : this.switch(this.dc);
-                let def = true;
-                for (const p of this.caseParts) {
-                    if (p.when($on, this.dc)) {
-                        def = false;
-                        p.part.insert();
-                    } else {
-                        p.part.remove();
+                if (this.caseParts !== undefined) {
+
+                    const $on = (this.switch === undefined) ? undefined : this.switch(this.dc);
+                    let def = true;
+                    for (const p of this.caseParts) {
+                        if (p.when($on, this.dc)) {
+                            def = false;
+                            p.part.insert();
+                        } else {
+                            p.part.remove();
+                        }
                     }
-                }
-                if (def) {
-                    this.defParts.forEach(p => p.insert())
-                }
-                else {
-                    this.defParts.forEach(p => p.remove())
+
+                    if (def) {
+                        this.defParts?.forEach(p => p.insert())
+                    }
+                    else {
+                        this.defParts?.forEach(p => p.remove())
+                    }
                 }
             });
         }
@@ -97,8 +102,8 @@ class PartSet implements PartActions {
         }
 
         this.parts.forEach(p => p.remove())
-        this.defParts.forEach(p => p.remove())
-        this.caseParts.forEach(p => p.part.remove())
+        this.defParts?.forEach(p => p.remove())
+        this.caseParts?.forEach(p => p.part.remove())
     }
 
     dispose() {
@@ -112,16 +117,18 @@ class LoopSet implements PartActions {
     part: PartFactory;
     parts: Component[] = [];
     disposer?: Lambda;
+    tail: InsertPointProvider;
 
-    constructor(params: LoopParams, private dc: DataContext, public ipp: InsertPointProvider) {
+
+
+    constructor(params: LoopParams, context: Context, ipp: InsertPointProvider) {
         this.forEach = params.forEach;
         this.part = params.part;
-    }
+        this.tail = ipp;
 
-    insert() {
+        const dc = context.dc;
 
-        const loopOver = this.forEach(this.dc);
-
+        const loopOver = this.forEach(dc);
 
         if (isObservableArray(loopOver)) {
 
@@ -129,6 +136,11 @@ class LoopSet implements PartActions {
 
                 if (change.type == "splice") {
                     if (change.removedCount > 0) {
+                        if (change.removedCount === this.parts.length) {
+                            // we need to remove everything
+                            this.parts.forEach(p => p.remove());
+                            this.parts = [];
+                        }
 
                         // remove parts
                         // if the last part removed, update ipp to the last visible
@@ -159,6 +171,7 @@ class LoopSet implements PartActions {
                 console.info(change.object);
                 console.info(change.index);
                 console.info(change.type);
+                this.tail = ipp;
 
             }, true);
 
@@ -184,45 +197,48 @@ class LoopSet implements PartActions {
             //         console.info(change.type);
 
             //     }, true);
+            this.tail = ipp;
 
         } else if (Array.isArray(loopOver)) {
             // static array
 
-            let currentPoint = this.ipp;
+            let currentPoint = ipp;
 
             for (let index = 0; index < loopOver.length; index++) {
-                const ldc = this.dc.createIteration(loopOver[index], loopOver, index.toString(), index);
+                const ldc = context.dc.createIteration(loopOver[index], loopOver, index.toString(), index);
                 const cc = this.part(ldc, currentPoint);
                 this.parts.push(cc);
-                currentPoint = cc.context.tail;
+                currentPoint = cc.getTail;
                 //currentPoint = cc.context.appendPos.bind(cc.context)
                 cc.insert();
             }
 
-            this.ipp = currentPoint;
+            this.tail = currentPoint;
 
         } else {
             // regular object
 
-            let currentPoint = this.ipp;
+            let currentPoint = ipp;
 
             let index = 0;
             for (const key in loopOver) {
                 if (loopOver.hasOwnProperty(key)) {
                     const value = loopOver[key];
 
-                    const ldc = this.dc.createIteration(value, loopOver, key, index++);
+                    const ldc = context.dc.createIteration(value, loopOver, key, index++);
                     const cc = this.part(ldc, currentPoint);
                     this.parts.push(cc);
-                    currentPoint = cc.context.tail;
+                    currentPoint = cc.getTail;
                     //currentPoint = cc.context.appendPos.bind(cc.context)
                     cc.insert();
                 }
             }
 
-            this.ipp = currentPoint;
+            this.tail = currentPoint;
         }
     }
+
+    insert() { }
 
     remove() {
 
@@ -235,6 +251,7 @@ class LoopSet implements PartActions {
 
     dispose() {
         this.remove();
+        this.parts = [];
     }
 
 }
@@ -243,21 +260,26 @@ class Context {
     dc: DataContext;
     disposed: boolean;
     attached: boolean;
-    insertPoint: InsertPointProvider;
-    lastInsertPosition?: InsertPointProvider;
+    head: InsertPointProvider;
+    tail?: InsertPointProvider;
     elements?: Element[];
     events: EventContext[] = [];
     disposers?: Array<() => void>;
 
     partSets: PartActions[] = [];
 
-    tail: () => ComponentInsertPosition = () => {
-        return this.appendPos2();
+    getTail: () => ComponentInsertPosition = () => {
+        if (this.attached) {
+            if (this.tail) {
+                return this.tail();
+            }
+        }
+        return this.head();
     }
 
     constructor(dc: DataContext, ipp: InsertPointProvider) {
         this.dc = dc;
-        this.insertPoint = ipp;
+        this.head = ipp;
         this.disposed = false;
         this.attached = false;
     }
@@ -291,10 +313,10 @@ class Context {
 
         const provider = this.getInsertPointProvider(insertPosition);
         if (provider) {
-            this.insertPoint = provider;
+            this.head = provider;
         }
 
-        let { element, position } = this.insertPoint();
+        let { element, position } = this.head();
 
 
         if (element && this.elements && this.elements.length > 0) {
@@ -337,15 +359,6 @@ class Context {
         }
     }
 
-    appendPos2(): ComponentInsertPosition {
-
-        if (this.attached) {
-            if (this.lastInsertPosition) {
-                return this.lastInsertPosition();
-            }
-        }
-        return this.insertPoint();
-    }
 
 
 
@@ -359,13 +372,13 @@ declare type ComponentInsertPosition = {
     position: InsertPosition
 };
 
+
+
 declare type Component = {
 
-    // appendPos: () => ComponentInsertPosition;
     insert: (host?: ComponentInsertPosition | undefined) => void;
     remove: () => void;
     dispose: () => void;
-    context: Context;
 };
 
 
@@ -472,9 +485,14 @@ function createComponent(
 
     const ipp = (host !== undefined && typeof host === "function") ? host : () => { return { element: host, position: "beforeend" as InsertPosition } };
 
-    const component = componentFactory(dc, ipp);
+    const context = componentFactory(dc, ipp);
 
-    
+    const component = {
+        insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
+        remove: () => context.remove(),
+        dispose: () => context.dispose()
+    };
+
 
     if (host) {
         component.insert();
@@ -486,7 +504,7 @@ function createComponent(
 function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams) {
 
     const context = new Context(dc, ipp);
-    context.lastInsertPosition = context.insertPoint;
+    context.tail = context.head;
 
     if (isTemplateParams(params)) {
 
@@ -506,7 +524,7 @@ function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams)
                 lastChild = child;
                 child = child.nextElementSibling;
             }
-            context.lastInsertPosition = () => { return { element: lastChild, position: "afterend" } };
+            context.tail = () => { return { element: lastChild, position: "afterend" } };
         }
 
         if (params.attachTo) {
@@ -590,25 +608,15 @@ function create(dc: DataContext, ipp: InsertPointProvider, params: CreateParams)
 
     } else if (isPartsParams(params)) {
         const ps = new PartSet(params, dc, ipp);
-        context.lastInsertPosition = ps.ipp;
+        context.tail = ps.tail;
         context.partSets.push(ps);
     } else if (isLoopParams(params)) {
-        const ps = new LoopSet(params, dc, ipp);
-        context.lastInsertPosition = ps.ipp;
+        const ps = new LoopSet(params, context, ipp);
+        context.tail = ps.tail;
         context.partSets.push(ps);
     }
 
-    return {
-        // appendPos: () => context.appendPos(),
-        // appendPos: context.appendPos.bind(context),
-        // insert: (insertPoint?: ComponentInsertPosition | undefined) => context.insert(insertPoint),
-        insert: context.insert.bind(context),
-        // remove: () => context.remove(),
-        remove: context.remove.bind(context),
-        // dispose: () => context.dispose()
-        dispose: context.dispose.bind(context),
-        context
-    };
+    return context;
 }
 
 function isTemplateParams(params: CreateParams): params is TemplateParams {
@@ -659,7 +667,7 @@ interface EventParams {
 //   capture = 0x0020
 
 
-declare type PartFactory = (dc: DataContext, ipp: InsertPointProvider) => Component;
+declare type PartFactory = (dc: DataContext, ipp: InsertPointProvider) => Context;
 
 interface PartsParams {
     switch?: (dc: DataContext) => any,

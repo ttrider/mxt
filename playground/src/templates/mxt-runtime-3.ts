@@ -405,39 +405,31 @@ class LoopContext extends Context {
         } else if (Array.isArray(loopOver)) {
             // static array
 
-            let currentPoint = ipp;
+            this.parts.forEach(p => p.dispose());
+            this.parts = [];
+            this.tail = this.head;
 
-            for (let index = 0; index < loopOver.length; index++) {
-                const ldc = context.dc.createIteration(loopOver[index], loopOver, index.toString(), index);
-                const cc = this.part(ldc, currentPoint);
-                this.parts.push(cc);
-                currentPoint = cc.getTail;
-                //currentPoint = cc.context.appendPos.bind(cc.context)
-                cc.insert();
-            }
-
-            this.tail = currentPoint;
-
+            this.addParts(loopOver, 0, loopOver)
         } else {
             // regular object
 
-            let currentPoint = ipp;
+            // let currentPoint = ipp;
 
-            let index = 0;
-            for (const key in loopOver) {
-                if (loopOver.hasOwnProperty(key)) {
-                    const value = loopOver[key];
+            // let index = 0;
+            // for (const key in loopOver) {
+            //     if (loopOver.hasOwnProperty(key)) {
+            //         const value = loopOver[key];
 
-                    const ldc = context.dc.createIteration(value, loopOver, key, index++);
-                    const cc = this.part(ldc, currentPoint);
-                    this.parts.push(cc);
-                    currentPoint = cc.getTail;
-                    //currentPoint = cc.context.appendPos.bind(cc.context)
-                    cc.insert();
-                }
-            }
+            //         const ldc = context.dc.createIteration(value, loopOver, key, index++);
+            //         const cc = this.part(ldc, currentPoint);
+            //         this.parts.push(cc);
+            //         currentPoint = cc.getTail;
+            //         //currentPoint = cc.context.appendPos.bind(cc.context)
+            //         cc.insert();
+            //     }
+            // }
 
-            this.tail = currentPoint;
+            // this.tail = currentPoint;
         }
     }
 
@@ -468,19 +460,27 @@ class LoopContext extends Context {
 
     private addParts(loopOver: any, index: number, items: any[]) {
 
+        const dc = this.dc;
+        const part = this.part;
+
         if (this.parts.length === 0) {
             // empty - just add
+            this.tail = createSet(items, index, this.head, this.parts);
 
-            
-
-
+            if (this.attached) {
+                this.parts.forEach(p => p.insert());
+            }
 
             return;
         }
 
         if (this.parts.length <= index) {
             // append to the end
+            this.tail = createSet(items, index, this.tail, this.parts);
 
+            if (this.attached) {
+                this.parts.forEach(p => p.insert());
+            }
 
             return;
         }
@@ -488,41 +488,58 @@ class LoopContext extends Context {
         if (index === 0) {
             // insert at the front
 
+            const newSet: Context[] = [];
+            const tempTail = createSet(items, index, this.head, newSet);
+            this.parts[index].head = tempTail;
+
+            this.parts.splice(index, 0, ...newSet);
+
+            applyIndex(this.parts, index + items.length);
+
+            if (this.attached) {
+                newSet.forEach(p => p.insert());
+            }
 
             return;
         }
 
         // insert in between
 
+        const newSet: Context[] = [];
 
+        const tempTail = createSet(items, index, this.parts[index - 1].tail, newSet);
 
-        let currentPoint = index === 0 ? this.head : this.parts[index - 1].tail;
+        this.parts[index].head = tempTail;
 
-        let parts = items.map((item, i) => {
+        this.parts.splice(index, 0, ...newSet);
 
-            const ldc = this.dc.createIteration(item, loopOver, index + i);
-            const cc = this.part(ldc, currentPoint);
-            currentPoint = cc.getTail;
-            return cc;
-        });
-
-        // this.parts.splice(index, 0, ...parts);
-        // let i = index + parts.length;
-
-        // if (i<this.parts.length)
-        // {
-
-        // }
-
-        this.parts[index].updateHead(currentPoint);
-
-        for (let i = index + parts.length; i < this.parts.length; i++) {
-            this.parts[i].dc.$index = i;
-        }
+        applyIndex(this.parts, index + items.length);
 
         if (this.attached) {
-            parts.forEach(p => p.insert());
+            newSet.forEach(p => p.insert());
         }
+
+
+
+        function createSet(data: any[], startIndex: number, ipp: InsertPointProvider, target: Context[]) {
+
+            for (let index = 0; index < data.length; index++ , startIndex++) {
+                const item = data[index];
+
+                const ldc = dc.createIteration(item, loopOver, startIndex);
+                const cc = part(ldc, ipp);
+                target.push(cc);
+                ipp = cc.getTail;
+            }
+            return ipp;
+        }
+
+        function applyIndex(parts: Context[], index: number) {
+            for (; index < parts.length; index++) {
+                parts[index].dc.$index = index;
+            }
+        }
+
     }
 
 
@@ -598,8 +615,8 @@ class DataContext {
     $data: any;
     $parent?: DataContext;
     $collection?: any;
-    $key?: any;
-    $index?: number;
+    @observable $key?: any;
+    @observable $index?: number;
 
     constructor(data: any, parent?: DataContext) {
         this.$root = parent !== undefined ? parent.$root : data;
@@ -611,10 +628,10 @@ class DataContext {
         return new DataContext(data, this);
     }
     createIteration(data: any, collection: any, index: number, key?: any) {
-        const dc = new DataContext(observable(data), this);
+        const dc = new DataContext(data, this);
         dc.$collection = collection;
-        dc.$index = observable(index);
-        dc.$key = key !== undefined ? observable(key) : dc.$index;
+        dc.$index = index;
+        dc.$key = key ?? index.toString();
         return dc;
     }
 }

@@ -51,8 +51,8 @@ const { loop01 } =
                         {
                             id: "tagid_3",
                             value: ($dc$) => {
-                                const { name } = $dc$.$data;
-                                return name;
+                                const { title } = $dc$.$data;
+                                return title;
                             }
                         },
                         {

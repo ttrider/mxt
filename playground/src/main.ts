@@ -135,12 +135,12 @@ class TestData {
 
 
     @observable items: Item[] = [
-        { title: "Item 1", subsubTitle: "This is the item 1", link: "http://smile.amazon.com" },
-        { title: "Item 2", subsubTitle: "This is the item 2", link: "http://smile.amazon.com" },
-        { title: "Item 3", subsubTitle: "This is the item 3", link: "http://smile.amazon.com" },
-        { title: "Item 4", subsubTitle: "This is the item 4", link: "http://smile.amazon.com" },
-        { title: "Item 5", subsubTitle: "This is the item 5", link: "http://smile.amazon.com" },
-        { title: "Item 6", subsubTitle: "This is the item 6", link: "http://smile.amazon.com" },
+        { title: "Item 1", subTitle: "This is the item 1", link: "http://smile.amazon.com" },
+        { title: "Item 2", subTitle: "This is the item 2", link: "http://smile.amazon.com" },
+        { title: "Item 3", subTitle: "This is the item 3", link: "http://smile.amazon.com" },
+        { title: "Item 4", subTitle: "This is the item 4", link: "http://smile.amazon.com" },
+        { title: "Item 5", subTitle: "This is the item 5", link: "http://smile.amazon.com" },
+        { title: "Item 6", subTitle: "This is the item 6", link: "http://smile.amazon.com" },
     ];
 
     properties =
@@ -170,8 +170,8 @@ const data = new TestData();
 
 if (document) {
 
-    // const l01 = document.getElementById("loop01");
-    // loop01(data, l01);
+    const l01 = document.getElementById("loop01");
+    loop01(data, l01);
 
 
     //example 01
@@ -217,10 +217,9 @@ if (document) {
     // setInterval(() => {
 
 
-    //     const p = data.properties;
-    //     p.set(pn.toString(), { description: pn.toString(), value: pn });
-    //     pn++;
-    //     //data.properties["property 3"].value++;
+
+    //     data.items.splice(3,0,{ title: `=item= ${pn++} =item=`, subTitle: "This is the item 3", link: "http://smile.amazon.com" });
+
 
     // }, 1000);
 

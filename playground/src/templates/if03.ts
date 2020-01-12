@@ -15,7 +15,7 @@ const { if03 } =
                             </td>
                         </tr>
                     </table>`,
-                    parts: {
+                    embed: {
                         "tagid_1": $pf$.p01
                     }
                 }
@@ -33,21 +33,9 @@ const { if03 } =
                     }
                 }
             },
-            "p02": ($pf$) => {
-                return {
-                    template: `<span>before</span>`,
-                }
-            },
-            "p03": ($pf$) => {
-                return {
-                    template: `<span>text</span>`,
-                }
-            },
-            "p04": ($pf$) => {
-                return {
-                    template: `<span>after</span>`,
-                }
-            },
+            "p02": "<span>before</span>",
+            "p03": "<span>text</span>",
+            "p04": "<span>after</span>"
         }
     }
     );

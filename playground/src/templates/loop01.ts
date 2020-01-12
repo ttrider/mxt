@@ -19,7 +19,7 @@ const { loop01 } =
             "p02": ($pf$) => { // 2
                 return {
                     template: `<table id="tagid_1" style="border: 1px solid blue"></table>`,
-                    parts: {
+                    embed: {
                         "tagid_1": $pf$.p07
                     }
                 }
@@ -32,7 +32,7 @@ const { loop01 } =
             "p04": ($pf$) => { // 4
                 return {
                     template: `<table id="tagid_2" style="border: 1px solid rgb(0, 251, 255)"></table>`,
-                    parts: {
+                    embed: {
                         "tagid_2": $pf$.p08
                     }
                 }

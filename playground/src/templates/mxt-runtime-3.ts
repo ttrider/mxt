@@ -157,12 +157,12 @@ class TemplateContext extends Context {
             }
         }
 
-        if (params.parts) {
-            for (const itemId in params.parts) {
-                if (params.parts.hasOwnProperty(itemId)) {
+        if (params.embed) {
+            for (const itemId in params.embed) {
+                if (params.embed.hasOwnProperty(itemId)) {
                     const element = content.getElementById(itemId);
                     if (element) {
-                        this.parts.push(params.parts[itemId](dc, () => { return { element, position: "beforeend" } }));
+                        this.parts.push(params.embed[itemId](dc, () => { return { element, position: "beforeend" } }));
                     }
                 }
             }
@@ -767,7 +767,7 @@ declare type CreateParams =
 interface TemplateParams {
     template: HTMLTemplateElement | string;
     attachTo?: AttachParams[];
-    parts?: { [id: string]: PartFactory }
+    embed?: { [id: string]: PartFactory }
 }
 
 interface AttachParams {

@@ -2,14 +2,14 @@ import * as mxt from "./mxt-runtime-3";
 
 const { if02 } =
     mxt.register(
-        { "if02": 0 },
-        [
-            ($pf$) => {
+        { "if02": "p00" },
+        {
+            "p00": ($pf$) => {
                 return {
                     parts: [
-                        $pf$[1],
-                        { part: $pf$[2], when: ($on: any, $dc$) => $on },
-                        $pf$[4]
+                        $pf$.p01,
+                        { part: $pf$.p02, when: ($on: any, $dc$) => $on },
+                        $pf$.p04
                     ],
                     switch: ($dc$) => {
                         const { showElement } = $dc$.$data;
@@ -17,7 +17,7 @@ const { if02 } =
                     }
                 }
             },
-            ($pf$) => {
+            "p01": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_1">Before IF</div>`,
                     attachTo: [
@@ -43,11 +43,11 @@ const { if02 } =
                     ]
                 }
             },
-            ($pf$) => {
+            "p02": ($pf$) => {
                 return {
                     parts: [
-                        $pf$[3],
-                        { part: $pf$[5], when: ($on: any, $dc$) => $on }
+                        $pf$.p03,
+                        { part: $pf$.p05, when: ($on: any, $dc$) => $on }
                     ],
                     switch: ($dc$) => {
                         const { showSubElement } = $dc$.$data;
@@ -55,7 +55,7 @@ const { if02 } =
                     }
                 }
             },
-            ($pf$) => {
+            "p03": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_2">Yes, it is TRUE</div>`,
                     attachTo: [{
@@ -76,7 +76,7 @@ const { if02 } =
                     }]
                 }
             },
-            ($pf$) => {
+            "p04": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_3">After IF</div>`,
                     attachTo: [
@@ -101,7 +101,7 @@ const { if02 } =
                     ]
                 }
             },
-            ($pf$) => {
+            "p05": ($pf$) => {
                 return {
                     template: "<div id=\"tagid_4\">Yes, it is TRUE and TRUE</div>",
                     attachTo: [
@@ -126,7 +126,7 @@ const { if02 } =
                     ]
                 }
             }
-        ]
+        }
     );
 export { if02 };
 export default if02;

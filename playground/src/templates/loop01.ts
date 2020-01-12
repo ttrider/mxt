@@ -2,43 +2,42 @@ import * as mxt from "./mxt-runtime-3";
 
 const { loop01 } =
     mxt.register(
-        { "loop01": 0 },
-        [
-            ($pf$) => { // 0
+        { "loop01": "p00" },
+        {
+            "p00": ($pf$) => { // 0
                 return {
                     parts: [
-                        $pf$[1], $pf$[2],
-                        $pf$[3], $pf$[4]
+                        $pf$.p01, $pf$.p02, $pf$.p03, $pf$.p04
                     ]
                 }
             },
-            ($pf$) => { // 1
+            "p01": ($pf$) => { // 1
                 return {
                     template: `<div>Array Loop:</div>`
                 }
             },
-            ($pf$) => { // 2
+            "p02": ($pf$) => { // 2
                 return {
                     template: `<table id="tagid_1" style="border: 1px solid blue"></table>`,
                     parts: {
-                        "tagid_1": $pf$[7]
+                        "tagid_1": $pf$.p07
                     }
                 }
             },
-            ($pf$) => { // 3
+            "p03": ($pf$) => { // 3
                 return {
                     template: `<hr/><div>Property Loop:</div>`
                 }
             },
-            ($pf$) => { // 4
+            "p04": ($pf$) => { // 4
                 return {
                     template: `<table id="tagid_2" style="border: 1px solid rgb(0, 251, 255)"></table>`,
                     parts: {
-                        "tagid_2": $pf$[8]
+                        "tagid_2": $pf$.p08
                     }
                 }
             },
-            ($pf$) => { // 5
+            "p05": ($pf$) => { // 5
                 return {
                     template: `<tr>
                     <td id="tagid_3">\${name}</td>
@@ -65,14 +64,15 @@ const { loop01 } =
                         {
                             id: "tagid_5",
                             value: ($dc$) => {
-                                const { link } = $dc$.$data;
-                                return link;
+                                // const { link } = $dc$.$data;
+                                // return link;
+                                return $dc$.$index;
                             }
                         }
                     ]
                 }
             },
-            ($pf$) => { // 6
+            "p06": ($pf$) => { // 6
                 return {
                     template: `<tr id="tagid_6" style="background: \${$index%2?\`#f0f0f0\`:\`#fefefe\`}">
                     <td id="tagid_7">\${$key}</td>
@@ -115,25 +115,25 @@ const { loop01 } =
                     ]
                 }
             },
-            ($pf$) => { // 7
+            "p07": ($pf$) => { // 7
                 return {
                     forEach: ($dc$) => {
                         const { items } = $dc$.$data;
                         return items;
                     },
-                    part: $pf$[5]
+                    part: $pf$.p05
                 }
             },
-            ($pf$) => { // 8
+            "p08": ($pf$) => { // 8
                 return {
                     forEach: ($dc$) => {
                         const { properties } = $dc$.$data;
                         return properties;
                     },
-                    part: $pf$[6]
+                    part: $pf$.p06
                 }
             },
-        ]
+        }
     );
 
 export { loop01 };

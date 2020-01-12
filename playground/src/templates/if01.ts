@@ -2,14 +2,14 @@ import * as mxt from "./mxt-runtime-3";
 
 const { if01 } =
     mxt.register(
-        { "if01": 0 },
-        [
-            ($pf$) => {
+        { "if01": "p00" },
+        {
+            "p00": ($pf$) => {
                 return {
                     parts: [
-                        $pf$[1],
-                        { part: $pf$[2], when: ($on: any, $dc$) => $on },
-                        $pf$[3]
+                        $pf$.p01,
+                        { part: $pf$.p02, when: ($on: any, $dc$) => $on },
+                        $pf$.p03
                     ],
                     switch: ($dc$) => {
                         const { showElement } = $dc$.$data;
@@ -17,7 +17,7 @@ const { if01 } =
                     }
                 }
             },
-            ($pf$) => {
+            "p01": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_1">Before IF</div>`,
                     attachTo: [
@@ -43,7 +43,7 @@ const { if01 } =
                     ]
                 }
             },
-            ($pf$) => {
+            "p02": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_2">Yes, it is TRUE</div>`,
                     attachTo: [{
@@ -64,7 +64,7 @@ const { if01 } =
                     }]
                 }
             },
-            ($pf$) => {
+            "p03": ($pf$) => {
                 return {
                     template: `<hr/><div id="tagid_3">After IF</div>`,
                     attachTo: [
@@ -88,7 +88,7 @@ const { if01 } =
                     ]
                 }
             }
-        ]
+        }
     );
 export { if01 };
 export default if01;

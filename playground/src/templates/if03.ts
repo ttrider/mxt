@@ -2,9 +2,9 @@ import * as mxt from "./mxt-runtime-3";
 
 const { if03 } =
     mxt.register(
-        { "if03": 0 },
-        [
-            ($pf$) => {
+        { "if03": "p00" },
+        {
+            "p00": ($pf$) => {
                 return {
                     template: `<table border="1">
                         <tr>
@@ -16,16 +16,16 @@ const { if03 } =
                         </tr>
                     </table>`,
                     parts: {
-                        "tagid_1": $pf$[1]
+                        "tagid_1": $pf$.p01
                     }
                 }
             },
-            ($pf$) => {
+            "p01": ($pf$) => {
                 return {
                     parts: [
-                        $pf$[2],
-                        { part: $pf$[3], when: ($on: any, $dc$) => $on },
-                        $pf$[4]
+                        $pf$.p02,
+                        { part: $pf$.p03, when: ($on: any, $dc$) => $on },
+                        $pf$.p04
                     ],
                     switch: ($dc$) => {
                         const { showElement } = $dc$.$data;
@@ -33,22 +33,22 @@ const { if03 } =
                     }
                 }
             },
-            ($pf$) => {
+            "p02": ($pf$) => {
                 return {
                     template: `<span>before</span>`,
                 }
             },
-            ($pf$) => {
+            "p03": ($pf$) => {
                 return {
                     template: `<span>text</span>`,
                 }
             },
-            ($pf$) => {
+            "p04": ($pf$) => {
                 return {
                     template: `<span>after</span>`,
                 }
             },
-        ]
+        }
     );
 export { if03 };
 

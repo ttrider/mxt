@@ -124,7 +124,7 @@ class TemplateContext extends Context {
 
                                 if (item.value !== undefined) {
                                     const value = item.value(this.dc);
-                                    element.innerText = value ? value.toString() : null;
+                                    element.innerText = value !== undefined ? value.toString() : null;
                                 }
                             }));
                     }
@@ -636,32 +636,36 @@ class DataContext {
     }
 }
 
-export function register(components: { [name: string]: number }, parts: Array<($pf: PartFactory[]) => CreateParams>) {
+export function register(components: { [name: string]: string }, parts: { [name: string]: ($pf: { [name: string]: PartFactory }) => CreateParams }) {
 
-    const pf: PartFactory[] = [];
-    const params: CreateParams[] = [];
+    const pf: { [name: string]: PartFactory } = {};
+    const params: { [name: string]: CreateParams } = {};
 
-    for (let index = 0; index < parts.length; index++) {
-        const partParams = parts[index];
+    for (const pfKey in parts) {
+        if (parts.hasOwnProperty(pfKey)) {
+            const partParams = parts[pfKey];
 
-        pf.push((dc: DataContext, ipp: InsertPointProvider) => {
+            pf[pfKey] = ((dc: DataContext, ipp: InsertPointProvider) => {
 
-            if (params[index] === undefined) {
-                params[index] = partParams(pf);
-            }
-            const cp = params[index];
+                if (params[pfKey] === undefined) {
+                    params[pfKey] = partParams(pf);
+                }
+                const cp = params[pfKey];
 
-            if (isTemplateParams(cp)) {
-                return new TemplateContext(cp, dc, ipp);
-            }
-            if (isPartsParams(cp)) {
-                return new PartsContext(cp, dc, ipp);
-            }
-            //if (isLoopParams(cp)) 
-            {
-                return new LoopContext(cp, dc, ipp);
-            }
-        });
+                if (isTemplateParams(cp)) {
+                    return new TemplateContext(cp, dc, ipp);
+                }
+                if (isPartsParams(cp)) {
+                    return new PartsContext(cp, dc, ipp);
+                }
+                //if (isLoopParams(cp)) 
+                {
+                    return new LoopContext(cp, dc, ipp);
+                }
+            });
+
+
+        }
     }
 
     const exports: {

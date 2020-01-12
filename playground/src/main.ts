@@ -221,7 +221,7 @@ if (document) {
     //     data.items.splice(3,0,{ title: `=item= ${pn++} =item=`, subTitle: "This is the item 3", link: "http://smile.amazon.com" });
 
 
-    // }, 1000);
+    // }, 3000);
 
 }
 

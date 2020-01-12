@@ -7,7 +7,6 @@ import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
 import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
-import { switch02 } from "./templates/switch02";
 import component00 from "./templates/component00";
 import loop01 from "./templates/loop01";
 
@@ -99,7 +98,7 @@ class TestData {
 
     switchClick() {
 
-        this.switchindex = (this.switchindex + 1) % 4;
+        this.switchindex = (this.switchindex + 1) % 5;
     }
 
     toggleClick() {
@@ -204,9 +203,6 @@ if (document) {
 
     const root_switch01 = document.getElementById("switch01");
     switch01(data, root_switch01);
-
-    const root_switch02 = document.getElementById("switch02");
-    switch02(data, root_switch02);
 
     const root_component00 = document.getElementById("component00");
     component00(data, root_component00);

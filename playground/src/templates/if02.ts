@@ -1,7 +1,7 @@
-import * as mxt from "./mxt-runtime-3";
+import { register } from "./mxt-runtime-3";
 
 const { if02 } =
-    mxt.register({
+    register({
         exports: { "if02": "p00" },
         parts: {
             "p00": ($pf$) => {

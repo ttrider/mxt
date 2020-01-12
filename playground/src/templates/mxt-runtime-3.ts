@@ -636,10 +636,26 @@ class DataContext {
     }
 }
 
-export function register(components: { [name: string]: string }, parts: { [name: string]: ($pf: { [name: string]: PartFactory }) => CreateParams }) {
+export function register(
+    exports: { [name: string]: string },
+    parts: { [name: string]: ($pf: { [name: string]: PartFactory }) => CreateParams },
+    imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component }
+) {
 
     const pf: { [name: string]: PartFactory } = {};
     const params: { [name: string]: CreateParams } = {};
+
+    if (imports) {
+        for (const importKey in imports) {
+            if (imports.hasOwnProperty(importKey)) {
+                const importItem = imports[importKey] as any;
+                if (importItem.component) {
+                    pf[importKey] = importItem.component;
+                }
+            }
+        }
+    }
+
 
     for (const pfKey in parts) {
         if (parts.hasOwnProperty(pfKey)) {
@@ -668,20 +684,21 @@ export function register(components: { [name: string]: string }, parts: { [name:
         }
     }
 
-    const exports: {
+    const exp: {
         [name: string]: (data: any, host?: null | undefined | Element | InsertPointProvider) => Component
     } = {};
 
-    for (const name in components) {
-        if (components.hasOwnProperty(name)) {
-            const index = components[name];
-            exports[name] = (data, host) => {
+    for (const name in exports) {
+        if (exports.hasOwnProperty(name)) {
+            const index = exports[name];
+            exp[name] = (data, host) => {
                 return createComponent(data, host, pf[index]);
             }
+            (exp[name] as any).component = pf[index];
         }
     }
 
-    return exports;
+    return exp;
 }
 
 function isDataContext(data: any): data is DataContext {

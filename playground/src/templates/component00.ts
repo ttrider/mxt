@@ -1,4 +1,4 @@
-import * as mxt from "./mxt-runtime-3";
+import * as mxt from "./mxt-runtime";
 import if01 from "./if01";
 
 

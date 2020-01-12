@@ -1,4 +1,4 @@
-import * as mxt from "./mxt-runtime-3";
+import * as mxt from "./mxt-runtime";
 
 const { if03 } =
     mxt.register({

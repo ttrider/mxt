@@ -1,4 +1,4 @@
-import { register } from "./mxt-runtime-3";
+import { register } from "./mxt-runtime";
 
 const { switch01 } =
     register({

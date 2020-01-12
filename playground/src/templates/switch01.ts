@@ -45,31 +45,11 @@ const { switch01 } =
                     }]
                 }
             },
-            "s01": ($pf$) => {
-                return {
-                    template: "<div>Switch index 0</div>"
-                }
-            },
-            "s02": ($pf$) => {
-                return {
-                    template: "<div>Switch index 1</div>"
-                }
-            },
-            "s03": ($pf$) => {
-                return {
-                    template: "<div>Switch index 2</div>"
-                }
-            },
-            "s04": ($pf$) => {
-                return {
-                    template: "<div>Switch index default</div>"
-                }
-            },
-            "s05": ($pf$) => {
-                return {
-                    template: "<div>Between 2 and 4</div>"
-                }
-            }
+            "s01": "<div>Switch index 0</div>",
+            "s02": "<div>Switch index 1</div>",
+            "s03": "<div>Switch index 2</div>",
+            "s04": "<div>Switch index default</div>",
+            "s05": "<div>Between 2 and 4</div>"
         }
     }
     );

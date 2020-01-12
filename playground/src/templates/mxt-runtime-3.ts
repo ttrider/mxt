@@ -638,7 +638,7 @@ class DataContext {
 
 export function register(regParams: {
     exports: { [name: string]: string },
-    parts: { [name: string]: ($pf: { [name: string]: PartFactory }) => CreateParams },
+    parts: { [name: string]: (($pf: { [name: string]: PartFactory }) => CreateParams) | string },
     imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component }
 }) {
     const { exports, parts, imports } = regParams;
@@ -665,7 +665,9 @@ export function register(regParams: {
             pf[pfKey] = ((dc: DataContext, ipp: InsertPointProvider) => {
 
                 if (params[pfKey] === undefined) {
-                    params[pfKey] = partParams(pf);
+                    params[pfKey] = (typeof partParams === "string")
+                        ? { template: partParams }
+                        : partParams(pf);
                 }
                 const cp = params[pfKey];
 

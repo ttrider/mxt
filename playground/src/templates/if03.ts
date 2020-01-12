@@ -1,9 +1,9 @@
 import * as mxt from "./mxt-runtime-3";
 
 const { if03 } =
-    mxt.register(
-        { "if03": "p00" },
-        {
+    mxt.register({
+        exports: { "if03": "p00" },
+        parts: {
             "p00": ($pf$) => {
                 return {
                     template: `<table border="1">
@@ -49,6 +49,7 @@ const { if03 } =
                 }
             },
         }
+    }
     );
 export { if03 };
 

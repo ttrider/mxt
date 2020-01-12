@@ -3,9 +3,9 @@ import if01 from "./if01";
 
 
 const { c01 } =
-    mxt.register(
-        { "c01": "p00" },
-        {
+    mxt.register({
+        exports: { "c01": "p00" },
+        parts: {
             "p00": ($pf$) => {
                 return {
                     parts: [
@@ -27,8 +27,9 @@ const { c01 } =
                     ]
                 }
             }
-        }, {
-        "if01": if01
+        }, imports: {
+            "if01": if01
+        }
     }
     );
 export { c01 };

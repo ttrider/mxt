@@ -636,11 +636,12 @@ class DataContext {
     }
 }
 
-export function register(
+export function register(regParams: {
     exports: { [name: string]: string },
     parts: { [name: string]: ($pf: { [name: string]: PartFactory }) => CreateParams },
     imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component }
-) {
+}) {
+    const { exports, parts, imports } = regParams;
 
     const pf: { [name: string]: PartFactory } = {};
     const params: { [name: string]: CreateParams } = {};

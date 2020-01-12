@@ -1,9 +1,9 @@
 import * as mxt from "./mxt-runtime-3";
 
 const { if01 } =
-    mxt.register(
-        { "if01": "p00" },
-        {
+    mxt.register({
+        exports: { "if01": "p00" },
+        parts: {
             "p00": ($pf$) => {
                 return {
                     parts: [
@@ -89,6 +89,6 @@ const { if01 } =
                 }
             }
         }
-    );
+    });
 export { if01 };
 export default if01;

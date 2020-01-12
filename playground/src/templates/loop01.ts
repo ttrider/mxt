@@ -1,9 +1,9 @@
 import * as mxt from "./mxt-runtime-3";
 
 const { loop01 } =
-    mxt.register(
-        { "loop01": "p00" },
-        {
+    mxt.register({
+        exports: { "loop01": "p00" },
+        parts: {
             "p00": ($pf$) => { // 0
                 return {
                     parts: [
@@ -134,6 +134,7 @@ const { loop01 } =
                 }
             },
         }
+    }
     );
 
 export { loop01 };

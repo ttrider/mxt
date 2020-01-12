@@ -6,7 +6,7 @@ const { if02 } =
         parts: {
             "p00": ($pf$) => {
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.p01,
                         { part: $pf$.p02, when: ($on: any, $dc$) => $on },
                         $pf$.p04
@@ -45,7 +45,7 @@ const { if02 } =
             },
             "p02": ($pf$) => {
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.p03,
                         { part: $pf$.p05, when: ($on: any, $dc$) => $on }
                     ],

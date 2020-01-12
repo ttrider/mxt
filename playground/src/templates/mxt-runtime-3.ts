@@ -238,7 +238,7 @@ class PartsContext extends Context {
         const defParts: Component[] = [];
         const caseParts: ConditionalPart[] = [];
 
-        for (const item of params.parts) {
+        for (const item of params.sequence) {
 
             if (typeof item === "function") {
                 const partInst = item(dc, currentPoint);
@@ -750,7 +750,7 @@ function isTemplateParams(params: CreateParams): params is TemplateParams {
     return (params as any).template !== undefined;
 }
 function isPartsParams(params: CreateParams): params is PartsParams {
-    return (params as any).parts !== undefined;
+    return (params as any).sequence !== undefined;
 }
 function isLoopParams(params: CreateParams): params is LoopParams {
     return (params as any).forEach !== undefined;
@@ -798,7 +798,7 @@ declare type PartFactory = (dc: DataContext, ipp: InsertPointProvider) => Contex
 
 interface PartsParams {
     switch?: (dc: DataContext) => any,
-    parts: Array<PartFactory | PartParams>
+    sequence: Array<PartFactory | PartParams>
 }
 
 interface PartParams {
@@ -812,3 +812,4 @@ interface LoopParams {
     forEach: (dc: DataContext) => any,
     part: PartFactory
 }
+

@@ -8,7 +8,7 @@ const { c01 } =
         parts: {
             "p00": ($pf$) => {
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.if01,
                         {
                             part: $pf$.if01,

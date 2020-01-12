@@ -6,7 +6,7 @@ const { switch01 } =
         parts: {
             "p00": ($pf$) => {
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.s00,
                         { part: $pf$.s01, when: ($on: any, $dc$) => $on == 0 },
                         { part: $pf$.s02, when: ($on: any, $dc$) => $on == 1 },

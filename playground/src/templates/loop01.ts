@@ -6,7 +6,7 @@ const { loop01 } =
         parts: {
             "p00": ($pf$) => { // 0
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.p01, $pf$.p02, $pf$.p03, $pf$.p04
                     ]
                 }

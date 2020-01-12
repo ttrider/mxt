@@ -22,7 +22,7 @@ const { if03 } =
             },
             "p01": ($pf$) => {
                 return {
-                    parts: [
+                    sequence: [
                         $pf$.p02,
                         { part: $pf$.p03, when: ($on: any, $dc$) => $on },
                         $pf$.p04

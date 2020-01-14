@@ -1,21 +1,6 @@
 import { autorun } from "mobx";
 const ex03$$template = document.createElement("template");
-ex03$$template.innerHTML = `
-
-    <style>
-        div {
-            background: #f0f0f0;
-            cursor: pointer;
-            box-sizing: content-box;
-        }
-
-        div:hover {
-            background: #e0e0f0;
-        }
-    </style>
-
-    <div id="tagid_3">Hello MXT!</div>
-`;
+ex03$$template.innerHTML = "\n\n    <style>\n        div {\n            background: #f0f0f0;\n            cursor: pointer;\n            box-sizing: content-box;\n        }\n\n        div:hover {\n            background: #e0e0f0;\n        }\n    </style>\n\n    <div id=\"tagid_3\">Hello MXT!</div>\n";
 export function ex03(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(ex03$$template, ["tagid_3"]);
@@ -46,7 +31,7 @@ export function ex03(data: any, host?: null | undefined | Element) {
     };
     function tagid_3$$click(ev: Event) {
         const { colorClick } = data;
-        colorClick(ev);
+        colorClick.bind(data)(ev);
     }
 }
 function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {

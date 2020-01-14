@@ -10,7 +10,7 @@
         "dev": "./node_modules/.bin/tsc -p src --watch",
         "build": "./node_modules/.bin/tsc -p src",
         "mocha": "./node_modules/.bin/mocha",
-        "test": "jest",
+        "test": "echo jest",
         "prepack": "./node_modules/.bin/tsc -t ES2016 --module commonjs --declaration --outDir ./lib --allowSyntheticDefaultImports ./src/*.ts"
     },
     "repository": {

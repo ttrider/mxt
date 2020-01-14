@@ -9,6 +9,7 @@ import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import component00 from "./templates/component00";
 import loop01 from "./templates/loop01";
+import style01 from "./templates/style01";
 
 // let extandable = observable({
 
@@ -171,6 +172,9 @@ if (document) {
 
     const l01 = document.getElementById("loop01");
     loop01(data, l01);
+
+    const styletag01 = document.getElementById("style01");
+    style01(data, styletag01);
 
 
     //example 01

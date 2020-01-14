@@ -1,0 +1,45 @@
+<!-- 
+    the global static style 
+    no prefix
+    installed by 'register'
+-->
+<style>
+    .global {
+        font-size: 1.1em;
+    }
+</style>
+
+
+<template id="ex03" type="mxt">
+
+    <!-- 
+        component - scoped style
+        prefixed with the component id
+        installed by 'register'
+    -->
+    <style>
+        .component {
+            color: brown;
+        }
+    </style>
+
+    <!-- 
+        dynamic, instance-bound style
+        should be very small for performance reasons
+        installed with the component
+    -->
+    <style>
+        div {
+            background: #f0f0f0;
+            cursor: pointer;
+
+            color: ${color};
+        }
+
+        div:hover {
+            background: #e0e0f0;
+        }
+    </style>
+
+    <div>Hello Styled Component!</div>
+</template>

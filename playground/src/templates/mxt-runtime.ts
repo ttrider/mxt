@@ -6,6 +6,8 @@ class Context {
     attached: boolean;
     head: InsertPointProvider;
     tail: InsertPointProvider;
+    styles?: Array<(dc: DataContext) => string>;
+    cid?: string;
 
     getTail: () => ComponentInsertPosition = () => {
         if (this.attached) {
@@ -16,12 +18,16 @@ class Context {
         return this.head();
     }
 
-    constructor(dc: DataContext, ipp: InsertPointProvider) {
+    constructor(params: CommonParams, dc: DataContext, ipp: InsertPointProvider) {
+        this.styles = params.styles;
+        this.cid = params.cid;
         this.dc = dc;
         this.head = ipp;
         this.tail = ipp;
         this.disposed = false;
         this.attached = false;
+
+        // if we have cid or styles, then we need to wrap it in a span
     }
 
     updateHead(ipp?: Element | ComponentInsertPosition | InsertPointProvider | undefined | null) {
@@ -67,7 +73,7 @@ class TemplateContext extends Context {
     parts: PartActions[] = [];
 
     constructor(params: TemplateParams, dc: DataContext, ipp: InsertPointProvider) {
-        super(dc, ipp);
+        super(params, dc, ipp);
 
         if (typeof params.template === "string") {
             const content = params.template;
@@ -227,7 +233,7 @@ class PartsContext extends Context {
 
 
     constructor(params: PartsParams, dc: DataContext, ipp: InsertPointProvider) {
-        super(dc, ipp);
+        super(params, dc, ipp);
 
         if (params.switch) {
             this.switch = params.switch;
@@ -340,7 +346,7 @@ class LoopContext extends Context {
     disposer?: Lambda;
 
     constructor(params: LoopParams, dc: DataContext, ipp: InsertPointProvider) {
-        super(dc, ipp);
+        super(params, dc, ipp);
 
         this.forEach = params.forEach;
         this.part = params.part;
@@ -613,22 +619,24 @@ interface EventContext {
 class DataContext {
     $root: any;
     $data: any;
+    $iid: string;
     $parent?: DataContext;
     $collection?: any;
     @observable $key?: any;
     @observable $index?: number;
 
-    constructor(data: any, parent?: DataContext) {
+    constructor(iid: string, data: any, parent?: DataContext) {
+        this.$iid = iid;
         this.$root = parent !== undefined ? parent.$root : data;
         this.$data = data;
         this.$parent = parent;
     }
 
     create(data: any) {
-        return new DataContext(data, this);
+        return new DataContext(this.$iid, data, this);
     }
     createIteration(data: any, collection: any, index: number, key?: any) {
-        const dc = new DataContext(data, this);
+        const dc = new DataContext(this.$iid, data, this);
         dc.$collection = collection;
         dc.$index = index;
         dc.$key = key ?? index.toString();
@@ -637,14 +645,33 @@ class DataContext {
 }
 
 export function register(regParams: {
-    exports: { [name: string]: string },
+    exports: {
+        [name: string]: {
+            part: string,
+            styles?: ($cid: string) => string[]
+        } | string
+    },
     parts: { [name: string]: (($pf: { [name: string]: PartFactory }) => CreateParams) | string },
-    imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component }
+    imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component },
+    globals?: {
+        styles?: string[]
+    }
 }) {
-    const { exports, parts, imports } = regParams;
+    const { exports, parts, imports, globals } = regParams;
+
+    if (globals) {
+        if (globals.styles) {
+            for (const gs of globals.styles) {
+                const se = document.createElement("style");
+                se.innerText = gs;
+                document.head.appendChild(se);
+            }
+        }
+    }
 
     const pf: { [name: string]: PartFactory } = {};
     const params: { [name: string]: CreateParams } = {};
+    const cStyles: { [name: string]: Array<($cid: string) => string[]> } = {};
 
     if (imports) {
         for (const importKey in imports) {
@@ -657,7 +684,6 @@ export function register(regParams: {
         }
     }
 
-
     for (const pfKey in parts) {
         if (parts.hasOwnProperty(pfKey)) {
             const partParams = parts[pfKey];
@@ -668,6 +694,21 @@ export function register(regParams: {
                     params[pfKey] = (typeof partParams === "string")
                         ? { template: partParams }
                         : partParams(pf);
+
+                    const cs = cStyles[pfKey];
+                    if (cs !== undefined) {
+                        const cid = params[pfKey].cid = getId("mxt-pfKey-");
+
+                        const styleText = cs.reduce<string[]>((ss, item) => {
+                            ss.push(...item(cid));
+                            return ss;
+                        }, []).join(" ");
+                        if (styleText) {
+                            const se = document.createElement("style");
+                            se.innerText = styleText;
+                            document.head.appendChild(se);
+                        }
+                    }
                 }
                 const cp = params[pfKey];
 
@@ -693,11 +734,27 @@ export function register(regParams: {
 
     for (const name in exports) {
         if (exports.hasOwnProperty(name)) {
-            const index = exports[name];
+
+            let ef = exports[name];
+
+            const exportInfo = (typeof ef === "string")
+                ? {
+                    part: ef,
+                }
+                : ef;
+
             exp[name] = (data, host) => {
-                return createComponent(data, host, pf[index]);
+                return createComponent(data, host, pf[exportInfo.part]);
             }
-            (exp[name] as any).component = pf[index];
+            (exp[name] as any).component = pf[exportInfo.part];
+
+            if (exportInfo.styles) {
+                if (cStyles[exportInfo.part] === undefined) {
+                    cStyles[exportInfo.part] = [exportInfo.styles];
+                } else {
+                    cStyles[exportInfo.part].push(exportInfo.styles);
+                }
+            }
         }
     }
 
@@ -708,6 +765,8 @@ function isDataContext(data: any): data is DataContext {
     return data instanceof DataContext;
 }
 
+
+
 function createComponent(
     data: any | DataContext,
     host: null | undefined | Element | InsertPointProvider,
@@ -716,7 +775,10 @@ function createComponent(
 
     if (data === undefined) throw new Error("data parameter is undefined");
 
-    const dc = isDataContext(data) ? data : new DataContext(data);
+
+
+
+    const dc = isDataContext(data) ? data : new DataContext(getId("mxt-iid-"), data);
 
     // if data is DataContext and host is InsertPointProvider, then we use it as a tempplate subcomponent
     // otherwise as a top level component
@@ -757,6 +819,42 @@ function isLoopParams(params: CreateParams): params is LoopParams {
 }
 
 
+let lastId = 0;
+function getId(prefix: string = "") {
+
+    let id = (new Date()).valueOf();
+    while (id === lastId) {
+        id++;
+    }
+    lastId = id;
+
+    return prefix + toId(id);
+
+    function toId(val: number) {
+        const chars: number[] = [];
+
+        while (val > 0) {
+            chars.push(val % 62);
+            val = Math.floor(val / 62);
+        }
+        return String.fromCharCode(...chars.map(i => {
+            if (i < 10) {
+                return i + 48;
+            }
+            i -= 10;
+            if (i < 26) {
+                return i + 65;
+            }
+            i -= 26;
+            return i + 97;
+        }));
+    }
+}
+
+
+
+
+
 declare type CreateParams =
     (
         TemplateParams |
@@ -764,7 +862,12 @@ declare type CreateParams =
         LoopParams
     );
 
-interface TemplateParams {
+interface CommonParams {
+    styles?: Array<(dc: DataContext) => string>,
+    cid?: string;
+}
+
+interface TemplateParams extends CommonParams {
     template: HTMLTemplateElement | string;
     attachTo?: AttachParams[];
     embed?: { [id: string]: PartFactory }
@@ -796,7 +899,7 @@ interface EventParams {
 
 declare type PartFactory = (dc: DataContext, ipp: InsertPointProvider) => Context;
 
-interface PartsParams {
+interface PartsParams extends CommonParams {
     switch?: (dc: DataContext) => any,
     sequence: Array<PartFactory | PartParams>
 }
@@ -808,7 +911,7 @@ interface PartParams {
     order?: number
 }
 
-interface LoopParams {
+interface LoopParams extends CommonParams {
     forEach: (dc: DataContext) => any,
     part: PartFactory
 }

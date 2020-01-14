@@ -42,7 +42,9 @@
         "uuid": "^3.3.3"
     },
     "dependencies": {
+        "@types/domutils": "^1.7.2",
         "css": "^2.2.4",
+        "domutils": "^2.0.0",
         "glob": "^7.1.6",
         "htmlparser2": "^4.0.0",
         "less": "^3.10.3",

@@ -1,5 +1,6 @@
 import { Element } from "domhandler";
-import { getOuterHTML } from "DomUtils";
+const du = require("DomUtils");
+const { getOuterHTML } = du;
 
 
 

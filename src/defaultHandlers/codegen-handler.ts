@@ -1,7 +1,7 @@
 import { HandlerContext, Eventinfo, TemplateInfo, IdInfo } from "..";
 import ts from "typescript";
 import * as d from "../ts";
-import { getHTML } from "../dom";
+import { getHTML } from "../dom/html";
 
 import { ComponentFile } from "../component-file";
 import { generateCode } from "../ts";

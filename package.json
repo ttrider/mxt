@@ -28,6 +28,7 @@
         "@babel/preset-env": "^7.7.1",
         "@babel/preset-typescript": "^7.7.2",
         "@types/css": "0.0.31",
+        "@types/domhandler": "^2.4.1",
         "@types/glob": "^7.1.1",
         "@types/jest": "^24.0.23",
         "@types/less": "^3.0.1",
@@ -42,8 +43,8 @@
         "uuid": "^3.3.3"
     },
     "dependencies": {
-        "@types/domutils": "^1.7.2",
         "css": "^2.2.4",
+        "domhandler": "^3.0.0",
         "domutils": "^2.0.0",
         "glob": "^7.1.6",
         "htmlparser2": "^4.0.0",

@@ -14,12 +14,7 @@ interface Component {
 };
 
 interface Config {
-    exports: {
-        [name: string]: {
-            part: string,
-            styles?: ($cid: string) => string[]
-        } | string
-    },
+    components: { [name: string]: ComponentConfig | string },
     parts: { [name: string]: (($pf: { [name: string]: PartFactory }) => CreateParams) | string },
     imports?: { [name: string]: (data: any, host?: Element | InsertPointProvider | null | undefined) => Component },
     globals?: {
@@ -27,22 +22,27 @@ interface Config {
     }
 }
 
-function register(regParams: Config) {
-    const { exports, parts, imports, globals } = regParams;
+interface ComponentConfig {
+
+    part: string,
+    css?: ($cid: string) => string,
+    dyncss?: Array<(dc: DataContext) => string>,
+}
+
+function register(config: Config) {
+    const { components, parts, imports, globals } = config;
 
     if (globals) {
         if (globals.styles) {
             for (const gs of globals.styles) {
-                const se = document.createElement("style");
-                se.innerText = gs;
-                document.head.appendChild(se);
+                installStyle(gs);
             }
         }
     }
 
     const pf: { [name: string]: PartFactory } = {};
     const params: { [name: string]: CreateParams } = {};
-    const cStyles: { [name: string]: Array<($cid: string) => string[]> } = {};
+    const cStyles: { [name: string]: Array<($cid: string) => string> } = {};
 
     if (imports) {
         for (const importKey in imports) {
@@ -73,7 +73,7 @@ function register(regParams: Config) {
 
 
                         const styleText = cs.reduce<string[]>((ss, item) => {
-                            ss.push(...item(cid));
+                            ss.push(item(cid));
                             return ss;
                         }, []).join(" ");
                         if (styleText) {
@@ -91,10 +91,7 @@ function register(regParams: Config) {
                 if (isPartsParams(cp)) {
                     return new PartsContext(cp, dc, ipp);
                 }
-                if (isLoopParams(cp)) {
-                    return new LoopContext(cp, dc, ipp);
-                }
-                return new StylesContext(cp, dc, ipp);
+                return new LoopContext(cp, dc, ipp);
             });
 
 
@@ -105,10 +102,10 @@ function register(regParams: Config) {
         [name: string]: (data: any, host?: null | undefined | Element | InsertPointProvider) => Component
     } = {};
 
-    for (const name in exports) {
-        if (exports.hasOwnProperty(name)) {
+    for (const name in components) {
+        if (components.hasOwnProperty(name)) {
 
-            let ef = exports[name];
+            let ef = components[name];
 
             const exportInfo = (typeof ef === "string")
                 ? {
@@ -116,16 +113,33 @@ function register(regParams: Config) {
                 }
                 : ef;
 
-            exp[name] = (data, host) => {
-                return createComponent(data, host, pf[exportInfo.part]);
-            }
-            (exp[name] as any).component = pf[exportInfo.part];
 
-            if (exportInfo.styles) {
+            let partFactory = pf[exportInfo.part];
+
+            let cid: string | undefined;
+            // = exportInfo.css ? getId("mxt-pfKey-") : undefined;
+            if (exportInfo.css) {
+                cid = getId("mxt-pfKey-");
+                installStyle(exportInfo.css(cid));
+            } else {
+                cid = undefined;
+            }
+            if (cid || exportInfo.dyncss) {
+                partFactory = (dc: DataContext, ipp: InsertPointProvider) => {
+                    return new StylesContext(cid, exportInfo.dyncss, pf[exportInfo.part], dc, ipp);
+                }
+            }
+
+            exp[name] = (data, host) => {
+                return createComponent(data, host, partFactory);
+            }
+            (exp[name] as any).component = partFactory;
+
+            if (exportInfo.css) {
                 if (cStyles[exportInfo.part] === undefined) {
-                    cStyles[exportInfo.part] = [exportInfo.styles];
+                    cStyles[exportInfo.part] = [exportInfo.css];
                 } else {
-                    cStyles[exportInfo.part].push(exportInfo.styles);
+                    cStyles[exportInfo.part].push(exportInfo.css);
                 }
             }
         }
@@ -213,6 +227,12 @@ function getId(prefix: string = "") {
             return i + 97;
         }));
     }
+}
+
+function installStyle(css: string) {
+    const se = document.createElement("style");
+    se.innerText = css;
+    document.head.appendChild(se);
 }
 
 

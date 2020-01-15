@@ -2,12 +2,15 @@ import $r$ from "../mxt-rt";
 
 const { style01 } =
     $r$({
-        exports: {
+        components: {
             "style01": {
-                part: "wrap",
-                styles: ($cid) => [
-                    `.${$cid} .component {color: brown;} .${$cid} .component:hover {color: yellow;}`
-                ]
+                part: "p00",
+                css: ($cid) => `.${$cid} .component {color: brown;} .${$cid} .component:hover {color: yellow;}`,
+                dyncss: [($dc$) => {
+                    const { color } = $dc$.$data;
+                    const $iid = $dc$.$iid;
+                    return `.${$iid} div {background: #f0f0f0;cursor: pointer;color: ${color};} .${$iid} div:hover {background: #e0e0f0;}`;
+                }]
             }
         },
         parts: {
@@ -27,11 +30,6 @@ const { style01 } =
                                 embed: $pf$.p00
                             }
                         ],
-                    styles: [($dc$) => {
-                        const { color } = $dc$.$data;
-                        const $iid = $dc$.$iid;
-                        return `.${$iid} div {background: #f0f0f0;cursor: pointer;color: ${color};} .${$iid} div:hover {background: #e0e0f0;}`;
-                    }]
                 }
             },
 

@@ -2,7 +2,7 @@ import $r$ from "../mxt-rt";
 
 const { switch01 } =
     $r$({
-        exports: { "switch01": "p00" },
+        components: { "switch01": "p00" },
         parts: {
             "p00": ($pf$) => {
                 return {

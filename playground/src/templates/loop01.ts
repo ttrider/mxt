@@ -2,7 +2,7 @@ import $r$ from "../mxt-rt";
 
 const { loop01 } =
     $r$({
-        exports: { "loop01": "p00" },
+        components: { "loop01": "p00" },
         parts: {
             "p00": ($pf$) => { // 0
                 return {

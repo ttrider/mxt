@@ -4,7 +4,7 @@ import if01 from "./if01";
 
 const { c01 } =
     $r$({
-        exports: { "c01": "p00" },
+        components: { "c01": "p00" },
         parts: {
             "p00": ($pf$) => {
                 return {

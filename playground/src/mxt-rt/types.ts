@@ -15,8 +15,7 @@ export declare type CreateParams =
     (
         TemplateParams |
         PartsParams |
-        LoopParams |
-        StylesParams
+        LoopParams
     );
 
 export interface CommonParams {
@@ -63,5 +62,5 @@ export interface LoopParams extends CommonParams {
 }
 
 export interface StylesParams extends CommonParams {
-    styles?: Array<(dc: DataContext) => string>,
+    //styles?: Array<(dc: DataContext) => string>,
 }

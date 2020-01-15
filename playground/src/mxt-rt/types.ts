@@ -1,4 +1,6 @@
-import { DataContext, Context } from ".";
+import DataContext from "./data-context";
+import Context from "./context";
+
 
 export interface ComponentInsertPosition {
     element: Element | undefined | null,

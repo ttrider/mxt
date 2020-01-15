@@ -1,5 +1,7 @@
-import { Context, DataContext, InsertPointProvider, TemplateParams, Part } from ".";
+import * as rt from "./types";
 import { autorun } from "mobx";
+import Context from "./context";
+import DataContext from "./data-context";
 
 // Event Flags
 //   preventDefault = 0x0001,
@@ -21,9 +23,9 @@ export class TemplateContext extends Context {
     elements: Element[] = [];
     events: EventContext[] = [];
     disposers: Array<() => void> = [];
-    parts: Part[] = [];
+    parts: rt.Part[] = [];
 
-    constructor(params: TemplateParams, dc: DataContext, ipp: InsertPointProvider) {
+    constructor(params: rt.TemplateParams, dc: DataContext, ipp: rt.InsertPointProvider) {
         super(params, dc, ipp);
 
         if (typeof params.template === "string") {

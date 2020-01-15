@@ -1,5 +1,7 @@
-import { Context, DataContext, InsertPointProvider, PartsParams, Part, ConditionalPart } from ".";
+import * as rt from "./types";
 import { IReactionDisposer, autorun } from "mobx";
+import Context from "./context";
+import DataContext from "./data-context";
 
 
 
@@ -7,12 +9,12 @@ export class PartsContext extends Context {
 
     private switch?: (dc: DataContext) => any;
     private disposer?: IReactionDisposer;
-    private parts: Part[] = [];
-    private caseParts?: ConditionalPart[];
-    private defParts?: Part[];
+    private parts: rt.Part[] = [];
+    private caseParts?: rt.ConditionalPart[];
+    private defParts?: rt.Part[];
 
 
-    constructor(params: PartsParams, dc: DataContext, ipp: InsertPointProvider) {
+    constructor(params: rt.PartsParams, dc: DataContext, ipp: rt.InsertPointProvider) {
         super(params, dc, ipp);
 
         if (params.switch) {
@@ -21,8 +23,8 @@ export class PartsContext extends Context {
 
         let currentPoint = ipp;
 
-        const defParts: Part[] = [];
-        const caseParts: ConditionalPart[] = [];
+        const defParts: rt.Part[] = [];
+        const caseParts: rt.ConditionalPart[] = [];
 
         for (const item of params.sequence) {
 

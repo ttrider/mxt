@@ -1,6 +1,5 @@
 import { DataContext } from "./data-context";
-import * as rt from ".";
-import { CommonParams } from ".";
+import * as rt from "./types";
 
 export class Context {
     dc: DataContext;
@@ -20,7 +19,7 @@ export class Context {
         return this.head();
     }
 
-    constructor(params: CommonParams, dc: DataContext, ipp: rt.InsertPointProvider) {
+    constructor(params: rt.CommonParams, dc: DataContext, ipp: rt.InsertPointProvider) {
         this.styles = params.styles;
         this.cid = params.cid;
         this.dc = dc;

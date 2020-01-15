@@ -1,7 +1,7 @@
-import { register } from "./mxt-runtime";
+import $r$ from "../mxt-rt";
 
 const { if02 } =
-    register({
+    $r$({
         exports: { "if02": "p00" },
         parts: {
             "p00": ($pf$) => {

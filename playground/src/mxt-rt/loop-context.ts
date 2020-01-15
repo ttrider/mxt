@@ -1,14 +1,16 @@
-import { Context, DataContext, InsertPointProvider, PartFactory, LoopParams } from ".";
+import * as rt from "./types";
 import { Lambda, isObservableArray, isObservableMap } from "mobx";
+import Context from "./context";
+import DataContext from "./data-context";
 
 export class LoopContext extends Context {
 
     forEach: (dc: DataContext) => any;
-    part: PartFactory;
+    part: rt.PartFactory;
     parts: Context[] = [];
     disposer?: Lambda;
 
-    constructor(params: LoopParams, dc: DataContext, ipp: InsertPointProvider) {
+    constructor(params: rt.LoopParams, dc: DataContext, ipp: rt.InsertPointProvider) {
         super(params, dc, ipp);
 
         this.forEach = params.forEach;
@@ -190,7 +192,7 @@ export class LoopContext extends Context {
 
 
 
-        function createSet(data: any[], startIndex: number, ipp: InsertPointProvider, target: Context[]) {
+        function createSet(data: any[], startIndex: number, ipp: rt.InsertPointProvider, target: Context[]) {
 
             for (let index = 0; index < data.length; index++ , startIndex++) {
                 const item = data[index];

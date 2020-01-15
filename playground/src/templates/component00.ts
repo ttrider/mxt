@@ -1,9 +1,9 @@
-import * as mxt from "./mxt-runtime";
+import $r$ from "../mxt-rt";
 import if01 from "./if01";
 
 
 const { c01 } =
-    mxt.register({
+    $r$({
         exports: { "c01": "p00" },
         parts: {
             "p00": ($pf$) => {

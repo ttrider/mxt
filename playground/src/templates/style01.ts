@@ -1,7 +1,7 @@
-import * as mxt from "./mxt-runtime";
+import $r$ from "../mxt-rt";
 
 const { style01 } =
-    mxt.register({
+    $r$({
         exports: {
             "style01": {
                 part: "wrap",

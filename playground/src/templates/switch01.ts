@@ -1,7 +1,7 @@
-import { register } from "./mxt-runtime";
+import $r$ from "../mxt-rt";
 
 const { switch01 } =
-    register({
+    $r$({
         exports: { "switch01": "p00" },
         parts: {
             "p00": ($pf$) => {

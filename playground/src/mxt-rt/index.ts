@@ -1,20 +1,19 @@
-import { CreateParams, TemplateParams, PartsParams, LoopParams, ComponentInsertPosition, InsertPointProvider, Component, PartFactory } from "./types";
+import { CreateParams, TemplateParams, PartsParams, LoopParams, ComponentInsertPosition, InsertPointProvider, PartFactory } from "./types";
 import DataContext from "./data-context";
 import Context from "./context";
 import TemplateContext from "./template-context";
 import PartsContext from "./parts-context";
 import LoopContext from "./loop-context";
+import StylesContext from "./styles-context";
 
-// export * from "./types";
-// export * from "./context";
-// export * from "./template-context";
-// export * from "./data-context";
-// export * from "./parts-context";
-// export * from "./loop-context";
-// export * from "./styles-context";
+interface Component {
 
+    insert: (host?: Element | ComponentInsertPosition | undefined | null) => void;
+    remove: () => void;
+    dispose: () => void;
+};
 
-function register(regParams: {
+interface Config {
     exports: {
         [name: string]: {
             part: string,
@@ -26,7 +25,9 @@ function register(regParams: {
     globals?: {
         styles?: string[]
     }
-}) {
+}
+
+function register(regParams: Config) {
     const { exports, parts, imports, globals } = regParams;
 
     if (globals) {
@@ -65,10 +66,11 @@ function register(regParams: {
                         ? { template: partParams }
                         : partParams(pf);
 
+                    const cid = params[pfKey].cid = getId("mxt-pfKey-");
 
                     const cs = cStyles[pfKey];
                     if (cs !== undefined) {
-                        const cid = params[pfKey].cid = getId("mxt-pfKey-");
+
 
                         const styleText = cs.reduce<string[]>((ss, item) => {
                             ss.push(...item(cid));
@@ -89,10 +91,10 @@ function register(regParams: {
                 if (isPartsParams(cp)) {
                     return new PartsContext(cp, dc, ipp);
                 }
-                //if (isLoopParams(cp)) 
-                {
+                if (isLoopParams(cp)) {
                     return new LoopContext(cp, dc, ipp);
                 }
+                return new StylesContext(cp, dc, ipp);
             });
 
 

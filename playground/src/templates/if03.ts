@@ -15,9 +15,12 @@ const { if03 } =
                             </td>
                         </tr>
                     </table>`,
-                    embed: {
-                        "tagid_1": $pf$.p01
-                    }
+                    attachTo: [
+                        {
+                            id: "tagid_1",
+                            embed: $pf$.p01
+                        }
+                    ]
                 }
             },
             "p01": ($pf$) => {

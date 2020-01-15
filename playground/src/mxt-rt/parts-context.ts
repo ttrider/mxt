@@ -3,15 +3,26 @@ import { IReactionDisposer, autorun } from "mobx";
 import Context from "./context";
 import DataContext from "./data-context";
 
+export interface Part {
+    insert: () => void;
+    remove: () => void;
+    dispose: () => void;
+}
+
+interface ConditionalPart {
+    part: Part,
+    when: ($on: any, da: DataContext) => boolean,
+    order: number
+};
 
 
 export class PartsContext extends Context {
 
     private switch?: (dc: DataContext) => any;
     private disposer?: IReactionDisposer;
-    private parts: rt.Part[] = [];
-    private caseParts?: rt.ConditionalPart[];
-    private defParts?: rt.Part[];
+    private parts: Part[] = [];
+    private caseParts?: ConditionalPart[];
+    private defParts?: Part[];
 
 
     constructor(params: rt.PartsParams, dc: DataContext, ipp: rt.InsertPointProvider) {
@@ -23,8 +34,8 @@ export class PartsContext extends Context {
 
         let currentPoint = ipp;
 
-        const defParts: rt.Part[] = [];
-        const caseParts: rt.ConditionalPart[] = [];
+        const defParts: Part[] = [];
+        const caseParts: ConditionalPart[] = [];
 
         for (const item of params.sequence) {
 

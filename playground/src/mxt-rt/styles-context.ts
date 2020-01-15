@@ -8,3 +8,4 @@ export class StylesContext extends Context {
         super(params, dc, ipp);
     }
 }
+export default StylesContext;

@@ -15,18 +15,18 @@ export declare type CreateParams =
     (
         TemplateParams |
         PartsParams |
-        LoopParams
+        LoopParams |
+        StylesParams
     );
 
 export interface CommonParams {
-    styles?: Array<(dc: DataContext) => string>,
+
     cid?: string;
 }
 
 export interface TemplateParams extends CommonParams {
     template: HTMLTemplateElement | string;
     attachTo?: AttachParams[];
-    embed?: { [id: string]: PartFactory }
 }
 
 export interface AttachParams {
@@ -34,7 +34,8 @@ export interface AttachParams {
     originalId?: string,
     attrs?: (dc: DataContext) => { [name: string]: any },
     value?: (dc: DataContext) => any,
-    events?: EventParams[]
+    events?: EventParams[],
+    embed?: PartFactory,
 }
 
 export interface EventParams {
@@ -61,21 +62,6 @@ export interface LoopParams extends CommonParams {
     part: PartFactory
 }
 
-export interface Part {
-    insert: () => void;
-    remove: () => void;
-    dispose: () => void;
+export interface StylesParams extends CommonParams {
+    styles?: Array<(dc: DataContext) => string>,
 }
-
-export interface ConditionalPart {
-    part: Part,
-    when: ($on: any, da: DataContext) => boolean,
-    order: number
-};
-
-export interface Component {
-
-    insert: (host?: Element | ComponentInsertPosition | undefined | null) => void;
-    remove: () => void;
-    dispose: () => void;
-};

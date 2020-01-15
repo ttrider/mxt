@@ -2,6 +2,7 @@ import * as rt from "./types";
 import { autorun } from "mobx";
 import Context from "./context";
 import DataContext from "./data-context";
+import { Part } from "./parts-context";
 
 // Event Flags
 //   preventDefault = 0x0001,
@@ -23,7 +24,7 @@ export class TemplateContext extends Context {
     elements: Element[] = [];
     events: EventContext[] = [];
     disposers: Array<() => void> = [];
-    parts: rt.Part[] = [];
+    parts: Part[] = [];
 
     constructor(params: rt.TemplateParams, dc: DataContext, ipp: rt.InsertPointProvider) {
         super(params, dc, ipp);
@@ -112,20 +113,14 @@ export class TemplateContext extends Context {
                             this.events.push(eventContext);
                         }
                     }
-                }
-            }
-        }
 
-        if (params.embed) {
-            for (const itemId in params.embed) {
-                if (params.embed.hasOwnProperty(itemId)) {
-                    const element = content.getElementById(itemId);
-                    if (element) {
-                        this.parts.push(params.embed[itemId](dc, () => { return { element, position: "beforeend" } }));
+                    if (item.embed) {
+                        this.parts.push(item.embed(dc, () => { return { element, position: "beforeend" } }));
                     }
                 }
             }
         }
+
 
         this.tail = currentIpp;
     }

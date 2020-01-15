@@ -14,10 +14,19 @@ const { style01 } =
 
             "wrap": ($pf$) => {
                 return {
-                    template: `<span id="tagid_3" class="${$pf$.$cid} ${$pf$.$iid}"></span>`,
-                    embed: {
-                        "tagid_3": $pf$.p00
-                    },
+                    template: `<span id="tagid_3"></span>`,
+                    attachTo:
+                        [
+                            {
+                                id: "tagid_3",
+                                attrs: ($dc$) => {
+                                    return {
+                                        "class": `${$dc$.$iid}`
+                                    }
+                                },
+                                embed: $pf$.p00
+                            }
+                        ],
                     styles: [($dc$) => {
                         const { color } = $dc$.$data;
                         const $iid = $dc$.$iid;

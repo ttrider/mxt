@@ -7,7 +7,6 @@ export class Context {
     attached: boolean;
     head: rt.InsertPointProvider;
     tail: rt.InsertPointProvider;
-    styles?: Array<(dc: DataContext) => string>;
     cid?: string;
 
     getTail: () => rt.ComponentInsertPosition = () => {
@@ -20,7 +19,6 @@ export class Context {
     }
 
     constructor(params: rt.CommonParams, dc: DataContext, ipp: rt.InsertPointProvider) {
-        this.styles = params.styles;
         this.cid = params.cid;
         this.dc = dc;
         this.head = ipp;

@@ -9,7 +9,8 @@ import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import component00 from "./templates/component00";
 import loop01 from "./templates/loop01";
-import style01 from "./templates/style01";
+import { style01 } from "./templates/style01";
+//import s from "./templates/style01";
 
 // let extandable = observable({
 

@@ -13,6 +13,8 @@ interface Component {
     dispose: () => void;
 };
 
+export declare type ComponentFactory = (data: any, host?: Element | InsertPointProvider | null | undefined) => Component;
+
 interface Config {
     components: { [name: string]: ComponentConfig | string },
     parts: { [name: string]: (($pf: { [name: string]: PartFactory }) => CreateParams) | string },
@@ -42,7 +44,6 @@ function register(config: Config) {
 
     const pf: { [name: string]: PartFactory } = {};
     const params: { [name: string]: CreateParams } = {};
-    const cStyles: { [name: string]: Array<($cid: string) => string> } = {};
 
     if (imports) {
         for (const importKey in imports) {
@@ -65,23 +66,6 @@ function register(config: Config) {
                     params[pfKey] = (typeof partParams === "string")
                         ? { template: partParams }
                         : partParams(pf);
-
-                    const cid = params[pfKey].cid = getId("mxt-pfKey-");
-
-                    const cs = cStyles[pfKey];
-                    if (cs !== undefined) {
-
-
-                        const styleText = cs.reduce<string[]>((ss, item) => {
-                            ss.push(item(cid));
-                            return ss;
-                        }, []).join(" ");
-                        if (styleText) {
-                            const se = document.createElement("style");
-                            se.innerText = styleText;
-                            document.head.appendChild(se);
-                        }
-                    }
                 }
                 const cp = params[pfKey];
 
@@ -117,7 +101,6 @@ function register(config: Config) {
             let partFactory = pf[exportInfo.part];
 
             let cid: string | undefined;
-            // = exportInfo.css ? getId("mxt-pfKey-") : undefined;
             if (exportInfo.css) {
                 cid = getId("mxt-pfKey-");
                 installStyle(exportInfo.css(cid));
@@ -134,14 +117,6 @@ function register(config: Config) {
                 return createComponent(data, host, partFactory);
             }
             (exp[name] as any).component = partFactory;
-
-            if (exportInfo.css) {
-                if (cStyles[exportInfo.part] === undefined) {
-                    cStyles[exportInfo.part] = [exportInfo.css];
-                } else {
-                    cStyles[exportInfo.part].push(exportInfo.css);
-                }
-            }
         }
     }
 

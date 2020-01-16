@@ -9,7 +9,7 @@ export class StylesContext extends Context {
     wrap: Element;
     part: Part;
 
-    styles: Array<{ element: Element, disposer: IReactionDisposer }>;
+    styles?: Array<{ element: Element, disposer: IReactionDisposer }>;
 
     constructor(cid: string | undefined, dyncss: Array<(dc: DataContext) => string> | undefined, part: rt.PartFactory, dc: DataContext, ipp: rt.InsertPointProvider) {
         super({ cid }, dc, ipp);

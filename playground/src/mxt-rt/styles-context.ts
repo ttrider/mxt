@@ -2,11 +2,14 @@ import * as rt from "./types";
 import Context from "./context";
 import DataContext from "./data-context";
 import { Part } from "./parts-context";
+import { IReactionDisposer, autorun } from "mobx";
 
 export class StylesContext extends Context {
 
     wrap: Element;
     part: Part;
+
+    styles: Array<{ element: Element, disposer: IReactionDisposer }>;
 
     constructor(cid: string | undefined, dyncss: Array<(dc: DataContext) => string> | undefined, part: rt.PartFactory, dc: DataContext, ipp: rt.InsertPointProvider) {
         super({ cid }, dc, ipp);
@@ -22,7 +25,21 @@ export class StylesContext extends Context {
         this.part = part(dc, currentIpp);
         this.tail = currentIpp;
 
+        if (dyncss) {
 
+            this.styles = dyncss.map(item => {
+
+                const element = document.createElement("style");
+                document.head.appendChild(element);
+
+                return {
+                    element,
+                    disposer: autorun(() => {
+                        element.innerText = item(dc);
+                    })
+                };
+            })
+        }
     }
 
     insert() {
@@ -46,6 +63,14 @@ export class StylesContext extends Context {
         this.remove();
         delete this.part;
         delete this.wrap;
+
+        if (this.styles) {
+            for (const item of this.styles) {
+                item.disposer();
+                item.element.remove();
+            }
+        }
+
         super.dispose();
     }
 }

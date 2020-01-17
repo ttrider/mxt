@@ -1,52 +1,27 @@
-import { autorun } from "mobx";
-import * as mxt from "./mxt-runtime";
-const ex01$$template = document.createElement("template");
-ex01$$template.innerHTML = `
-    <div id="tagid_1">Hello MXT!</div>
-`;
+import $r$ from "../mxt-rt";
 
-export function ex01(data: any, host?: null | undefined | Element) {
-
-    let disposed = false;
-    const segment00 = s00(data, () => { return { element: host, position: "beforeend" } })
-
-    if (host) {
-        segment00.insert();
-    }
-
-    return {
-        get disposed() {
-            return disposed;
-        },
-
-        appendTo: (element: Element) => {
-            host = element;
-            segment00.insert();
-        },
-        remove: () => segment00.remove(),
-        dispose: () => {
-            disposed = true;
-            segment00.dispose();
-        }
-    };
-
-    function s00(data: any, segmentInsertPoint: mxt.InsertPointProvider) {
-
-        return mxt.createSegment(ex01$$template, {
-
-            segmentInsertPoint,
-
-            elements: {
-                tagid_1: {
-                    id: "tagid_1",
-                    originalId: "",
-                    attributeSetter: (element: Element) => {
-                        const { color } = data;
-                        element.setAttribute("style", `color: ${color}`);
-                    },
-                    events: []
+const { ex01 } =
+    $r$({
+        components: { "ex01": "p01" },
+        parts: {
+            "p01": ($pf$) => {
+                return {
+                    template: `<div id="tagid_1">Hello MXT!</div>`,
+                    attachTo: [
+                        {
+                            id: "tagid_1",
+                            attrs: ($dc$) => {
+                                const { color } = $dc$.$data;
+                                return {
+                                    "style": `color: ${color}`
+                                }
+                            },
+                        }
+                    ]
                 }
-            }
-        });
+            },
+        }
     }
-}
+    );
+export { ex01 };
+export default ex01;

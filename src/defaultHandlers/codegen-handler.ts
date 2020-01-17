@@ -26,6 +26,8 @@ const names = {
 
 export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
+    componentFile.addImport("$r$", "../mxt-rt");
+
     componentFile.addImport("autorun", "mobx");
 
     // create definitions code

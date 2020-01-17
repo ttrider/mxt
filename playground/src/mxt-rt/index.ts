@@ -77,8 +77,6 @@ function register(config: Config) {
                 }
                 return new LoopContext(cp, dc, ipp);
             });
-
-
         }
     }
 
@@ -92,11 +90,8 @@ function register(config: Config) {
             let ef = components[name];
 
             const exportInfo = (typeof ef === "string")
-                ? {
-                    part: ef,
-                }
+                ? { part: ef }
                 : ef;
-
 
             let partFactory = pf[exportInfo.part];
 
@@ -117,6 +112,8 @@ function register(config: Config) {
                 return createComponent(data, host, partFactory);
             }
             (exp[name] as any).component = partFactory;
+
+            pf[name] = partFactory;
         }
     }
 

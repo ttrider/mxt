@@ -1,8 +1,8 @@
-import $r$, { ComponentFactory } from "../mxt-rt";
+import $r$ from "../mxt-rt";
 
-//namespace style02ns {
 
-export const { style02 } =
+
+const { style02 } =
     $r$({
         components: {
             "style02": {
@@ -15,29 +15,11 @@ export const { style02 } =
                 }],
                 // events:{
 
+
                 // }
             }
         },
         parts: {
-
-            "wrap": ($pf$) => {
-                return {
-                    template: `<span id="tagid_3"></span>`,
-                    attachTo:
-                        [
-                            {
-                                id: "tagid_3",
-                                attrs: ($dc$) => {
-                                    return {
-                                        "class": `${$dc$.$iid}`
-                                    }
-                                },
-                                embed: $pf$.p00
-                            }
-                        ],
-                }
-            },
-
             "p00": ($pf$) => {
                 return {
                     template: "<div class=\"component global\">Hello Another Styled Component!</div>",
@@ -48,13 +30,11 @@ export const { style02 } =
             styles: [".global {font-size: 1.2em;}"]
         }
     });
-//}
-//const style02 = style02ns.style02;
-//export { style02 };
 
-//namespace style01ns {
+export { style02 };
 
-export const { style01 } =
+
+const { style01 } =
     $r$({
         components: {
             "style01": {
@@ -93,10 +73,12 @@ export const { style01 } =
             "st2": style02
         }
     });
-//}
 
-//const style01 = style01ns.style01;
-//export { style01 };
+export { style01 };
+
+
+
+
 
 
 

@@ -13,7 +13,7 @@ interface Component {
     dispose: () => void;
 };
 
-export declare type ComponentFactory = (data: any, host?: Element | InsertPointProvider | null | undefined) => Component;
+declare type ComponentFactory = (data: any, host?: Element | InsertPointProvider | null | undefined) => Component;
 
 interface Config {
     components: { [name: string]: ComponentConfig | string },

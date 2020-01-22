@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { PropertyAssignment } from "./declare";
 
 //export function Identifier()
 
@@ -49,4 +50,34 @@ export function Literal(value: Array<LiteralArg> | LiteralArg) {
 export function TemplateLiteral(content: string) {
 
     return ts.createIdentifier("`" + content.replace("`", "\`") + "`");
+}
+
+
+declare type ObjectLiteralBuilder = ts.ObjectLiteralExpression & {
+    addProperty: (name: string | ts.Identifier | ts.StringLiteral | ts.NumericLiteral | ts.ComputedPropertyName, value?: Array<LiteralArg> | LiteralArg | ts.Expression | ts.Identifier) => ObjectLiteralBuilder,
+
+};
+export function ObjectLiteral(properties?: readonly ts.ObjectLiteralElementLike[] | undefined) {
+
+    let obj = ts.createObjectLiteral(properties);
+
+    (obj as any).multiLine = properties && properties.length > 1;
+
+
+    return update(obj);
+
+    function update(newObj: any): ObjectLiteralBuilder {
+
+        newObj.addProperty = (name: string | ts.Identifier | ts.StringLiteral | ts.NumericLiteral | ts.ComputedPropertyName, value?: Array<LiteralArg> | LiteralArg | ts.Expression | ts.Identifier) => {
+
+            newObj.properties.push(PropertyAssignment(name, value));
+
+            newObj.multiLine = newObj.properties && newObj.properties.length > 1;
+
+            return newObj;
+        };
+
+        return newObj;
+    }
+
 }

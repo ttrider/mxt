@@ -28,7 +28,43 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
     componentFile.addImport("$r$", "../mxt-rt");
 
-    componentFile.addImport("autorun", "mobx");
+    const componentsObj = d.ObjectLiteral();
+    const partsObj = d.ObjectLiteral();
+
+    const templateNames: string[] = [];
+
+    const config = d.ObjectLiteral()
+        .addProperty("components", componentsObj)
+        .addProperty("parts", partsObj);
+        
+
+    for (const templateId in componentFile.templates) {
+        if (componentFile.templates.hasOwnProperty(templateId)) {
+            const template = componentFile.templates[templateId];
+            templateNames.push(templateId);
+
+
+
+        }
+    }
+
+    componentFile.componentStatements.add(
+        d.ConstObjectBindingVariable(templateNames,
+            d.Call("$r$", config)));
+
+
+    componentFile.componentStatements.add(ts.createExportDeclaration(undefined, undefined, ts.createNamedExports(templateNames.map(i => ts.createExportSpecifier(undefined, i)))));
+
+    if (templateNames.length === 1) {
+        componentFile.componentStatements.add(ts.createExportDefault(ts.createIdentifier(templateNames[0])));
+    }
+
+    // componentFile.componentStatements
+
+
+
+
+    componentFile.addImport({ name: "autorun", as: "autorun" }, "mobx");
 
     // create definitions code
     for (const templateId in componentFile.templates) {

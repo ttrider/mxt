@@ -25,7 +25,7 @@ export class ComponentFile {
     componentStatements = d.StatementList();
 
     importStatements: {
-        [from: string]: { name: string, as: string }[]
+        [from: string]: Array<string | { name: string, as: string }>
     } = {};
 
     private constructor(content: string, filePath: string) {
@@ -40,28 +40,30 @@ export class ComponentFile {
         if (!Array.isArray(identifier)) {
             identifier = [identifier];
         }
-        const definitions = identifier.map<{ name: string, as: string }>(i => {
-            if (typeof i === "string") {
-                i = { name: i, as: i };
-            }
-            return i;
-        });
+        // const definitions = identifier.map<{ name: string, as: string }>(i => {
+        //     if (typeof i === "string") {
+        //         i = { name: i, as: i };
+        //     }
+        //     return i;
+        // });
 
 
         const fromSet = this.importStatements[from];
         if (!fromSet) {
-            this.importStatements[from] = definitions;
-            return;
+            this.importStatements[from] = identifier;
+            return this;
         }
 
-        for (const definition of definitions) {
+        for (const definition of identifier) {
             // lookup existing definition
-            const existing = fromSet.find((item) => item.as === definition.as);
+            const existing = fromSet.find((item) =>
+                (typeof item === "string")
+                    ? ((typeof definition === "string") ? (item === definition) : false)
+                    : ((typeof definition !== "string") ? (item.as === definition.as) : false));
             if (!existing) {
                 fromSet.push(definition);
             } else {
-
-                if (definition.name != existing.name) {
+                if ((typeof definition !== "string") && (typeof existing !== "string") && (definition.name != existing.name)) {
                     throw new Error(`redefinition of the import: '${existing.name}' by ${definition.name}`);
                 }
             }
@@ -76,9 +78,24 @@ export class ComponentFile {
         for (const from in this.importStatements) {
             if (this.importStatements.hasOwnProperty(from)) {
 
-                const ii = d.ImportStatement(this.importStatements[from], from);
+                const imp = this.importStatements[from]
+                    .reduce<{ s: string[], o: Array<{ name: string, as: string }> }>((ret, item) => {
 
-                items.push(ii);
+                        if (typeof item === "string") {
+                            ret.s.push(item);
+                        } else {
+                            ret.o.push(item);
+                        }
+                        return ret;
+                    }, { s: [], o: [] });
+
+                if (imp.o.length > 0) {
+                    items.push(d.ImportStatement(imp.o, from));
+                }
+
+                for (const item of imp.s) {
+                    items.push(d.ImportStatement(item, from));
+                }
             }
         }
         return items;

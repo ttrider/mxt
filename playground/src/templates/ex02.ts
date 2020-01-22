@@ -1,7 +1,13 @@
-import { $r$ } from "../mxt-rt";
+import $r$ from "../mxt-rt";
 import { autorun } from "mobx";
 const ex02$$template = document.createElement("template");
 ex02$$template.innerHTML = "\n    <div id=\"tagid_2\">Hello MXT!</div>\n";
+const { ex02 } = $r$({
+    components: {},
+    parts: {}
+});
+export { ex02 };
+export default ex02;
 export function ex02(data: any, host?: null | undefined | Element) {
     let disposed = false;
     const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(ex02$$template, ["tagid_2"]);

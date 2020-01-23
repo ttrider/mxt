@@ -55,23 +55,10 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     const partObj = d.ObjectLiteral();
                     partObj.addProperty("template", d.Literal(getHTML(part.elements)));
 
-
-                    // attachTo: [
-                    //     {
-                    //         id: "tagid_1",
-                    //         attrs: ($dc$) => {
-                    //             const { color } = $dc$.$data;
-                    //             return {
-                    //                 "style": `color: ${color}`
-                    //             }
-                    //         },
-                    //     }
-                    // ]
-
                     if (part.dynamicElements) {
 
-
                         const eitems: ts.Expression[] = [];
+                        const evitems: ts.Expression[] = [];
 
                         for (const de in part.dynamicElements) {
                             if (part.dynamicElements.hasOwnProperty(de)) {
@@ -101,10 +88,47 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                             }, d.ObjectLiteral()))
                                     ).addParameter(d.Parameter("$dc$")));
 
+                                if (element.events) {
+                                    for (const elid in element.events) {
+                                        if (element.events.hasOwnProperty(elid)) {
+                                            const event = element.events[elid];
+
+                                            if (event.handler)
+                                            {
+                                                let flag = 0;
+                                                if (event.preventDefault) flag |= 0x001;
+                                                if (event.stopPropagation) flag |= 0x002;
+                                                if (event.stopImmediatePropagation) flag |= 0x004;
+                                                if (event.once) flag |= 0x008;
+                                                if (event.passive) flag |= 0x010;
+                                                if (event.capture) flag |= 0x020;
+
+
+                                            }
+                                            //event.name
+
+
+// events: [
+//     {
+//         name: "click",
+//         handler: function (ev: Event, $dc$) {
+//             const { toggleClick } = $dc$.$data;
+//             toggleClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
+//         },
+//         flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
+//     }
+// ]
+
+                                        }
+                                    }
+                                }
+
                                 eitems.push(eitem);
                             }
 
-                            partObj.addProperty("attachTo", ts.createArrayLiteral(eitems));
+                            if (eitems.length > 0) { partObj.addProperty("attachTo", ts.createArrayLiteral(eitems)); }
+
+
                         }
                     }
 

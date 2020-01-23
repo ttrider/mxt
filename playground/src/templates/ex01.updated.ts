@@ -15,7 +15,10 @@ const { ex01 } =
                                 return {
                                     "style": `color: ${color}`
                                 }
-                            },
+                            }, events:
+                                [
+                                    
+                                ]
                         }
                     ]
                 }

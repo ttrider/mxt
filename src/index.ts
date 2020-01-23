@@ -53,8 +53,8 @@ interface PluginHandlerMap {
     "afterParseTemplate": Element;
 }
 
-export interface IdInfo{
-    id: string; 
+export interface IdInfo {
+    id: string;
 }
 
 export interface ElementInfo {
@@ -90,6 +90,13 @@ export interface Eventinfo {
 export interface StyleElementInfo extends ElementInfo {
     rules: string[]
 }
+
+export interface ComponentInfo {
+    id: string;
+    rootPart: string;
+    parts: { [id: string]: TemplateInfo };
+}
+
 
 export interface TemplateInfo extends ElementInfo {
     id: string,

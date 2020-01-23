@@ -1,63 +1,18 @@
 import $r$ from "../mxt-rt";
-import { autorun } from "mobx";
-const ex01$$template = document.createElement("template");
-ex01$$template.innerHTML = "\n    <div id=\"tagid_1\">Hello MXT!</div>\n";
 const { ex01 } = $r$({
-    components: {},
-    parts: {}
+    components: { ex01: "p1" },
+    parts: { p1: $pf$ => {
+            return {
+                template: "\n    <div id=\"tagid_1\">Hello MXT!</div>\n",
+                attachTo: [{
+                        id: "tagid_1",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: `color: ${color}` };
+                        }
+                    }]
+            };
+        } }
 });
 export { ex01 };
 export default ex01;
-export function ex01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(ex01$$template, ["tagid_1"]);
-    tagid_1$$element.id = "";
-    const tagid_1$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_1$$element.setAttribute("style", `color: ${color}`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_1$$autorun();
-        }
-    };
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + "$$element"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}

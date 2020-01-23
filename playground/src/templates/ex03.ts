@@ -1,69 +1,18 @@
 import $r$ from "../mxt-rt";
-import { autorun } from "mobx";
-const ex03$$template = document.createElement("template");
-ex03$$template.innerHTML = "\n\n    <style>\n        div {\n            background: #f0f0f0;\n            cursor: pointer;\n            box-sizing: content-box;\n        }\n\n        div:hover {\n            background: #e0e0f0;\n        }\n    </style>\n\n    <div id=\"tagid_3\">Hello MXT!</div>\n";
 const { ex03 } = $r$({
-    components: {},
-    parts: {}
+    components: { ex03: "p3" },
+    parts: { p3: $pf$ => {
+            return {
+                template: "\n\n    <style>\n        div {\n            background: #f0f0f0;\n            cursor: pointer;\n            box-sizing: content-box;\n        }\n\n        div:hover {\n            background: #e0e0f0;\n        }\n    </style>\n\n    <div id=\"tagid_3\">Hello MXT!</div>\n",
+                attachTo: [{
+                        id: "tagid_3",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: `color: ${color}` };
+                        }
+                    }]
+            };
+        } }
 });
 export { ex03 };
 export default ex03;
-export function ex03(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(ex03$$template, ["tagid_3"]);
-    tagid_3$$element.id = "";
-    tagid_3$$element.addEventListener("click", tagid_3$$click);
-    const tagid_3$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_3$$element.setAttribute("style", `color: ${color}`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_3$$element.removeEventListener("click", tagid_3$$click);
-            tagid_3$$autorun();
-        }
-    };
-    function tagid_3$$click(ev: Event) {
-        const { colorClick } = data;
-        colorClick.bind(data)(ev);
-    }
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + "$$element"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}

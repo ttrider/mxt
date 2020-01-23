@@ -6,6 +6,7 @@ import { parseInlineExpressions } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
 
 let idindex = 1;
+let partid = 1;
 
 
 export function parseTemplate(context: HandlerContext, componentFile: ComponentFile, element: Element) {
@@ -15,19 +16,19 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
     if (element.attribs["type"] !== "mxt") {
         return false;
     }
-    const template_id = element.attribs.id;
-    if (!template_id) {
+    const component_id = element.attribs.id;
+    if (!component_id) {
         componentFile.errors.push(new Error(`template doesn't have an id`))
         return false;
     }
 
-    if (componentFile.templates[template_id]) {
+    if (componentFile.components[component_id]) {
         componentFile.errors.push(new Error(`duplicate template id`))
         return false;
     }
 
     const template: TemplateInfo = {
-        id: element.attribs.id,
+        id: `p${partid++}`,
         name: "template",
         attributes: element.attribs,
         elements: [],
@@ -36,7 +37,13 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
 
 
 
-    componentFile.templates[template_id] = template;
+    componentFile.components[component_id] = {
+        id: component_id,
+        rootPart: template.id,
+        parts: {
+            [template.id]: template
+        }
+    }
 
     // traverse template
     for (const item of element.children) {

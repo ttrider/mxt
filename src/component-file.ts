@@ -1,4 +1,4 @@
-import { ElementInfo, StyleElementInfo, TemplateInfo } from ".";
+import { ElementInfo, StyleElementInfo, TemplateInfo, ComponentInfo } from ".";
 import { parseDOM } from "htmlparser2";
 import * as dom from "domhandler";
 import fs from "fs";
@@ -18,7 +18,7 @@ export class ComponentFile {
     links: ElementInfo[] = [];
     globalStyles: StyleElementInfo[] = [];
 
-    templates: { [id: string]: TemplateInfo } = {};
+    components: { [id: string]: ComponentInfo } = {};
     errors: Error[] = [];
 
     initStatements = d.StatementList();

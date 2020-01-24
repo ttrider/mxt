@@ -1,275 +1,117 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`events handler 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_1\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_1\\"]);
-    tagid_1$$element.id = \\"old\\";
-    tagid_1$$element.addEventListener(\\"click\\", tagid_1$$click);
-    const tagid_1$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_1$$element.removeEventListener(\\"click\\", tagid_1$$click);
-            tagid_1$$autorun();
-        }
-    };
-    function tagid_1$$click(ev: Event) {
-        const { doClick } = data;
-        doClick(ev);
-    }
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p1\\" },
+    parts: { p1: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_1\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_1\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color}\` };
+                        },
+                        events: [{
+                                name: \\"click\\",
+                                flags: 0,
+                                handler: ($ev$: Event, $dc$: any) => {
+                                    const { doClick } = $dc$.$data;
+                                    doClick.bind($dc$.$data)($ev$, $dc$.$data, $dc$);
+                                }
+                            }]
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`events handler and propagation functions 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_2\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_2\\"]);
-    tagid_2$$element.id = \\"old\\";
-    tagid_2$$element.addEventListener(\\"click\\", tagid_2$$click);
-    const tagid_2$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_2$$element.removeEventListener(\\"click\\", tagid_2$$click);
-            tagid_2$$autorun();
-        }
-    };
-    function tagid_2$$click(ev: Event) {
-        const { doClick } = data;
-        doClick(ev);
-        ev.preventDefault();
-        ev.stopPropagation();
-        ev.stopImmediatePropagation();
-    }
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p2\\" },
+    parts: { p2: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_2\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_2\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color}\` };
+                        },
+                        events: [{
+                                name: \\"click\\",
+                                flags: 7,
+                                handler: ($ev$: Event, $dc$: any) => {
+                                    const { doClick } = $dc$.$data;
+                                    doClick.bind($dc$.$data)($ev$, $dc$.$data, $dc$);
+                                }
+                            }]
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`events handler with options 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_3\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_3\\"]);
-    tagid_3$$element.id = \\"old\\";
-    tagid_3$$element.addEventListener(\\"click\\", tagid_3$$click);
-    const tagid_3$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_3$$element.removeEventListener(\\"click\\", tagid_3$$click);
-            tagid_3$$autorun();
-        }
-    };
-    function tagid_3$$click(ev: Event) {
-        const { doClick } = data;
-        doClick(ev);
-    }
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p3\\" },
+    parts: { p3: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_3\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_3\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color}\` };
+                        },
+                        events: [{
+                                name: \\"click\\",
+                                flags: 56,
+                                handler: ($ev$: Event, $dc$: any) => {
+                                    const { doClick } = $dc$.$data;
+                                    doClick.bind($dc$.$data)($ev$, $dc$.$data, $dc$);
+                                }
+                            }]
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`events no handler 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_4\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_4$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_4\\"]);
-    tagid_4$$element.id = \\"old\\";
-    tagid_4$$element.addEventListener(\\"click\\", tagid_4$$click);
-    const tagid_4$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_4$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_4$$element.removeEventListener(\\"click\\", tagid_4$$click);
-            tagid_4$$autorun();
-        }
-    };
-    function tagid_4$$click(ev: Event) {
-        ev.preventDefault();
-    }
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p4\\" },
+    parts: { p4: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_4\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_4\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color}\` };
+                        }
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;

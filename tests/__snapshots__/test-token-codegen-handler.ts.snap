@@ -1,257 +1,114 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`token multiple elements 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_4\\">Hello MXT!</div>
-    <div id=\\"tagid_5\\">Hello MXT too!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_4$$element, tagid_5$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_4\\", \\"tagid_5\\"]);
-    tagid_4$$element.id = \\"\\";
-    const tagid_4$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_4$$element.setAttribute(\\"style\\", \`color: \${color};\`);
-    });
-    tagid_5$$element.id = \\"\\";
-    const tagid_5$$autorun = autorun(() => {
-        const { title } = data;
-        tagid_5$$element.setAttribute(\\"title\\", \`\${title}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_4$$autorun();
-            tagid_5$$autorun();
-        }
-    };
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p4\\" },
+    parts: { p4: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_4\\\\\\">Hello MXT!</div>\\\\n    <div id=\\\\\\"tagid_5\\\\\\">Hello MXT too!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_4\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color};\` };
+                        }
+                    }, {
+                        id: \\"tagid_5\\",
+                        attrs: $dc$ => {
+                            const { title } = $dc$.$data;
+                            return { title: \`\${title}\` };
+                        }
+                    }],
+                attachTo: [{
+                        id: \\"tagid_4\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color};\` };
+                        }
+                    }, {
+                        id: \\"tagid_5\\",
+                        attrs: $dc$ => {
+                            const { title } = $dc$.$data;
+                            return { title: \`\${title}\` };
+                        }
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`token single element, attribute, token 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_1\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_1$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_1\\"]);
-    tagid_1$$element.id = \\"old\\";
-    const tagid_1$$autorun = autorun(() => {
-        const { color } = data;
-        tagid_1$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_1$$autorun();
-        }
-    };
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p1\\" },
+    parts: { p1: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_1\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_1\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color } = $dc$.$data;
+                            return { style: \`color: \${color}\` };
+                        }
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`token single element, multiple attributes,tokens 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_2\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_2$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_2\\"]);
-    tagid_2$$element.id = \\"old\\";
-    const tagid_2$$autorun = autorun(() => {
-        const { color, title } = data;
-        tagid_2$$element.setAttribute(\\"style\\", \`color: \${color}\`);
-        tagid_2$$element.setAttribute(\\"title\\", \`\${title}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_2$$autorun();
-        }
-    };
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p2\\" },
+    parts: { p2: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_2\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_2\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color, title } = $dc$.$data;
+                            return {
+                                style: \`color: \${color}\`,
+                                title: \`\${title}\`
+                            };
+                        }
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;
 
 exports[`token single element, multiple tokens per attribute 1`] = `
-"import { autorun } from \\"mobx\\";
-const t01$$template = document.createElement(\\"template\\");
-t01$$template.innerHTML = \`
-    <div id=\\"tagid_3\\">Hello MXT!</div>
-  \`;
-export function t01(data: any, host?: null | undefined | Element) {
-    let disposed = false;
-    const { $$mxt$$elements$$, tagid_3$$element } = $$mxt$$initialize$$(t01$$template, [\\"tagid_3\\"]);
-    tagid_3$$element.id = \\"old\\";
-    const tagid_3$$autorun = autorun(() => {
-        const { color, margin } = data;
-        tagid_3$$element.setAttribute(\\"style\\", \`color: \${color}; margin: \${margin}\`);
-    });
-    if (host)
-        $$mxt$$appendTo$$($$mxt$$elements$$, host);
-    return {
-        get disposed() {
-            return disposed;
-        },
-        get elements() {
-            return $$mxt$$elements$$;
-        },
-        appendTo: (host: Element) => $$mxt$$appendTo$$($$mxt$$elements$$, host),
-        remove: () => $$mxt$$remove$$($$mxt$$elements$$),
-        dispose: () => {
-            disposed = true;
-            $$mxt$$remove$$($$mxt$$elements$$);
-            $$mxt$$elements$$.splice(0, $$mxt$$elements$$.length);
-            tagid_3$$autorun();
-        }
-    };
-}
-function $$mxt$$initialize$$(template: HTMLTemplateElement, elementIds: string[]) {
-    const elements: Element[] = [];
-    let child = template.content.firstElementChild;
-    while (child) {
-        elements.push(child);
-        child = child.nextElementSibling;
-    }
-    const context: any = { $$mxt$$elements$$: elements };
-    for (const elementId of elementIds) {
-        const element = template.content.getElementById(elementId);
-        if (element) {
-            context[elementId + \\"$$element\\"] = element;
-        }
-    }
-    return context;
-}
-function $$mxt$$appendTo$$(elements: Element[], host: Element) {
-    for (const el of elements) {
-        host.appendChild(el);
-    }
-}
-function $$mxt$$remove$$(elements: Element[]) {
-    for (const el of elements) {
-        el.remove();
-    }
-}
+"import $r$ from \\"../mxt-rt\\";
+const { t01 } = $r$({
+    components: { t01: \\"p3\\" },
+    parts: { p3: $pf$ => {
+            return {
+                template: \\"\\\\n    <div id=\\\\\\"tagid_3\\\\\\">Hello MXT!</div>\\\\n  \\",
+                attachTo: [{
+                        id: \\"tagid_3\\",
+                        originalId: \\"old\\",
+                        attrs: $dc$ => {
+                            const { color, margin } = $dc$.$data;
+                            return { style: \`color: \${color}; margin: \${margin}\` };
+                        }
+                    }]
+            };
+        } }
+});
+export { t01 };
+export default t01;
 "
 `;

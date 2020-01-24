@@ -9,11 +9,11 @@ import { generateCode } from "../src/ast/ts";
 
 export function setupElementTest(content: string) {
 
-    const component = ComponentFile.fromContent(content);
+    const componentFile = ComponentFile.fromContent(content);
 
     const context: HandlerContext = {
-        componentFiles: [component],
-        files: [component.filePath],
+        componentFiles: [componentFile],
+        files: [componentFile.filePath],
         plugins: [],
         options: {
             input: "./test01.html"
@@ -23,13 +23,13 @@ export function setupElementTest(content: string) {
         bodyElements: []
     };
 
-    const element = component.dom[0] as Element;
+    const element = componentFile.dom[0] as Element;
 
-    return { context, component, element };
+    return { context, componentFile, element };
 }
 
 export function codegenSetup(content: string) {
-    const { context, component, element } = setupElementTest(content);
+    const { context, componentFile: component, element } = setupElementTest(content);
 
     expect(parseTemplate(context, component, element)).toBe(true);
     expect(codegen(context, component)).toBe(true);
@@ -39,15 +39,38 @@ export function codegenSetup(content: string) {
 
 export function templateTestSetup(content: string, templateId: string) {
 
-    const { context, component, element } = setupElementTest(content);
-    expect(parseTemplate(context, component, element)).toBe(true);
-    expect(component.templates).toHaveProperty(templateId);
-    const template = component.templates[templateId];
-    expect(template).not.toBeUndefined();
-    const dynamicElement = template.dynamicElements !== undefined && Object.keys(template.dynamicElements).length > 0 ? Object.values(template.dynamicElements)[0] : undefined;
+    const { context, componentFile, element } = setupElementTest(content);
+    expect(parseTemplate(context, componentFile, element)).toBe(true);
+
+    const component = Object.values(componentFile.components)[0];
+    const part = Object.values(component.parts)[0];
+
+    expect(component).toHaveProperty(templateId);
+    expect(part).not.toBeUndefined();
+    const dynamicElement = part.dynamicElements !== undefined && Object.keys(part.dynamicElements).length > 0 ? Object.values(part.dynamicElements)[0] : undefined;
 
     return {
-        template, dynamicElement
+        template: part, dynamicElement
+    };
+
+}
+
+export function dynamicElementTestSetup(content: string, templateId: string) {
+
+    const { context, componentFile, element } = setupElementTest(content);
+    expect(parseTemplate(context, componentFile, element)).toBe(true);
+
+    const component = Object.values(componentFile.components)[0];
+    const part = Object.values(component.parts)[0];
+
+    expect(part).not.toBeUndefined();
+    expect(part.dynamicElements).not.toBeUndefined();
+
+    //const dynamicElement = part.dynamicElements !== undefined && Object.keys(part.dynamicElements).length > 0 ? Object.values(part.dynamicElements)[0] : undefined;
+    const dynamicElement = Object.values(part.dynamicElements)[0];
+
+    return {
+        part, dynamicElement
     };
 
 }
@@ -61,7 +84,7 @@ export function LogResults() {
 
 test("utils", () => {
 
-    const { context, component, element } = setupElementTest(`<a></a>`)
+    const { context, componentFile: component, element } = setupElementTest(`<a></a>`)
 
     expect(context).not.toBeUndefined();
     expect(component).not.toBeUndefined();

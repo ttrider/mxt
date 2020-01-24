@@ -68,24 +68,7 @@ export function parseTemplate(context: HandlerContext, componentFile: ComponentF
         }
 
 
-        //const name = item.name.toLowerCase();
-
-        // if (name === "template") {
-        //     // extract sub-template
-
-        //     //pre parse
-        //     // parse
-        //     // post parse
-
-        //     parseTemplate(context, componentFile, item);
-        //     if (item.parent) {
-        //         const indexOf = item.parent.children.indexOf(item);
-        //         if (indexOf !== -1) {
-        //             item.parent.children.splice(indexOf, 1);
-        //         }
-        //     }
-        //     return;
-        // }
+        
 
     }
 

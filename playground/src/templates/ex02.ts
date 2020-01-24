@@ -9,7 +9,15 @@ const { ex02 } = $r$({
                         attrs: $dc$ => {
                             const { color } = $dc$.$data;
                             return { style: `color: ${color}` };
-                        }
+                        },
+                        events: [{
+                                name: "click",
+                                flags: 0,
+                                handler: ($ev$: Event, $dc$: any) => {
+                                    const { colorClick } = $dc$.$data;
+                                    colorClick.bind($dc$.$data)($ev$, $dc$.$data, $dc$);
+                                }
+                            }]
                     }]
             };
         } }

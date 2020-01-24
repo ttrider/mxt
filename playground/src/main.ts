@@ -179,21 +179,21 @@ if (document) {
 
 
     //example 01
-    // const root_ex01 = document.getElementById("ex01");
-    // if (root_ex01) {
-    //     data.el = ex01(data);
-    //     data.el.appendTo(root_ex01);
-    // }
+    const root_ex01 = document.getElementById("ex01");
+    if (root_ex01) {
+        data.el = ex01(data);
+        data.el.insert(root_ex01);
+    }
 
     // // example 02
-    // const root_ex02 = document.getElementById("ex02");
-    // if (root_ex02) {
-    //     ex02(data).appendTo(root_ex02);
-    // }
+    const root_ex02 = document.getElementById("ex02");
+    if (root_ex02) {
+        ex02(data).insert(root_ex02);
+    }
 
     // // example 03
-    // const root_ex03 = document.getElementById("ex03");
-    // ex03(data, root_ex03);
+    const root_ex03 = document.getElementById("ex03");
+    ex03(data, root_ex03);
 
     //example 04
     const root_if01 = document.getElementById("if01");

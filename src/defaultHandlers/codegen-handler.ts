@@ -58,7 +58,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                     if (part.dynamicElements) {
 
                         const eitems: ts.Expression[] = [];
-                        const evitems: ts.Expression[] = [];
+
 
                         for (const de in part.dynamicElements) {
                             if (part.dynamicElements.hasOwnProperty(de)) {
@@ -70,6 +70,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                 }
 
                                 // element.attributes
+
                                 const tokenSet = Object.values(element.attributes);
 
                                 const externalReferences = Object.keys(tokenSet.reduce<{ [name: string]: any }>((e, i) => {
@@ -88,13 +89,14 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                             }, d.ObjectLiteral()))
                                     ).addParameter(d.Parameter("$dc$")));
 
+
                                 if (element.events) {
+                                    const evitems: ts.Expression[] = [];
                                     for (const elid in element.events) {
                                         if (element.events.hasOwnProperty(elid)) {
                                             const event = element.events[elid];
 
-                                            if (event.handler)
-                                            {
+                                            if (event.handler) {
                                                 let flag = 0;
                                                 if (event.preventDefault) flag |= 0x001;
                                                 if (event.stopPropagation) flag |= 0x002;
@@ -103,32 +105,33 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
                                                 if (event.passive) flag |= 0x010;
                                                 if (event.capture) flag |= 0x020;
 
+                                                evitems.push(d.ObjectLiteral()
+                                                    .addProperty("name", event.name)
+                                                    .addProperty("flags", flag)
+                                                    .addProperty("handler", d.ArrowFunction(
+                                                        d.ConstObjectBindingVariable([event.handler], ts.createIdentifier("$dc$.$data")),
+                                                        d.Call(
+                                                            d.Call(event.handler + ".bind", ts.createIdentifier("$dc$.$data")),
+                                                            ts.createIdentifier("$ev$"),
+                                                            ts.createIdentifier("$dc$.$data"),
+                                                            ts.createIdentifier("$dc$")
+                                                        )
+                                                    ).addParameter(d.Parameter("$ev$", "Event"))
+                                                        .addParameter(d.Parameter("$dc$", "any"))));
 
                                             }
-                                            //event.name
 
-
-// events: [
-//     {
-//         name: "click",
-//         handler: function (ev: Event, $dc$) {
-//             const { toggleClick } = $dc$.$data;
-//             toggleClick.bind($dc$.$data)(ev, $dc$.$data, $dc$);
-//         },
-//         flags: 0x0001 | 0x0002 | 0x0004 | 0x0020
-//     }
-// ]
 
                                         }
                                     }
+
+                                    if (evitems.length > 0) { eitem.addProperty("events", ts.createArrayLiteral(evitems)); }
                                 }
 
                                 eitems.push(eitem);
                             }
 
                             if (eitems.length > 0) { partObj.addProperty("attachTo", ts.createArrayLiteral(eitems)); }
-
-
                         }
                     }
 

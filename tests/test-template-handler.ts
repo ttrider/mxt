@@ -2,9 +2,8 @@
 import { dynamicElementTestSetup, formatComponentFileObject } from "./utils";
 import { ComponentFile } from "../src/component-file";
 import path from "path";
-
-
-
+import processComponentFile from "../src/defaultHandlers/file-handler";
+import processTemplate from "../src/defaultHandlers/template-handler";
 
 
 test("simple template", () => {
@@ -14,7 +13,13 @@ test("simple template", () => {
     <div id="old" style="color: \${color}">Hello MXT!</div>
   </template>`;
 
-  const { dynamicElement } = dynamicElementTestSetup(input, "t01");
+  const cf = ComponentFile.fromContent(input);
+  expect(processComponentFile(cf)).toBe(true);
+  expect(processTemplate(cf, "t01")).toBe(true);
+  const component = cf.components["t01"];
+  const part = component.parts[component.rootPart];
+  const dynamicElement = Object.values(part.dynamicElements)[0];
+
 
   expect(dynamicElement.originalId).toBe("old");
   expect(dynamicElement.attributes["style"]).toBeDefined();

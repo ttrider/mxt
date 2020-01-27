@@ -9,28 +9,15 @@ let idindex = 1;
 let partid = 1;
 
 
-export function parseTemplate(componentFile: ComponentFile, element: Element) {
-    if (element.name.toLowerCase() !== "template") {
-        return false;
-    }
-    if (element.attribs["type"] !== "mxt") {
-        return false;
-    }
-    const component_id = element.attribs.id;
-    if (!component_id) {
-        componentFile.errors.push(new Error(`template doesn't have an id`))
-        return false;
-    }
+export function processTemplate(componentFile: ComponentFile, templateId: string) {
 
-    if (componentFile.components[component_id]) {
-        componentFile.errors.push(new Error(`duplicate template id`))
-        return false;
-    }
+    const templateElement = componentFile.templates[templateId];
+    const component_id = templateElement.attribs.id;
 
     const template: TemplateInfo = {
         id: `p${partid++}`,
         name: "template",
-        attributes: element.attribs,
+        attributes: templateElement.attribs,
         elements: [],
         dynamicElements: {}
     };
@@ -46,7 +33,7 @@ export function parseTemplate(componentFile: ComponentFile, element: Element) {
     }
 
     // traverse template
-    for (const item of element.children) {
+    for (const item of templateElement.children) {
         const element = item as Element;
         template.elements.push(element);
         processItem(template, element);
@@ -68,7 +55,7 @@ export function parseTemplate(componentFile: ComponentFile, element: Element) {
         }
 
 
-        
+
 
     }
 
@@ -226,3 +213,4 @@ export function parseTemplate(componentFile: ComponentFile, element: Element) {
 
     return true;
 }
+export default processTemplate;

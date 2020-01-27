@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import { ComponentFile } from "../../src/component-file";
-import { parseTemplate } from "../../src/defaultHandlers/template-handler";
+import { processTemplate } from "../../src/defaultHandlers/template-handler";
 import processFile from "../../src/defaultHandlers/file-handler";
 
 

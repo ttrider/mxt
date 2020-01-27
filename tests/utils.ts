@@ -1,10 +1,11 @@
 import { HandlerContext, ComponentInfo } from "../src";
 import { Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
-import { parseTemplate } from "../src/defaultHandlers/template-handler";
+import { processTemplate } from "../src/defaultHandlers/template-handler";
 import { codegen } from "../src/defaultHandlers/codegen-handler";
 import { generateCode } from "../src/ast/ts";
 import { format } from "path";
+import processComponentFile from "../src/defaultHandlers/file-handler";
 
 
 
@@ -29,10 +30,11 @@ export function setupElementTest(content: string) {
     return { context, componentFile, element };
 }
 
-export function codegenSetup(content: string) {
+export function codegenSetup(content: string, templateId: string) {
     const { context, componentFile: component, element } = setupElementTest(content);
 
-    expect(parseTemplate( component, element)).toBe(true);
+    expect(processComponentFile(component)).toBe(true);
+    expect(processTemplate(component, templateId)).toBe(true);
     expect(codegen(context, component)).toBe(true);
 
     return generateCode(component.getStatements());
@@ -41,7 +43,7 @@ export function codegenSetup(content: string) {
 export function templateTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
-    expect(parseTemplate(componentFile, element)).toBe(true);
+    expect(processTemplate(componentFile, templateId)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];
@@ -59,7 +61,8 @@ export function templateTestSetup(content: string, templateId: string) {
 export function dynamicElementTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
-    expect(parseTemplate(componentFile, element)).toBe(true);
+    expect(processComponentFile(componentFile)).toBe(true);
+    expect(processTemplate(componentFile, templateId)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];

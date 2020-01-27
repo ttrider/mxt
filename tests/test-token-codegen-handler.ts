@@ -24,7 +24,7 @@ describe("token", () => {
   </template>`;
 
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     expect(results).toMatchSnapshot();
 
@@ -37,7 +37,7 @@ describe("token", () => {
     <div id="old" style="color: \${color}" title="\${title}">Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
     expect(results).toMatchSnapshot();
 
   });
@@ -49,7 +49,7 @@ describe("token", () => {
     <div id="old" style="color: \${color}; margin: \${margin}" >Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     expect(results).toMatchSnapshot();
   });
@@ -61,10 +61,10 @@ describe("token", () => {
     <div title="\${title}">Hello MXT too!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     logs.push(results);
-    
+
 
     expect(results).toMatchSnapshot();
   })

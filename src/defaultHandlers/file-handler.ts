@@ -44,8 +44,9 @@ function processComponentFile(componentFile: ComponentFile) {
     }
 
     if (defTemplate.length > 0) {
-        componentFile.defaultTemplate = new dom.Element("template", {});
-        componentFile.defaultTemplate.children.push(...defTemplate);
+        const dt = new dom.Element("template", {});
+        dt.children.push(...defTemplate);
+        componentFile.templates[ComponentFile.defaultComponentId] = dt;
     }
 
     return !err;

@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { ComponentFile } from "../../src/component-file";
 import { parseTemplate } from "../../src/defaultHandlers/template-handler";
+import processFile from "../../src/defaultHandlers/file-handler";
 
 
 
@@ -25,6 +26,8 @@ describe("Functional Tests", () => {
                     expect(res).not.toBeUndefined();
 
                     if (!res.componentFile) return;
+
+                    expect(processFile(res.componentFile)).toBeTruthy();
 
                     //expect(parseTemplate(res.componentFile, element)).toBe(true);
 

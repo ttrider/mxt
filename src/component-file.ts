@@ -11,7 +11,9 @@ import { Problem } from "./problem";
 const readFile = util.promisify(fs.readFile);
 
 
+
 export class ComponentFile {
+    static defaultComponentId: string = "$$default$$component$$";
 
     problems: Problem[] = [];
 
@@ -19,7 +21,6 @@ export class ComponentFile {
     content: string;
     dom: dom.Node[];
 
-    defaultTemplate?: dom.Element;
     templates: { [id: string]: dom.Element } = {};
     scripts: dom.Element[] = [];
 

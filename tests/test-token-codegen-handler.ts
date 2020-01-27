@@ -64,6 +64,7 @@ describe("token", () => {
     const results = codegenSetup(input);
 
     logs.push(results);
+    
 
     expect(results).toMatchSnapshot();
   })

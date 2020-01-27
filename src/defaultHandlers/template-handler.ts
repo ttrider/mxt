@@ -9,7 +9,7 @@ let idindex = 1;
 let partid = 1;
 
 
-export function parseTemplate(context: HandlerContext, componentFile: ComponentFile, element: Element) {
+export function parseTemplate(componentFile: ComponentFile, element: Element) {
     if (element.name.toLowerCase() !== "template") {
         return false;
     }

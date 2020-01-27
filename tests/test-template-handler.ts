@@ -1,15 +1,10 @@
 
-<<<<<<< HEAD
-import { templateTestSetup, dynamicElementTestSetup, setupElementTest } from "./utils";
-import { parseTemplate } from "../src/defaultHandlers/template-handler";
-=======
 import { dynamicElementTestSetup, formatComponentFileObject } from "./utils";
 import { ComponentFile } from "../src/component-file";
 import path from "path";
 import processComponentFile from "../src/defaultHandlers/file-handler";
 import processTemplate from "../src/defaultHandlers/template-handler";
 
->>>>>>> 8c06f36f31b73973b688d69932d6d14fb300553e
 
 let a:string;
 test((a = "simple template", a), () => {
@@ -143,13 +138,9 @@ describe("events", () => {
     <div mxt.someevent="foo" >Hello MXT!</div>
   </template>`;
 
-<<<<<<< HEAD
-    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
-=======
     const { dynamicElement, component } = dynamicElementTestSetup(input, "t01");
 
 
->>>>>>> 8c06f36f31b73973b688d69932d6d14fb300553e
 
     expect(dynamicElement).toBeUndefined();
   });

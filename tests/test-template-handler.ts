@@ -1,6 +1,15 @@
 
+<<<<<<< HEAD
 import { templateTestSetup, dynamicElementTestSetup, setupElementTest } from "./utils";
 import { parseTemplate } from "../src/defaultHandlers/template-handler";
+=======
+import { dynamicElementTestSetup, formatComponentFileObject } from "./utils";
+import { ComponentFile } from "../src/component-file";
+import path from "path";
+import processComponentFile from "../src/defaultHandlers/file-handler";
+import processTemplate from "../src/defaultHandlers/template-handler";
+
+>>>>>>> 8c06f36f31b73973b688d69932d6d14fb300553e
 
 let a:string;
 test((a = "simple template", a), () => {
@@ -10,7 +19,13 @@ test((a = "simple template", a), () => {
     <div id="old" style="color: \${color}">Hello MXT!</div>
   </template>`;
 
-  const { dynamicElement } = dynamicElementTestSetup(input, "t01");
+  const cf = ComponentFile.fromContent(input);
+  expect(processComponentFile(cf)).toBe(true);
+  expect(processTemplate(cf, "t01")).toBe(true);
+  const component = cf.components["t01"];
+  const part = component.parts[component.rootPart];
+  const dynamicElement = Object.values(part.dynamicElements)[0];
+
 
   expect(dynamicElement.originalId).toBe("old");
   expect(dynamicElement.attributes["style"]).toBeDefined();
@@ -128,7 +143,13 @@ describe("events", () => {
     <div mxt.someevent="foo" >Hello MXT!</div>
   </template>`;
 
+<<<<<<< HEAD
     const { dynamicElement } = dynamicElementTestSetup(input, "t01");
+=======
+    const { dynamicElement, component } = dynamicElementTestSetup(input, "t01");
+
+
+>>>>>>> 8c06f36f31b73973b688d69932d6d14fb300553e
 
     expect(dynamicElement).toBeUndefined();
   });

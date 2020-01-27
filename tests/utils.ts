@@ -1,9 +1,11 @@
-import { HandlerContext } from "../src";
+import { HandlerContext, ComponentInfo } from "../src";
 import { Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
-import { parseTemplate } from "../src/defaultHandlers/template-handler";
+import { processTemplate } from "../src/defaultHandlers/template-handler";
 import { codegen } from "../src/defaultHandlers/codegen-handler";
 import { generateCode } from "../src/ast/ts";
+import { format } from "path";
+import processComponentFile from "../src/defaultHandlers/file-handler";
 
 
 
@@ -28,10 +30,11 @@ export function setupElementTest(content: string) {
     return { context, componentFile, element };
 }
 
-export function codegenSetup(content: string) {
+export function codegenSetup(content: string, templateId: string) {
     const { context, componentFile: component, element } = setupElementTest(content);
 
-    expect(parseTemplate(context, component, element)).toBe(true);
+    expect(processComponentFile(component)).toBe(true);
+    expect(processTemplate(component, templateId)).toBe(true);
     expect(codegen(context, component)).toBe(true);
 
     return generateCode(component.getStatements());
@@ -40,7 +43,7 @@ export function codegenSetup(content: string) {
 export function templateTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
-    expect(parseTemplate(context, componentFile, element)).toBe(true);
+    expect(processTemplate(componentFile, templateId)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];
@@ -58,7 +61,8 @@ export function templateTestSetup(content: string, templateId: string) {
 export function dynamicElementTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
-    expect(parseTemplate(context, componentFile, element)).toBe(true);
+    expect(processComponentFile(componentFile)).toBe(true);
+    expect(processTemplate(componentFile, templateId)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];
@@ -70,6 +74,7 @@ export function dynamicElementTestSetup(content: string, templateId: string) {
     const dynamicElement = Object.values(part.dynamicElements)[0];
 
     return {
+        component,
         part, dynamicElement
     };
 
@@ -91,3 +96,47 @@ test("utils", () => {
     expect(element).not.toBeUndefined();
 
 });
+
+
+export function formatComponentFileObject(componentFile: ComponentFile) {
+
+    return JSON.stringify(componentFile, (key, value) => {
+        switch (key) {
+            case 'next':
+            case 'parent':
+            case 'prev':
+                return undefined;
+            case 'children':
+            case 'data':
+            case 'attribs':
+            case 'endIndex':
+            case 'startIndex':
+            case 'type':
+            case 'name':
+                return value;
+        }
+        return value;
+    }, 4);
+}
+
+
+function formatComponentObject(component: ComponentInfo) {
+
+    return JSON.stringify(component, (key, value) => {
+        switch (key) {
+            case 'next':
+            case 'parent':
+            case 'prev':
+                return undefined;
+            case 'children':
+            case 'data':
+            case 'attribs':
+            case 'endIndex':
+            case 'startIndex':
+            case 'type':
+            case 'name':
+                return value;
+        }
+        return value;
+    }, 4);
+}

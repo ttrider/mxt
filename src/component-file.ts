@@ -6,15 +6,25 @@ import path from "path";
 import util from "util";
 import ts from "typescript";
 import * as d from "./ts";
+import { Problem } from "./problem";
 
 const readFile = util.promisify(fs.readFile);
 
 
+
 export class ComponentFile {
+    static defaultComponentId: string = "$$default$$component$$";
+
+    problems: Problem[] = [];
 
     filePath: string;
     content: string;
     dom: dom.Node[];
+
+    templates: { [id: string]: dom.Element } = {};
+    scripts: dom.Element[] = [];
+
+
     links: ElementInfo[] = [];
     globalStyles: StyleElementInfo[] = [];
 
@@ -33,6 +43,8 @@ export class ComponentFile {
         this.content = content;
         this.dom = parseDOM(this.content, { xmlMode: true, withStartIndices: true, withEndIndices: true });
         this.filePath = filePath;
+
+
     }
 
     addImport(identifier: string | { name: string, as: string } | Array<string | { name: string, as: string }>, from: string) {
@@ -116,8 +128,8 @@ export class ComponentFile {
 
 
 
-    static fromContent(content: string) {
-        return new ComponentFile(content, "./dummy.html")
+    static fromContent(content: string, filePath: string = "./dummy.html") {
+        return new ComponentFile(content, filePath);
     }
 
     static async fromFile(filePath: string) {

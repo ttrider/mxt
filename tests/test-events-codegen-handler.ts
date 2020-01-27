@@ -23,7 +23,7 @@ describe("events", () => {
     <div id="old" style="color: \${color}" mxt.click="doClick">Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     expect(results).toMatchSnapshot();
   });
@@ -35,7 +35,7 @@ describe("events", () => {
     <div id="old" style="color: \${color}" mxt.click="doClick" mxt.click.preventDefault mxt.click.stopPropagation mxt.click.stopImmediatePropagation>Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     //logs.push(results); 
 
@@ -49,7 +49,7 @@ describe("events", () => {
     <div id="old" style="color: \${color}" mxt.click="doClick" mxt.click.once mxt.click.passive mxt.click.capture>Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     logs.push(results); 
 
@@ -64,7 +64,7 @@ describe("events", () => {
     <div id="old" style="color: \${color}" mxt.click.preventDefault>Hello MXT!</div>
   </template>`;
 
-    const results = codegenSetup(input);
+    const results = codegenSetup(input, "t01");
 
     //logs.push(results); 
 

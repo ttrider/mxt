@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parse:element a1 1`] = `"a1"`;
+
+exports[`parse:element a2 1`] = `"a2"`;
+
+exports[`parse:element a3 1`] = `"a3"`;

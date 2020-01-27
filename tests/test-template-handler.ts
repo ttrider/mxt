@@ -1,7 +1,9 @@
 
-import { templateTestSetup, dynamicElementTestSetup } from "./utils";
+import { templateTestSetup, dynamicElementTestSetup, setupElementTest } from "./utils";
+import { parseTemplate } from "../src/defaultHandlers/template-handler";
 
-test("simple template", () => {
+let a:string;
+test((a = "simple template", a), () => {
 
   const input =
     `<template id="t01" type="mxt">
@@ -26,7 +28,7 @@ describe("events", () => {
     <div mxt.click="doClick">Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement.events).toHaveProperty("click");
 
@@ -47,7 +49,7 @@ describe("events", () => {
     <div mxt.click="\${doClick}">Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement.events).toHaveProperty("click");
 
@@ -67,7 +69,7 @@ describe("events", () => {
     <div mxt.click="doClick" mxt.click.preventDefault>Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement.events).toHaveProperty("click");
 
@@ -108,7 +110,7 @@ describe("events", () => {
     <div mxt.click.preventDefault >Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement.events).toHaveProperty("click");
 
@@ -126,7 +128,7 @@ describe("events", () => {
     <div mxt.someevent="foo" >Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement).toBeUndefined();
   });
@@ -138,11 +140,13 @@ describe("events", () => {
     <div mxt.someevent="foo" mxt.click="doClick" >Hello MXT!</div>
   </template>`;
 
-    const {  dynamicElement } = dynamicElementTestSetup(input, "t01");
+    const { dynamicElement } = dynamicElementTestSetup(input, "t01");
 
     expect(dynamicElement).not.toBeUndefined();
     expect(dynamicElement.events).not.toHaveProperty("someevent");
   });
+
+
 
 });
 

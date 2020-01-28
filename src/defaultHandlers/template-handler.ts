@@ -213,4 +213,48 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 
     return true;
 }
+
+
+function processElementSet(elements: Element[]) {
+
+    for (const el of elements) {
+
+        switch (el.type.toLowerCase()) {
+            // ???
+            case ElementType.CDATA: break;
+            // include as-is
+            case ElementType.Comment: break;
+            // include as-is
+            case ElementType.Directive: break;
+            // ignore
+            case ElementType.Doctype: break;
+            // extract into a top level script 
+            case ElementType.Script: break;
+            // extract and process the style element in the context of the component
+            case ElementType.Style: break;
+            // normal elements    
+            case ElementType.Tag:
+                // if the element is an <mxt.> element, 
+                // we need to convert the whole set
+                break;
+            // text block
+            case ElementType.Text: 
+                // text blocks 
+                // if we have any <mxt> elements or tokens, we would need to convert it into <span>
+            break;
+        }
+
+
+
+
+    }
+
+
+
+
+
+}
+
+
+
 export default processTemplate;

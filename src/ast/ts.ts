@@ -4,153 +4,87 @@ import { ExpressionInfo } from "..";
 export function parseInlineExpressions(content: string) {
 
     const state: ExpressionInfo = {
+
         content,
-        hasTokens: false,
         externalReferences: []
     };
 
     const code = "`" + content + "`";
-    const result = getDiagnosticsForText(code);
 
-    if (result) {
-        state.hasTokens = true;
-        state.externalReferences =
-            result
-                .filter(r => r.code === 2304)
-                .map(r => code.substr(r.start === undefined ? 0 : r.start, r.length));
+    const { program, source } = getProgram("`" + content + "`");
+
+
+    const tokens = getTokens(source);
+
+    if (tokens.length > 0) {
+        const diags = ts.getPreEmitDiagnostics(program);
+
+        if (diags) {
+            state.tokens = tokens;
+            state.externalReferences =
+                diags
+                    .filter(r => r.code === 2304)
+                    .map(r => code.substr(r.start === undefined ? 0 : r.start, r.length));
+        }
+
     }
 
     return state;
 }
 
 
-
-
-function getDiagnosticsForText(text: string) {
+function getProgram(content: string) {
     const dummyFilePath = "/file.ts";
-    const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.Latest);
+    const source = ts.createSourceFile(dummyFilePath, content, ts.ScriptTarget.Latest);
 
-    const ht = hasTokens(textAst, text);
+    const options: ts.CompilerOptions = {};
+    const host: ts.CompilerHost = {
+        fileExists: filePath => filePath === dummyFilePath,
+        directoryExists: dirPath => dirPath === "/",
+        getCurrentDirectory: () => "/",
+        getDirectories: () => [],
+        getCanonicalFileName: fileName => fileName,
+        getNewLine: () => "\n",
+        getDefaultLibFileName: () => "",
+        getSourceFile: filePath => filePath === dummyFilePath ? source : undefined,
+        readFile: filePath => filePath === dummyFilePath ? content : undefined,
+        useCaseSensitiveFileNames: () => true,
+        writeFile: () => { }
+    };
+    const program = ts.createProgram({
+        options,
+        rootNames: [dummyFilePath],
+        host
+    });
 
-    if (ht) {
-
-        const options: ts.CompilerOptions = {};
-        const host: ts.CompilerHost = {
-            fileExists: filePath => filePath === dummyFilePath,
-            directoryExists: dirPath => dirPath === "/",
-            getCurrentDirectory: () => "/",
-            getDirectories: () => [],
-            getCanonicalFileName: fileName => fileName,
-            getNewLine: () => "\n",
-            getDefaultLibFileName: () => "",
-            getSourceFile: filePath => filePath === dummyFilePath ? textAst : undefined,
-            readFile: filePath => filePath === dummyFilePath ? text : undefined,
-            useCaseSensitiveFileNames: () => true,
-            writeFile: () => { }
-        };
-        const program = ts.createProgram({
-            options,
-            rootNames: [dummyFilePath],
-            host
-        });
-
-        return ts.getPreEmitDiagnostics(program);
-    }
+    return { program, source };
 }
 
-function hasTokens(node: ts.SourceFile, content: string) {
 
-    let value = false;
+function getTokens(node: ts.SourceFile) {
+
+    const tokens: Array<{ start: number, end: number, text: string }> = [];
     traverse(node);
-    return value;
+    return tokens;
     function traverse(nd: ts.Node) {
-        if (ts.isTemplateSpan(nd)) {
-            const pos = nd.pos;
-            const end = nd.end;
-            const t = content.substring(pos, end);
-            const start = nd.getStart(node);
-            const width = nd.getWidth(node);
-            const fstart = nd.getFullStart();
-            const fwidth = nd.getFullWidth();
-            const text = nd.getText(node);
-            const ftext = nd.getFullText(node);
-            console.info(pos, end, t, start,
-                width,
-                fstart,
-                fwidth,
-                text,
-                ftext);
-            value = true;
-            //return;
-        }
         if (ts.isTemplateLiteral(nd)) {
-            
+
             const tn = nd as any;
 
-            if (tn.templateSpans && tn.templateSpans.lenght>0){
+            if (tn.templateSpans) {
 
                 for (const ts of tn.templateSpans) {
 
-                    console.info(ts);
-
-
-                    
-
+                    if (ts.expression) {
+                        tokens.push({
+                            start: ts.start - 1,
+                            end: ts.end - 1,
+                            text: ts.text
+                        });
+                    }
                 }
             }
-            
-            
-            
-            const start = nd.getStart(node);
-            const width = nd.getWidth(node);
-            const fstart = nd.getFullStart();
-            const fwidth = nd.getFullWidth();
-            const text = nd.getText(node);
-            const ftext = nd.getFullText(node);
-            console.info(start,
-                width,
-                fstart,
-                fwidth,
-                text,
-                ftext);
-
-            //return;
-        }
-        if (ts.isTemplateLiteralToken(nd)) {
-            const pos = nd.pos;
-            const end = nd.end;
-            const t = content.substring(pos, end);
-
-            const start = nd.getStart(node);
-            const width = nd.getWidth(node);
-            const fstart = nd.getFullStart();
-            const fwidth = nd.getFullWidth();
-            const text = nd.getText(node);
-            const ftext = nd.getFullText(node);
-            console.info(pos, end, t, start,
-                width,
-                fstart,
-                fwidth,
-                text,
-                ftext);
-
-            //return;
-        }
-        if (ts.isTemplateExpression(nd)) {
-            const start = nd.getStart(node);
-            const width = nd.getWidth(node);
-            const fstart = nd.getFullStart();
-            const fwidth = nd.getFullWidth();
-            const text = nd.getText(node);
-            const ftext = nd.getFullText(node);
-            console.info(start,
-                width,
-                fstart,
-                fwidth,
-                text,
-                ftext);
-
-            //return;
+            return;
         }
         ts.forEachChild(nd, traverse);
     }

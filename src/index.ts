@@ -107,7 +107,11 @@ export interface TemplateInfo extends ElementInfo {
 
 export interface ExpressionInfo {
     content: string,
-    hasTokens: boolean,
+    tokens?: {
+        start: number;
+        end: number;
+        text: string;
+    }[],
     externalReferences: string[]
 }
 

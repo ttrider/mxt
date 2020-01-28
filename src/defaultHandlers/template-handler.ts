@@ -176,7 +176,7 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
                     // this is not allowed:
                     // "sometext${token}someother text"
 
-                    if (attrState.hasTokens && attrState.externalReferences.length > 0) {
+                    if (attrState.tokens && attrState.externalReferences.length > 0) {
                         // TODO: we need a lot of error checking here
                         ev.handler = attrState.externalReferences[0];
                     } else {
@@ -189,7 +189,7 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
         }
 
         function processAttributeTokens(attrName: string, attrValue: string, attrState: AttributeTokenInfo) {
-            if (attrState.hasTokens) {
+            if (attrState.tokens) {
 
                 const el = getDynamicElement(tagItem);
                 attrState.attributeName = attrName;
@@ -281,9 +281,23 @@ function processStyle(element: Element) {
 
         const expressions = parseInlineExpressions(content);
 
-        //expressions.
+        if (expressions.tokens) {
+            // this style has tokens
+            // it means it is a dynamic, scoped style
+
+            // for the processing, we need to replace tokens with safe strings
+            const tokens = expressions.tokens.sort((a, b) => b.end - a.end);
+            for (let index = 0; index < tokens.length; index++) {
+                const token = tokens[index];
+
+            }
 
 
+        } else if (element.attribs["mxt.global"]) {
+            // global style - used as is
+        } else {
+            // component-scoped style
+        }
 
     }
 

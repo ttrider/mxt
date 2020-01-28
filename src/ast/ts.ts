@@ -9,10 +9,7 @@ export function parseInlineExpressions(content: string) {
         externalReferences: []
     };
 
-    const code = "`" + content + "`";
-
     const { program, source } = getProgram("`" + content + "`");
-
 
     const tokens = getTokens(source);
 
@@ -24,7 +21,7 @@ export function parseInlineExpressions(content: string) {
             state.externalReferences =
                 diags
                     .filter(r => r.code === 2304)
-                    .map(r => code.substr(r.start === undefined ? 0 : r.start, r.length));
+                    .map(r => content.substr(r.start === undefined ? 0 : r.start - 1, r.length));
         }
 
     }

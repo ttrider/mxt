@@ -234,6 +234,7 @@ function processElementSet(elements: Element[]) {
             case ElementType.Style: break;
             // normal elements    
             case ElementType.Tag:
+<<<<<<< HEAD
                 // if the element is an <mxt.> element, 
                 // we need to convert the whole set
                 break;
@@ -242,6 +243,11 @@ function processElementSet(elements: Element[]) {
                 // text blocks 
                 // if we have any <mxt> elements or tokens, we would need to convert it into <span>
             break;
+=======
+                break;
+            // text block
+            case ElementType.Text: break;
+>>>>>>> ffa6400eeba6ea6b518cec3a44fea7b07b1ad07c
         }
 
 

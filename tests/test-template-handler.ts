@@ -6,7 +6,8 @@ import processComponentFile from "../src/defaultHandlers/file-handler";
 import processTemplate from "../src/defaultHandlers/template-handler";
 
 
-test("simple template", () => {
+let a:string;
+test((a = "simple template", a), () => {
 
   const input =
     `<template id="t01" type="mxt">
@@ -156,6 +157,8 @@ describe("events", () => {
     expect(dynamicElement).not.toBeUndefined();
     expect(dynamicElement.events).not.toHaveProperty("someevent");
   });
+
+
 
 });
 

@@ -8,6 +8,12 @@ import getElementInfo from "../dom/elementInfo";
 let idindex = 1;
 let partid = 1;
 
+//<mxt.component name="if01" from="./if01" with="${inner2}" />
+//<mxt.import name="if03" from="./if03" as="f0000" />
+//<mxt.with data="${inner}">
+//<mxt.if></mxt.if>
+//<mxt.foreach data="${items}"></mxt.foreach data="${items}"> 
+//<mxt.switch on="${switchindex}"><mxt.case when="${0}"></mxt.case><mxt.default></mxt.default></mxt.switch>
 
 export function processTemplate(componentFile: ComponentFile, templateId: string) {
 

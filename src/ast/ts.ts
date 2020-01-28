@@ -23,11 +23,14 @@ export function parseInlineExpressions(content: string) {
     return state;
 }
 
+
+
+
 function getDiagnosticsForText(text: string) {
     const dummyFilePath = "/file.ts";
     const textAst = ts.createSourceFile(dummyFilePath, text, ts.ScriptTarget.Latest);
 
-    const ht = hasTokens(textAst);
+    const ht = hasTokens(textAst, text);
 
     if (ht) {
 
@@ -55,17 +58,101 @@ function getDiagnosticsForText(text: string) {
     }
 }
 
-function hasTokens(node: ts.Node) {
+function hasTokens(node: ts.SourceFile, content: string) {
 
     let value = false;
     traverse(node);
     return value;
-    function traverse(node: ts.Node) {
-        if (ts.isTemplateSpan(node)) {
+    function traverse(nd: ts.Node) {
+        if (ts.isTemplateSpan(nd)) {
+            const pos = nd.pos;
+            const end = nd.end;
+            const t = content.substring(pos, end);
+            const start = nd.getStart(node);
+            const width = nd.getWidth(node);
+            const fstart = nd.getFullStart();
+            const fwidth = nd.getFullWidth();
+            const text = nd.getText(node);
+            const ftext = nd.getFullText(node);
+            console.info(pos, end, t, start,
+                width,
+                fstart,
+                fwidth,
+                text,
+                ftext);
             value = true;
-            return;
+            //return;
         }
-        ts.forEachChild(node, traverse);
+        if (ts.isTemplateLiteral(nd)) {
+            
+            const tn = nd as any;
+
+            if (tn.templateSpans && tn.templateSpans.lenght>0){
+
+                for (const ts of tn.templateSpans) {
+
+                    console.info(ts);
+
+
+                    
+
+                }
+            }
+            
+            
+            
+            const start = nd.getStart(node);
+            const width = nd.getWidth(node);
+            const fstart = nd.getFullStart();
+            const fwidth = nd.getFullWidth();
+            const text = nd.getText(node);
+            const ftext = nd.getFullText(node);
+            console.info(start,
+                width,
+                fstart,
+                fwidth,
+                text,
+                ftext);
+
+            //return;
+        }
+        if (ts.isTemplateLiteralToken(nd)) {
+            const pos = nd.pos;
+            const end = nd.end;
+            const t = content.substring(pos, end);
+
+            const start = nd.getStart(node);
+            const width = nd.getWidth(node);
+            const fstart = nd.getFullStart();
+            const fwidth = nd.getFullWidth();
+            const text = nd.getText(node);
+            const ftext = nd.getFullText(node);
+            console.info(pos, end, t, start,
+                width,
+                fstart,
+                fwidth,
+                text,
+                ftext);
+
+            //return;
+        }
+        if (ts.isTemplateExpression(nd)) {
+            const start = nd.getStart(node);
+            const width = nd.getWidth(node);
+            const fstart = nd.getFullStart();
+            const fwidth = nd.getFullWidth();
+            const text = nd.getText(node);
+            const ftext = nd.getFullText(node);
+            console.info(start,
+                width,
+                fstart,
+                fwidth,
+                text,
+                ftext);
+
+            //return;
+        }
+        ts.forEachChild(nd, traverse);
     }
 }
 

@@ -3,7 +3,7 @@
     no prefix
     installed by 'register'
 -->
-<style>
+<style mxt.global="true">
     .global {
         font-size: 1.1em;
     }
@@ -13,7 +13,7 @@
 <template id="ex03" type="mxt" mxt.creating="(config)=>doCreating(config)" mxt.created="(config)=>doCreated(config)" mxt.inserting="" mxt.inserted="" mxt.removing="" mxt.removed="" mxt.disposing="" mxt.disposed="">
 
 
-    
+
 
     <!-- 
         component - scoped style
@@ -36,7 +36,11 @@
             background: #f0f0f0;
             cursor: pointer;
 
-            color: ${color};
+            color: $ {
+                color
+            }
+
+            ;
         }
 
         div:hover {

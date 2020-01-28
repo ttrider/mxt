@@ -1,9 +1,11 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo } from "../index";
-import { Element } from "domhandler";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo } from "../index";
+import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
 import { parseInlineExpressions } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
+import * as du from "domutils";
+import { removeElement } from "domutils";
 
 let idindex = 1;
 let partid = 1;
@@ -221,43 +223,40 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 }
 
 
-function processElementSet(elements: Element[]) {
+function processElementSet(elements: Element[], component: ComponentInfo) {
 
     for (const el of elements) {
 
+
+
+
+
         switch (el.type.toLowerCase()) {
-            // ???
-            case ElementType.CDATA: break;
+
             // include as-is
-            case ElementType.Comment: break;
-            // include as-is
-            case ElementType.Directive: break;
+            case ElementType.Comment:
+            case ElementType.Directive:
+                break;
             // ignore
-            case ElementType.Doctype: break;
+            case ElementType.Doctype:
+                removeElement(el);
+                break;
             // extract into a top level script 
             case ElementType.Script: break;
             // extract and process the style element in the context of the component
             case ElementType.Style: break;
             // normal elements    
             case ElementType.Tag:
-<<<<<<< HEAD
                 // if the element is an <mxt.> element, 
                 // we need to convert the whole set
                 break;
             // text block
-            case ElementType.Text: 
+            case ElementType.CDATA:
+            case ElementType.Text:
                 // text blocks 
                 // if we have any <mxt> elements or tokens, we would need to convert it into <span>
-            break;
-=======
                 break;
-            // text block
-            case ElementType.Text: break;
->>>>>>> ffa6400eeba6ea6b518cec3a44fea7b07b1ad07c
         }
-
-
-
 
     }
 
@@ -267,6 +266,35 @@ function processElementSet(elements: Element[]) {
 
 }
 
+interface StyleInfo {
+    element: Element;
+}
+
+
+function processStyle(element: Element) {
+
+    // preprocess styles.
+    // in order to less/sasc to work, we need to replace ${} tokens and replace them back in the postprocess
+
+    const content = (element.firstChild as DataNode)?.data;
+    if (content) {
+
+        const expressions = parseInlineExpressions(content);
+
+        //expressions.
+
+
+
+    }
+
+}
+
+function preProcessStyle(element: Element) {
+
+
+
+
+}
 
 
 export default processTemplate;

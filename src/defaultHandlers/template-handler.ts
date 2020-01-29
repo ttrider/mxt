@@ -280,17 +280,9 @@ function processStyle(element: Element) {
     if (content) {
 
         const expressions = parseInlineExpressions(content);
-
         if (expressions.tokens) {
-            // this style has tokens
-            // it means it is a dynamic, scoped style
 
-            // for the processing, we need to replace tokens with safe strings
-            const tokens = expressions.tokens.sort((a, b) => b.end - a.end);
-            for (let index = 0; index < tokens.length; index++) {
-                const token = tokens[index];
 
-            }
 
 
         } else if (element.attribs["mxt.global"]) {
@@ -300,13 +292,6 @@ function processStyle(element: Element) {
         }
 
     }
-
-}
-
-function preProcessStyle(element: Element) {
-
-
-
 
 }
 

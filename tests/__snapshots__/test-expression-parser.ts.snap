@@ -8,7 +8,13 @@ Object {
     "c",
     "d",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "end": 33,
+      "start": NaN,
+      "text": undefined,
+    },
+  ],
 }
 `;
 
@@ -19,7 +25,18 @@ Object {
     "def",
     "jkl",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "end": 14,
+      "start": NaN,
+      "text": undefined,
+    },
+    Object {
+      "end": 19,
+      "start": NaN,
+      "text": undefined,
+    },
+  ],
 }
 `;
 
@@ -27,7 +44,6 @@ exports[`null expression 1`] = `
 Object {
   "content": "abc",
   "externalReferences": Array [],
-  "hasTokens": false,
 }
 `;
 
@@ -37,6 +53,12 @@ Object {
   "externalReferences": Array [
     "abc",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "end": 7,
+      "start": NaN,
+      "text": undefined,
+    },
+  ],
 }
 `;

@@ -29,7 +29,6 @@ export function parseInlineExpressions(content: string) {
     return state;
 }
 
-
 function getProgram(content: string) {
     const dummyFilePath = "/file.ts";
     const source = ts.createSourceFile(dummyFilePath, content, ts.ScriptTarget.Latest);
@@ -56,7 +55,6 @@ function getProgram(content: string) {
 
     return { program, source };
 }
-
 
 function getTokens(node: ts.SourceFile) {
 

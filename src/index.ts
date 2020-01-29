@@ -105,13 +105,17 @@ export interface TemplateInfo extends ElementInfo {
     dynamicElements: { [name: string]: DynamicElementInfo };
 }
 
+export interface TokenInfo {
+    start: number;
+    end: number;
+    content: string;
+    token: string;
+}
+
+
 export interface ExpressionInfo {
     content: string,
-    tokens?: {
-        start: number;
-        end: number;
-        text: string;
-    }[],
+    tokens?: TokenInfo[],
     externalReferences: string[]
 }
 

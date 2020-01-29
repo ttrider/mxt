@@ -1,4 +1,4 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo } from "../index";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo, TokenInfo, ExpressionInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -281,8 +281,6 @@ function processStyle(element: Element) {
 
         const expressions = parseInlineExpressions(content);
         if (expressions.tokens) {
-
-
 
 
         } else if (element.attribs["mxt.global"]) {

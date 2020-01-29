@@ -1,4 +1,4 @@
-import { ElementInfo, StyleElementInfo, TemplateInfo, ComponentInfo } from ".";
+import { ElementInfo, StyleElementInfo, TemplateInfo, ComponentInfo, TokenizedContent } from ".";
 import { parseDOM } from "htmlparser2";
 import * as dom from "domhandler";
 import fs from "fs";
@@ -37,6 +37,7 @@ export class ComponentFile {
     importStatements: {
         [from: string]: Array<string | { name: string, as: string }>
     } = {};
+    styles?: TokenizedContent[];
 
     private constructor(content: string, filePath: string) {
 

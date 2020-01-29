@@ -91,7 +91,14 @@ export interface StyleElementInfo extends ElementInfo {
     rules: string[]
 }
 
+export interface TokenizedContent {
+    content: string,
+    references?: string[]
+}
+
 export interface ComponentInfo {
+    dynamicStyles?: TokenizedContent[];
+    styles?: TokenizedContent[];
     id: string;
     rootPart: string;
     parts: { [id: string]: TemplateInfo };
@@ -193,7 +200,6 @@ export interface HandlerContext {
     globalStyleElements: ElementInfo[],
     bodyElements: ElementInfo[]
 }
-
 
 
 

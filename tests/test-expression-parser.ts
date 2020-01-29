@@ -4,7 +4,7 @@ test("null expression", () => {
 
     const results = parseInlineExpressions("abc");
     expect(results).toMatchSnapshot();
-});
+}); 
 
 test("simple value expression", () => {
 

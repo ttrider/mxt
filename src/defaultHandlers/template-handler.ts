@@ -2,7 +2,7 @@ import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo, TokenI
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
-import { parseInlineExpressions } from "../ast/ts";
+import { parseInlineExpressions, tokenizedContent } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
 import * as du from "domutils";
 import { removeElement } from "domutils";
@@ -223,13 +223,9 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 }
 
 
-function processElementSet(elements: Element[], component: ComponentInfo) {
+async function processElementSet(componentFile: ComponentFile, component: ComponentInfo, elements: Element[]) {
 
     for (const el of elements) {
-
-
-
-
 
         switch (el.type.toLowerCase()) {
 
@@ -270,28 +266,6 @@ interface StyleInfo {
     element: Element;
 }
 
-
-function processStyle(element: Element) {
-
-    // preprocess styles.
-    // in order to less/sasc to work, we need to replace ${} tokens and replace them back in the postprocess
-
-    const content = (element.firstChild as DataNode)?.data;
-    if (content) {
-
-        const expressions = parseInlineExpressions(content);
-        if (expressions.tokens) {
-
-
-        } else if (element.attribs["mxt.global"]) {
-            // global style - used as is
-        } else {
-            // component-scoped style
-        }
-
-    }
-
-}
 
 
 export default processTemplate;

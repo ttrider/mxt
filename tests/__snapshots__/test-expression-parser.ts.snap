@@ -8,7 +8,14 @@ Object {
     "c",
     "d",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "content": "function(a){return a*b*c;}(d)",
+      "end": 32,
+      "start": 0,
+      "token": "\${function(a){return a*b*c;}(d)}",
+    },
+  ],
 }
 `;
 
@@ -19,7 +26,20 @@ Object {
     "def",
     "jkl",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "content": "def",
+      "end": 9,
+      "start": 3,
+      "token": "\${def}",
+    },
+    Object {
+      "content": "jkl",
+      "end": 18,
+      "start": 12,
+      "token": "\${jkl}",
+    },
+  ],
 }
 `;
 
@@ -27,7 +47,6 @@ exports[`null expression 1`] = `
 Object {
   "content": "abc",
   "externalReferences": Array [],
-  "hasTokens": false,
 }
 `;
 
@@ -37,6 +56,13 @@ Object {
   "externalReferences": Array [
     "abc",
   ],
-  "hasTokens": true,
+  "tokens": Array [
+    Object {
+      "content": "abc",
+      "end": 6,
+      "start": 0,
+      "token": "\${abc}",
+    },
+  ],
 }
 `;

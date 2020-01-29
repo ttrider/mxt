@@ -1,4 +1,4 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo } from "../index";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo, TokenInfo, ExpressionInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -286,11 +286,11 @@ function processStyle(element: Element) {
             // it means it is a dynamic, scoped style
 
             // for the processing, we need to replace tokens with safe strings
-            const tokens = expressions.tokens.sort((a, b) => b.end - a.end);
-            for (let index = 0; index < tokens.length; index++) {
-                const token = tokens[index];
 
-            }
+
+
+
+
 
 
         } else if (element.attribs["mxt.global"]) {

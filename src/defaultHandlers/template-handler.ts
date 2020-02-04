@@ -6,6 +6,8 @@ import { parseInlineExpressions, tokenizedContent } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
 import * as du from "domutils";
 import { removeElement } from "domutils";
+//import { DomElement } from "domhandler";
+import processStyle from "./style-handler";
 
 let idindex = 1;
 let partid = 1;
@@ -225,6 +227,9 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 
 async function processElementSet(componentFile: ComponentFile, component: ComponentInfo, elements: Element[]) {
 
+    const textNodes: Element[] = [];
+
+
     for (const el of elements) {
 
         switch (el.type.toLowerCase()) {
@@ -238,12 +243,14 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                 removeElement(el);
                 break;
             // extract into a top level script 
-            case ElementType.Script: break;
-            // extract and process the style element in the context of the component
-            case ElementType.Style: break;
-                //const content = (element.firstChild as DataNode)?.data;
-                //const type = element.attribs.type ?? "text/css";
-                //element.attribs["mxt.global"]
+            case ElementType.Script:
+                componentFile.scripts.push(el);
+                removeElement(el);
+                break;
+            case ElementType.Style:
+                await processStyleElement(el);
+                removeElement(el);
+                break;
             // normal elements    
             case ElementType.Tag:
                 // if the element is an <mxt.> element, 
@@ -254,21 +261,33 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
             case ElementType.Text:
                 // text blocks 
                 // if we have any <mxt> elements or tokens, we would need to convert it into <span>
+                textNodes.push(el);
                 break;
         }
 
     }
 
+    async function processStyleElement(element: Element) {
 
+        const content = (element.firstChild as DataNode)?.data;
+        if (content) {
+            const type = element.attribs.type ?? "text/css";
+            const isGlobal = element.attribs["mxt.global"];
 
+            const { globalStyle, componentStyle, dynamicStyle } = await processStyle(content, type, isGlobal === "true");
 
-
+            if (globalStyle) {
+                (componentFile.styles = componentFile.styles ?? []).push(globalStyle);
+            }
+            else if (componentStyle) {
+                (component.styles = component.styles ?? []).push(componentStyle);
+            }
+            else if (dynamicStyle) {
+                (component.dynamicStyles = component.dynamicStyles ?? []).push(dynamicStyle);
+            }
+        }
+    }
 }
-
-interface StyleInfo {
-    element: Element;
-}
-
 
 
 export default processTemplate;

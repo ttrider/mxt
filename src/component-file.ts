@@ -28,6 +28,7 @@ export class ComponentFile {
     links: ElementInfo[] = [];
     globalStyles: StyleElementInfo[] = [];
 
+
     components: { [id: string]: ComponentInfo } = {};
     errors: Error[] = [];
 
@@ -38,6 +39,7 @@ export class ComponentFile {
         [from: string]: Array<string | { name: string, as: string }>
     } = {};
     styles?: TokenizedContent[];
+    
 
     private constructor(content: string, filePath: string) {
 

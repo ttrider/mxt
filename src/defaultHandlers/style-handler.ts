@@ -1,9 +1,18 @@
+import less from "less";
+import sass from "sass";
 import { TokenizedContent } from "../index";
 import { parseInlineExpressions, tokenizedContent } from "../ast/ts";
-import lessHandler from "./less-style-handler";
-import sassHandler from "./sass-style-handler";
 
-
+const handlers = {
+    "less": lessHandler,
+    "text/less": lessHandler,
+    "scss": scssHandler,
+    "text/scss": scssHandler,
+    "sass": sassHandler,
+    "text/sass": sassHandler,
+    "css": cssHandler,
+    "text/css": cssHandler
+}
 
 export async function processStyle(content?: string, type?: string, isGlobal?: boolean):
     Promise<{
@@ -14,7 +23,8 @@ export async function processStyle(content?: string, type?: string, isGlobal?: b
 
 
     if (content) {
-        type = type ?? "text/css";
+
+        const handler = (handlers[type ?? "text/css"] ?? cssHandler);
 
         const expressions = parseInlineExpressions(content);
         if (expressions.tokens) {
@@ -22,7 +32,7 @@ export async function processStyle(content?: string, type?: string, isGlobal?: b
             const wrapid = ".${$iid} ";
             const tc = tokenizedContent(expressions);
             const id = tc.addToken(wrapid);
-            const results = await doProcessStyle(type, tc.content, id);
+            const results = await handler(tc.content, id);
             tc.content = results;
             return {
                 dynamicStyle: { content: tc.resolved, references: expressions.externalReferences }
@@ -30,7 +40,7 @@ export async function processStyle(content?: string, type?: string, isGlobal?: b
         }
 
         if (isGlobal) {
-            const results = await doProcessStyle(type, content);
+            const results = await handler(content);
             return {
                 globalStyle: { content: results }
             }
@@ -39,41 +49,56 @@ export async function processStyle(content?: string, type?: string, isGlobal?: b
         const wrapid = ".${$cid} ";
         const tc = tokenizedContent(expressions);
         const id = tc.addToken(wrapid);
-        const results = await doProcessStyle(type, tc.content, id);
+        const results = await handler(tc.content, id);
         tc.content = results;
 
         return {
             componentStyle: { content: tc.resolved, references: expressions.externalReferences }
-            // component-scoped style
         }
     }
     return {};
 }
 export default processStyle;
 
-async function doProcessStyle(type: string, content: string, wrapClass?: string) {
-    
-    switch (type) {
-        case "less":
-        case "text/less":
-            return await lessHandler(wrapClass ? (wrapClass + " { " + content + " } ") : content);
-        case "scss":
-        case "text/scss":
-            return await sassHandler(wrapClass ? (wrapClass + " { " + content + " } ") : content, "scss");
-        case "sass":
-        case "text/sass":
-            const css = await sassHandler(content, "sass");
-            if (wrapClass) {
-                return await sassHandler(wrapClass + " { " + css + " } ", "scss");
-            }
-            return css;
-        case "css":
-        case "text/css":
-        default:
-            if (wrapClass) {
-                return await sassHandler(wrapClass + " { " + content + " } ", "scss");
-            }
-            return content;
+
+async function cssHandler(content: string, wrapClass?: string) {
+
+    if (wrapClass) {
+        return await scssHandler(content, wrapClass);
     }
+    return content;
 }
 
+async function lessHandler(content: string, wrapClass?: string) {
+
+    const output = await less.render(wrapClass ? (wrapClass + " { " + content + " } ") : content);
+    return output.css;
+}
+
+async function sassHandler(content: string, wrapClass?: string) {
+
+    const { css } = sass.renderSync({
+        data: content,
+        indentedSyntax: true,
+    });
+
+    const cssValue = css.toString();
+
+    if (wrapClass) {
+        return (sass.renderSync({
+            data: wrapClass + " { " + cssValue + " } ",
+            indentedSyntax: false,
+        })).css.toString();
+    }
+    return cssValue;
+}
+
+async function scssHandler(content: string, wrapClass?: string) {
+
+    const output = sass.renderSync({
+        data: wrapClass ? wrapClass + " { " + content + " } " : content,
+        indentedSyntax: false,
+    })
+
+    return output.css.toString();
+}

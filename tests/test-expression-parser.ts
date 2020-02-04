@@ -10,6 +10,7 @@ test("simple value expression", () => {
 
     const results = parseInlineExpressions("${abc}");
     expect(results).toMatchSnapshot();
+
 });
 
 test("multiple value expressions", () => {

@@ -66,6 +66,7 @@ test("LESS component style", async () => {
     expect(results.componentStyle.content).toStrictEqual(output);
   }
 
+
   const results2 = await processStyle(input, "text/less");
   expect(results2.componentStyle).not.toBeFalsy();
   expect(results2.dynamicStyle).toBeFalsy();
@@ -114,16 +115,13 @@ test("LESS dynamic style", async () => {
   expect(results.globalStyle).toBeFalsy();
   if (results.dynamicStyle) {
 
-    // console.info(results.dynamicStyle.content.split("\n").join("\\n"));
-    // console.info(output.split("\n").join("\\n"));
-
-    expect(results.dynamicStyle.content).toBe(output);
+    expect(results.dynamicStyle.content.trim()).toBe(output.trim());
     expect(results.dynamicStyle.references).toStrictEqual(["color", "color2"]);
   }
 });
 
 
-test("SASS component style", async () => {
+test("SCSS component style", async () => {
 
   const input = `.foo { 
     color: white; 
@@ -137,8 +135,7 @@ test("SASS component style", async () => {
 }
 .\${$cid}  .foo .bar {
   color: black;
-}
-`;
+}`;
 
   const results = await processStyle(input, "scss");
   expect(results.componentStyle).not.toBeFalsy();
@@ -153,12 +150,11 @@ test("SASS component style", async () => {
 
 test("SASS global style", async () => {
 
-  const input = `.foo { 
-    color: white; 
-    .bar { 
-      color: black;
-    }
-  }`;
+  const input = `.foo
+    color: white
+    .bar
+      color: black
+      `;
   const output =
     `.foo {
   color: white;
@@ -172,39 +168,15 @@ test("SASS global style", async () => {
   expect(results.componentStyle).toBeFalsy();
   expect(results.dynamicStyle).toBeFalsy();
   expect(results.globalStyle).not.toBeFalsy();
-  if (results.globalStyle) expect(results.globalStyle.content).toBe(output);
-});
+  if (results.globalStyle) {
 
-test("SASS dynamic style", async () => {
-
-  const input = `.foo 
-  { 
-    color: \${color}; 
-    
-    .bar { 
-      color: \${color2};
-    }
-  }`;
-  const output =
-    `.\${$iid}  .foo {
-  color: \${color};
-}
-.\${$iid}  .foo .bar {
-  color: \${color2};
-}`;
-
-  const results = await processStyle(input, "sass");
-  expect(results.componentStyle).toBeFalsy();
-  expect(results.dynamicStyle).not.toBeFalsy();
-  expect(results.globalStyle).toBeFalsy();
-  if (results.dynamicStyle) {
-
-    console.info(results.dynamicStyle.content.split("\n").join("\\n"));
+    console.info(results.globalStyle.content.split("\n").join("\\n"));
     console.info(output.split("\n").join("\\n"));
 
-    expect(results.dynamicStyle.content).toBe(output);
-    expect(results.dynamicStyle.references).toStrictEqual(["color", "color2"]);
+    expect(results.globalStyle.content.trim()).toBe(output.trim());
+
   }
 });
+
 
 

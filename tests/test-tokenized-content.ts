@@ -9,7 +9,7 @@ test("null expression", () => {
         "${function(a){return a*b*c;}(d)}"
     ]) {
         const results = parseInlineExpressions(val);
-        const tc = tokenizedContent(results);
+        const tc = tokenizedContent(results); 
         expect(tc.resolved).toBe(val);
     }
 });

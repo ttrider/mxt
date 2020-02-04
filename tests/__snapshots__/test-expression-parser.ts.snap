@@ -10,9 +10,10 @@ Object {
   ],
   "tokens": Array [
     Object {
-      "end": 33,
-      "start": NaN,
-      "text": undefined,
+      "content": "function(a){return a*b*c;}(d)",
+      "end": 32,
+      "start": 0,
+      "token": "\${function(a){return a*b*c;}(d)}",
     },
   ],
 }
@@ -27,14 +28,16 @@ Object {
   ],
   "tokens": Array [
     Object {
-      "end": 14,
-      "start": NaN,
-      "text": undefined,
+      "content": "def",
+      "end": 9,
+      "start": 3,
+      "token": "\${def}",
     },
     Object {
-      "end": 19,
-      "start": NaN,
-      "text": undefined,
+      "content": "jkl",
+      "end": 18,
+      "start": 12,
+      "token": "\${jkl}",
     },
   ],
 }
@@ -55,9 +58,10 @@ Object {
   ],
   "tokens": Array [
     Object {
-      "end": 7,
-      "start": NaN,
-      "text": undefined,
+      "content": "abc",
+      "end": 6,
+      "start": 0,
+      "token": "\${abc}",
     },
   ],
 }

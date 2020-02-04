@@ -241,6 +241,9 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
             case ElementType.Script: break;
             // extract and process the style element in the context of the component
             case ElementType.Style: break;
+                //const content = (element.firstChild as DataNode)?.data;
+                //const type = element.attribs.type ?? "text/css";
+                //element.attribs["mxt.global"]
             // normal elements    
             case ElementType.Tag:
                 // if the element is an <mxt.> element, 

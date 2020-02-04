@@ -153,7 +153,7 @@ export function tokenizedContent(expressions: ExpressionInfo) {
         addToken,
 
         get resolved() {
-            const reg = /___MXT#\d+#TXM___/gim;
+            const reg = /___MXT_\d+_TXM___/gim;
             return content.replace(reg, (id) => {
                 return tokens[id];
             })
@@ -162,7 +162,7 @@ export function tokenizedContent(expressions: ExpressionInfo) {
 
 
     function addToken(value: string) {
-        const id = "___MXT#" + tokenIndex + "#TXM___";
+        const id = "___MXT_" + tokenIndex + "_TXM___";
         tokenIndex++;
         tokens[id] = value;
         return id;

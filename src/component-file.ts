@@ -6,7 +6,7 @@ import path from "path";
 import util from "util";
 import ts from "typescript";
 import * as d from "./ts";
-import { Problem } from "./problem";
+import { Problem, ProblemCode } from "./problem";
 
 const readFile = util.promisify(fs.readFile);
 
@@ -39,7 +39,7 @@ export class ComponentFile {
         [from: string]: Array<string | { name: string, as: string }>
     } = {};
     styles?: TokenizedContent[];
-    
+
 
     private constructor(content: string, filePath: string) {
 
@@ -143,5 +143,10 @@ export class ComponentFile {
         }
         const content = fileBuffer.toString();
         return new ComponentFile(content, filePath);
+    }
+
+
+    problemFromElement(code: ProblemCode, element: dom.Element) {
+        this.problems.push(Problem.fromElement(code, element));
     }
 }

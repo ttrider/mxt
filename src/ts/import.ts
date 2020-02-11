@@ -14,13 +14,7 @@ export function ImportStatement(name: string | { name: string, as?: string }[], 
         if (Array.isArray(name)) {
 
             const specifiers = name
-                .map(m => {
-
-                    if (m.as === undefined || m.as === m.name) {
-                        return ts.createImportSpecifier(undefined, ts.createIdentifier(m.name));
-                    }
-                    return ts.createImportSpecifier(ts.createIdentifier(m.name), ts.createIdentifier(m.as));
-                });
+                .map(getImportSpecifier);
 
             return ts.createImportClause(undefined, specifiers.length > 0 ? ts.createNamedImports(specifiers) : undefined);
         }
@@ -29,10 +23,57 @@ export function ImportStatement(name: string | { name: string, as?: string }[], 
 
 }
 
+declare type ImportStatementListBuilder = (ts.ImportDeclaration[]) & { add: ((identifier: string | { name: string, as?: string }, from: string) => ImportStatementListBuilder) };
+export function ImportStatementList() {
+
+    const imports: ts.ImportDeclaration[] = [];
+
+    (imports as any).add = add;
+    return imports as ImportStatementListBuilder;
+
+    function add(identifier: string | { name: string, as?: string }, from: string) {
+
+        const existing = imports.find(p => p.moduleSpecifier.getText() === from);
+        if (existing && existing.importClause) {
+
+            if (typeof identifier === "string") {
+                if (existing.importClause.name) {
+                    if (existing.importClause.name.text !== identifier) {
+                        throw new Error("can't redefine a namespace import");
+                    }
+                    // do nothing
+                } else {
+                    existing.importClause.name = ts.createIdentifier(identifier);
+                }
+            } else {
+
+                const importSpecifier = getImportSpecifier(identifier);
+
+                if (!existing.importClause.namedBindings) {
+                    existing.importClause.namedBindings = ts.createNamedImports([importSpecifier]);
+                }
+                else {
+                    const bindings = existing.importClause.namedBindings as ts.NamedImports;
+                    (bindings.elements as any).push(importSpecifier);
+                }
+            }
+
+        } else {
+            if (typeof identifier === "string") {
+                imports.push(ImportStatement(identifier, from));
+            } else {
+                imports.push(ImportStatement([{ name: identifier.name, as: identifier.as }], from));
+            }
+        }
+
+        return imports as ImportStatementListBuilder;
+    }
+}
 
 
-// export function pickCard(x: { suit: string; card: number; }[], y: string): number;
-// export function pickCard(x: number, y): { suit: string; card: number; };
-// export function pickCard(x, y): any {
-
-// }
+function getImportSpecifier(m: { name: string, as?: string }) {
+    if (m.as === undefined || m.as === m.name) {
+        return ts.createImportSpecifier(undefined, ts.createIdentifier(m.name));
+    }
+    return ts.createImportSpecifier(ts.createIdentifier(m.name), ts.createIdentifier(m.as));
+}

@@ -8,6 +8,7 @@ import * as du from "domutils";
 import { removeElement } from "domutils";
 //import { DomElement } from "domhandler";
 import processStyle from "./style-handler";
+import { Problem, ProblemCode } from "../problem";
 
 let idindex = 1;
 let partid = 1;
@@ -228,11 +229,13 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 async function processElementSet(componentFile: ComponentFile, component: ComponentInfo, elements: Element[]) {
 
     const textNodes: Element[] = [];
+    let hasMxtNode: boolean = false;
 
 
     for (const el of elements) {
+        const elType = el.type.toLowerCase();
 
-        switch (el.type.toLowerCase()) {
+        switch (elType) {
 
             // include as-is
             case ElementType.Comment:
@@ -253,8 +256,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                 break;
             // normal elements    
             case ElementType.Tag:
-                // if the element is an <mxt.> element, 
-                // we need to convert the whole set
+                processTagElement(el);
                 break;
             // text block
             case ElementType.CDATA:
@@ -287,6 +289,85 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
             }
         }
     }
+
+    function processTagElement(element: Element) {
+
+        const name = element.name.toLowerCase();
+        if (name.startsWith("mxt.")) {
+
+            switch (name.substring(4)) {
+                case "component":
+                    processMxtComponent(element);
+                    break;
+                case "foreach":
+                    processMxtForeach(element);
+                    break;
+                case "if":
+                    processMxtIf(element);
+                    break;
+                case "import":
+                    processMxtImport(element);
+                    break;
+                case "switch":
+                    processMxtSwitch(element);
+                    break;
+                case "with":
+                    processMxtWith(element);
+                    break;
+                default:
+                    componentFile.problemFromElement(ProblemCode.ERR003, element);
+                    break;
+            }
+        }
+
+
+
+
+    }
+
+    function processMxtComponent(element: Element) {
+
+    }
+    function processMxtForeach(element: Element) {
+
+    }
+    function processMxtIf(element: Element) {
+
+    }
+    function processMxtImport(element: Element) {
+        //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
+        //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
+        //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
+        const attrs = element.attribs;
+
+        if (!attrs.from) {
+            componentFile.problemFromElement(ProblemCode.ERR004, element);
+            return;
+        }
+
+        if (!attrs.as) {
+            if (!attrs.name) {
+                componentFile.problemFromElement(ProblemCode.ERR005, element);
+                return;
+            }
+            componentFile.addImport({ name: attrs.name, as: attrs.name }, attrs.from);
+            return;
+        } else {
+            if (!attrs.name) {
+                componentFile.addImport(attrs.name, attrs.from);
+                return;
+            }
+            componentFile.addImport({ name: attrs.name, as: attrs.as }, attrs.from);
+            return;
+        }
+    }
+    function processMxtSwitch(element: Element) {
+
+    }
+    function processMxtWith(element: Element) {
+
+    }
+
 }
 
 

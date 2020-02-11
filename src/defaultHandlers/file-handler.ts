@@ -20,13 +20,13 @@ function processComponentFile(componentFile: ComponentFile) {
                 if (element.attribs.id) {
                     if (componentFile.templates[element.attribs.id]) {
                         err = true;
-                        componentFile.problems.push(Problem.fromElement(ProblemCode.ERR001, element));
+                        componentFile.problemFromElement(ProblemCode.ERR001, element);
                     } else {
                         componentFile.templates[element.attribs.id] = element;
                     }
                 } else {
                     err = true;
-                    componentFile.problems.push(Problem.fromElement(ProblemCode.ERR002, element));
+                    componentFile.problemFromElement(ProblemCode.ERR002, element);
                 }
             }
             else {

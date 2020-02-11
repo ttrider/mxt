@@ -5,12 +5,19 @@ export enum ProblemCode {
 
     ERR001, // Duplicate template id
     ERR002, // Missing template id
+    ERR003, // Invalid tag
+
+    ERR004, // missing "from" attribute in mxt.import element
+    ERR005, // missing "from" attribute in mxt.import element
 }
 
 const msgTemplates = [
     template`OK`,
     template`Duplicate template id '${"id"}'`,
     template`Missing template id`,
+    template`Invalid tag '${"name"}'`,
+    template`mxt.import: missing required "from" attribute`,
+    template`mxt.import: either "name" or "as" is required`,
 
 
 ]

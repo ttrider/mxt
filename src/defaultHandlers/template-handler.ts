@@ -350,14 +350,14 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                 componentFile.problemFromElement(ProblemCode.ERR005, element);
                 return;
             }
-            componentFile.addImport({ name: attrs.name, as: attrs.name }, attrs.from);
+            componentFile.imports.add({ name: attrs.name, as: attrs.name }, attrs.from);
             return;
         } else {
             if (!attrs.name) {
-                componentFile.addImport(attrs.name, attrs.from);
+                componentFile.imports.add(attrs.name, attrs.from);
                 return;
             }
-            componentFile.addImport({ name: attrs.name, as: attrs.as }, attrs.from);
+            componentFile.imports.add({ name: attrs.name, as: attrs.as }, attrs.from);
             return;
         }
     }

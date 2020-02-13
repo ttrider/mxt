@@ -26,7 +26,7 @@ const names = {
 
 export function codegen(context: HandlerContext, componentFile: ComponentFile) {
 
-    componentFile.addImport("$r$", "../mxt-rt");
+    componentFile.imports.add("$r$", "../mxt-rt");
 
     const componentsObj = d.ObjectLiteral();
     const partsObj = d.ObjectLiteral();
@@ -153,7 +153,7 @@ export function codegen(context: HandlerContext, componentFile: ComponentFile) {
         componentFile.componentStatements.add(ts.createExportDefault(ts.createIdentifier(templateNames[0])));
     }
 
-    
+
 
 
     return true;

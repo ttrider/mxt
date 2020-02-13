@@ -33,7 +33,10 @@ export function ImportStatementList() {
 
     function add(identifier: string | { name: string, as?: string }, from: string) {
 
-        const existing = imports.find(p => p.moduleSpecifier.getText() === from);
+        const existing = imports.find(p =>
+            p.moduleSpecifier !== undefined
+            && ts.isStringLiteral(p.moduleSpecifier)
+            && p.moduleSpecifier.text === from);
         if (existing && existing.importClause) {
 
             if (typeof identifier === "string") {

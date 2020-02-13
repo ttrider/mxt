@@ -36,7 +36,7 @@ describe("import list", () => {
         const stmt = ImportStatementList().add("foo", "bar").add("bar", "foo");
 
         const code = stmt.map(generateCode).join("\n");
-        expect(code).toBe(`import foo from "bar";`);
+        expect(code).toBe("import foo from \"bar\";\nimport bar from \"foo\";"); 
     }); 
 
 });

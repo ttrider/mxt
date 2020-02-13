@@ -29,14 +29,38 @@ describe("import list", () => {
 
         const code = stmt.map(generateCode).join("\n");
         expect(code).toBe(`import foo from "bar";`);
-    }); 
+    });
 
     test("dual import", () => {
 
         const stmt = ImportStatementList().add("foo", "bar").add("bar", "foo");
 
         const code = stmt.map(generateCode).join("\n");
-        expect(code).toBe("import foo from \"bar\";\nimport bar from \"foo\";"); 
-    }); 
+        expect(code).toBe("import foo from \"bar\";\nimport bar from \"foo\";");
+    });
+
+    test("multiple props import", () => {
+
+        const stmt = ImportStatementList().add({ name: "foo" }, "foobar").add({ name: "bar" }, "foobar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import { foo, bar } from \"foobar\";");
+    });
+
+    test("multiple props import with rename", () => {
+
+        const stmt = ImportStatementList().add({ name: "foo", as: "f" }, "foobar").add({ name: "bar", as: "b" }, "foobar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import { foo as f, bar as b } from \"foobar\";");
+    });
+
+    test("mixed import", () => {
+
+        const stmt = ImportStatementList().add({ name: "foo", as: "f" }, "foobar").add("bar", "foobar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import bar, { foo as f } from \"foobar\";");
+    });
 
 });

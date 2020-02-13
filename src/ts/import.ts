@@ -13,8 +13,7 @@ export function ImportStatement(name: string | { name: string, as?: string }[], 
 
         if (Array.isArray(name)) {
 
-            const specifiers = name
-                .map(getImportSpecifier);
+            const specifiers = name.map(getImportSpecifier);
 
             return ts.createImportClause(undefined, specifiers.length > 0 ? ts.createNamedImports(specifiers) : undefined);
         }

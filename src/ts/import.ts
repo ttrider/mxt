@@ -1,4 +1,5 @@
 import ts from "typescript";
+import { isEqualIdentifiers } from "./core";
 
 
 export function ImportStatement(name: string | { name: string, as?: string }[], from: string) {
@@ -41,7 +42,8 @@ export function ImportStatementList() {
             if (typeof identifier === "string") {
                 if (existing.importClause.name) {
                     if (existing.importClause.name.text !== identifier) {
-                        throw new Error("can't redefine a namespace import");
+                        // insert an additional import statement in this case
+                        imports.push(ImportStatement(identifier, from));
                     }
                     // do nothing
                 } else {
@@ -56,7 +58,18 @@ export function ImportStatementList() {
                 }
                 else {
                     const bindings = existing.importClause.namedBindings as ts.NamedImports;
-                    (bindings.elements as any).push(importSpecifier);
+                    // let's see if we have this import already
+
+                    const exi = bindings.elements.find(item => isEqualIdentifiers(item.name, importSpecifier.name));
+                    if (exi) {
+                        if (isEqualIdentifiers(exi.propertyName, importSpecifier.propertyName)) {
+                            // do nothing
+                        } else {
+                            throw new Error(`property name redefinition '${exi.propertyName} => ${importSpecifier.propertyName}'`)
+                        }
+                    } else {
+                        (bindings.elements as any).push(importSpecifier);
+                    }
                 }
             }
 

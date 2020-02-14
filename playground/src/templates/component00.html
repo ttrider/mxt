@@ -1,5 +1,14 @@
 <template id="component00" type="mxt">
+    <!-- use previously imported component -->
+    <mxt.component name="if01" />
+
+    <!-- import and use default component from ./if01 -->
+    <mxt.component from="./if01" />
+
+    <!-- import named component from ./if01 -->
     <mxt.component name="if01" from="./if01" />
+
+
     <mxt.component name="if01" from="./if01" with="${inner}" />
     <mxt.component name="if01" from="./if01" with="${inner2}" />
 </template>

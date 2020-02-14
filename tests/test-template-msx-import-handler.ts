@@ -20,7 +20,6 @@ describe("msx-import", () => {
     expect(code).toBe("import { foo as bar } from \"./if03\";");
   });
 
-
 });
 
 function createInputElement(name: string, attribs: { [name: string]: string }) {
@@ -31,7 +30,7 @@ function createInputElement(name: string, attribs: { [name: string]: string }) {
   el.startIndex = 0;
   el.endIndex = 1;
 
-  processMxtImport(cf, el);
+  processMxtImport(cf, undefined, el);
 
   return cf.imports.map(generateCode).join("\n");
 

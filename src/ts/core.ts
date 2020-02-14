@@ -111,3 +111,17 @@ export function modifiersBuilder(host: { modifiers?: ts.ModifiersArray | undefin
 
 }
 //modifiers: ts.ModifiersArray | undefined
+
+export function isEqualIdentifiers(left?: ts.Node, right?: ts.Node) {
+    // same object passed
+    if (left === right) return true;
+
+    if (!left) return false;
+    if (!right) return false;
+
+    if (!ts.isIdentifier(left)) return false;
+    if (!ts.isIdentifier(right)) return false;
+
+    return left.text === right.text;
+
+}

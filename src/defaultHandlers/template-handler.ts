@@ -297,7 +297,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
             switch (name.substring(4)) {
                 case "component":
-                    processMxtComponent(element);
+                    processMxtComponent(componentFile, component, element);
                     break;
                 case "foreach":
                     processMxtForeach(element);
@@ -306,13 +306,13 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtIf(element);
                     break;
                 case "import":
-                    processMxtImport(componentFile, element);
+                    processMxtImport(componentFile, component, element);
                     break;
                 case "switch":
                     processMxtSwitch(element);
                     break;
                 case "with":
-                    processMxtWith(componentFile, element);
+                    processMxtWith(componentFile, component, element);
                     break;
                 default:
                     componentFile.problemFromElement(ProblemCode.ERR003, element);
@@ -328,12 +328,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
     }
 
-    function processMxtComponent(element: Element) {
-        // <mxt.component name="if01" />
-        // <mxt.component name="if01" from="./if01" />
-        // <mxt.component name="if01" from="./if01" with="${inner}" />
 
-    }
 
     function processMxtForeach(element: Element) {
 
@@ -349,8 +344,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
 }
 
-
-export function processMxtImport(componentFile: ComponentFile, element: Element) {
+export function processMxtImport(componentFile: ComponentFile, component: ComponentInfo | undefined, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
     //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
     //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
@@ -378,13 +372,42 @@ export function processMxtImport(componentFile: ComponentFile, element: Element)
     }
 }
 
-export function processMxtWith(componentFile: ComponentFile, element: Element) {
+export function processMxtWith(componentFile: ComponentFile, component: ComponentInfo, element: Element) {
 
     if (element.attribs.data === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR006, element);
     }
 
 
+
+}
+
+function processMxtComponent(componentFile: ComponentFile, component: ComponentInfo, element: Element) {
+
+    const attribs = element.attribs;
+    if (!attribs.name) {
+        if (!attribs.from) {
+            // have neither "name" nor "from"
+            componentFile.problemFromElement(ProblemCode.ERR007, element);
+            return;
+        }
+        if (!attribs.as) {
+            // has "from" but neither "name" nor "as"
+            componentFile.problemFromElement(ProblemCode.ERR008, element);
+            return;
+        }
+
+        // no "name", but has "from" and "as"
+
+        return;
+    }
+
+
+
+    // <mxt.component name="if01" />
+    // <mxt.component from="../if01" as="something"/>
+    // <mxt.component name="if01" from="./if01" />
+    // <mxt.component name="if01" from="./if01" with="${inner}" />
 
 }
 

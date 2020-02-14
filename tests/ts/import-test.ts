@@ -31,6 +31,14 @@ describe("import list", () => {
         expect(code).toBe(`import foo from "bar";`);
     });
 
+    test("import", () => {
+
+        const stmt = ImportStatementList().add("foo", "bar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe(`import foo from "bar";`);
+    });
+
     test("dual import", () => {
 
         const stmt = ImportStatementList().add("foo", "bar").add("bar", "foo");
@@ -39,12 +47,29 @@ describe("import list", () => {
         expect(code).toBe("import foo from \"bar\";\nimport bar from \"foo\";");
     });
 
-    test("multiple props import", () => {
+    test("multiple defaults imports for the same from", () => {
+
+        const stmt = ImportStatementList().add("foo", "foobar").add("bar", "foobar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import foo from \"foobar\";\nimport bar from \"foobar\";");
+    });
+
+    
+
+    test("multiple default props import", () => {
 
         const stmt = ImportStatementList().add({ name: "foo" }, "foobar").add({ name: "bar" }, "foobar");
 
         const code = stmt.map(generateCode).join("\n");
         expect(code).toBe("import { foo, bar } from \"foobar\";");
+    });
+
+    test("duplicate props import", () => {
+        const stmt = ImportStatementList().add({ name: "foo" }, "foobar").add({ name: "foo" }, "foobar");
+ 
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import { foo } from \"foobar\";");
     });
 
     test("multiple props import with rename", () => {
@@ -53,6 +78,14 @@ describe("import list", () => {
 
         const code = stmt.map(generateCode).join("\n");
         expect(code).toBe("import { foo as f, bar as b } from \"foobar\";");
+    });
+
+    test("duplicate props import with rename", () => {
+
+        const stmt = ImportStatementList().add({ name: "foo", as: "f" }, "foobar").add({ name: "foo", as: "f" }, "foobar");
+
+        const code = stmt.map(generateCode).join("\n");
+        expect(code).toBe("import { foo as f } from \"foobar\";");
     });
 
     test("mixed import", () => {

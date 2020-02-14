@@ -9,6 +9,8 @@ export enum ProblemCode {
 
     ERR004, // missing "from" attribute in mxt.import element
     ERR005, // missing "from" attribute in mxt.import element
+
+    ERR006, // missing "data" attribute in mxt.with element
 }
 
 const msgTemplates = [
@@ -16,8 +18,9 @@ const msgTemplates = [
     template`Duplicate template id '${"id"}'`,
     template`Missing template id`,
     template`Invalid tag '${"name"}'`,
-    template`mxt.import: missing required "from" attribute`,
+    template`mxt.import: missing required attribute: "from"`,
     template`mxt.import: either "name" or "as" is required`,
+    template`mxt.with: missing required attribute: "data"`,
 
 
 ]

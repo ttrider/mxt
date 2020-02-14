@@ -312,12 +312,15 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtSwitch(element);
                     break;
                 case "with":
-                    processMxtWith(element);
+                    processMxtWith(componentFile, element);
                     break;
                 default:
                     componentFile.problemFromElement(ProblemCode.ERR003, element);
                     break;
             }
+            removeElement(element);
+        } else {
+
         }
 
 
@@ -326,8 +329,12 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
     }
 
     function processMxtComponent(element: Element) {
+        // <mxt.component name="if01" />
+        // <mxt.component name="if01" from="./if01" />
+        // <mxt.component name="if01" from="./if01" with="${inner}" />
 
     }
+
     function processMxtForeach(element: Element) {
 
     }
@@ -338,9 +345,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
     function processMxtSwitch(element: Element) {
 
     }
-    function processMxtWith(element: Element) {
 
-    }
 
 }
 
@@ -373,5 +378,14 @@ export function processMxtImport(componentFile: ComponentFile, element: Element)
     }
 }
 
+export function processMxtWith(componentFile: ComponentFile, element: Element) {
+
+    if (element.attribs.data === undefined) {
+        componentFile.problemFromElement(ProblemCode.ERR006, element);
+    }
+
+
+
+}
 
 export default processTemplate;

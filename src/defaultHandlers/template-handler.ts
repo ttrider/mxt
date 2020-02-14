@@ -306,7 +306,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtIf(element);
                     break;
                 case "import":
-                    processMxtImport(element);
+                    processMxtImport(componentFile, element);
                     break;
                 case "switch":
                     processMxtSwitch(element);
@@ -334,33 +334,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
     function processMxtIf(element: Element) {
 
     }
-    function processMxtImport(element: Element) {
-        //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
-        //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
-        //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
-        const attrs = element.attribs;
 
-        if (!attrs.from) {
-            componentFile.problemFromElement(ProblemCode.ERR004, element);
-            return;
-        }
-
-        if (!attrs.as) {
-            if (!attrs.name) {
-                componentFile.problemFromElement(ProblemCode.ERR005, element);
-                return;
-            }
-            componentFile.imports.add({ name: attrs.name, as: attrs.name }, attrs.from);
-            return;
-        } else {
-            if (!attrs.name) {
-                componentFile.imports.add(attrs.name, attrs.from);
-                return;
-            }
-            componentFile.imports.add({ name: attrs.name, as: attrs.as }, attrs.from);
-            return;
-        }
-    }
     function processMxtSwitch(element: Element) {
 
     }
@@ -368,6 +342,35 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
     }
 
+}
+
+
+export function processMxtImport(componentFile: ComponentFile, element: Element) {
+    //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
+    //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
+    //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
+    const attrs = element.attribs;
+
+    if (!attrs.from) {
+        componentFile.problemFromElement(ProblemCode.ERR004, element);
+        return;
+    }
+
+    if (!attrs.as) {
+        if (!attrs.name) {
+            componentFile.problemFromElement(ProblemCode.ERR005, element);
+            return;
+        }
+        componentFile.imports.add({ name: attrs.name, as: attrs.name }, attrs.from);
+        return;
+    } else {
+        if (!attrs.name) {
+            componentFile.imports.add(attrs.as, attrs.from);
+            return;
+        }
+        componentFile.imports.add({ name: attrs.name, as: attrs.as }, attrs.from);
+        return;
+    }
 }
 
 

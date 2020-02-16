@@ -1,4 +1,4 @@
-import { HandlerContext, ComponentInfo } from "../src";
+import { HandlerContext } from "../src";
 import { Element } from "domhandler";
 import { ComponentFile } from "../src/component-file";
 import { processTemplate } from "../src/defaultHandlers/template-handler";
@@ -6,6 +6,7 @@ import { codegen } from "../src/defaultHandlers/codegen-handler";
 import { generateCode } from "../src/ast/ts";
 import { format } from "path";
 import processComponentFile from "../src/defaultHandlers/file-handler";
+import { Component } from "../src/component";
 
 
 
@@ -120,7 +121,7 @@ export function formatComponentFileObject(componentFile: ComponentFile) {
 }
 
 
-function formatComponentObject(component: ComponentInfo) {
+function formatComponentObject(component: Component) {
 
     return JSON.stringify(component, (key, value) => {
         switch (key) {

@@ -23,7 +23,7 @@ describe("import", () => {
 
 describe("import list", () => {
 
-    test("import", () => {
+    test("import", () => { 
 
         const stmt = ImportStatementList().add("foo", "bar");
 

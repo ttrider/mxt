@@ -14,6 +14,7 @@ export enum ProblemCode {
 
     ERR007, // missing "name" attribute in mxt.component element
     ERR008, // missing "as" attribute in mxt.component element
+
 }
 
 const msgTemplates = [

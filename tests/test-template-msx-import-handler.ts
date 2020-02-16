@@ -5,7 +5,7 @@ import { generateCode } from "../src/ts";
 
 describe("msx-import", () => {
 
-  test("import from as", () => {
+  test("import from as", () => { 
     const code = createInputElement("mxt.import", { from: "./if03", as: "foo" });
     expect(code).toBe("import foo from \"./if03\";");
   });

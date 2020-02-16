@@ -1,4 +1,4 @@
-import { ElementInfo, StyleElementInfo, TemplateInfo, ComponentInfo, TokenizedContent } from ".";
+import { ElementInfo, StyleElementInfo, TemplateInfo, TokenizedContent } from ".";
 import { parseDOM } from "htmlparser2";
 import * as dom from "domhandler";
 import fs from "fs";
@@ -7,6 +7,7 @@ import util from "util";
 import ts from "typescript";
 import * as d from "./ts";
 import { Problem, ProblemCode } from "./problem";
+import { Component } from "./component";
 
 const readFile = util.promisify(fs.readFile);
 
@@ -29,7 +30,7 @@ export class ComponentFile {
     globalStyles: StyleElementInfo[] = [];
 
 
-    components: { [id: string]: ComponentInfo } = {};
+    components: { [id: string]: Component } = {};
     errors: Error[] = [];
 
     initStatements = d.StatementList();

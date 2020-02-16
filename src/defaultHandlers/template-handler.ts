@@ -1,4 +1,4 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo, ComponentInfo, TokenInfo, ExpressionInfo } from "../index";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo, PartInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -9,6 +9,7 @@ import { removeElement } from "domutils";
 //import { DomElement } from "domhandler";
 import processStyle from "./style-handler";
 import { Problem, ProblemCode } from "../problem";
+import { Component } from "../component";
 
 let idindex = 1;
 let partid = 1;
@@ -25,6 +26,8 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
     const templateElement = componentFile.templates[templateId];
     const component_id = templateElement.attribs.id;
 
+    const component = new Component(component_id);
+
     const template: TemplateInfo = {
         id: `p${partid++}`,
         name: "template",
@@ -35,20 +38,20 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 
 
 
-    componentFile.components[component_id] = {
-        id: component_id,
-        rootPart: template.id,
-        parts: {
-            [template.id]: template
-        }
-    }
+    // componentFile.components[component_id] = {
+    //     id: component_id,
+    //     rootPart: template.id,
+    //     parts: {
+    //         [template.id]: template
+    //     }
+    // }
 
-    // traverse template
-    for (const item of templateElement.children) {
-        const element = item as Element;
-        template.elements.push(element);
-        processItem(template, element);
-    }
+    // // traverse template
+    // for (const item of templateElement.children) {
+    //     const element = item as Element;
+    //     template.elements.push(element);
+    //     processItem(template, element);
+    // }
 
     function processItem(template: TemplateInfo, item: Element) {
 
@@ -226,7 +229,7 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 }
 
 
-async function processElementSet(componentFile: ComponentFile, component: ComponentInfo, elements: Element[]) {
+async function processElementSet(componentFile: ComponentFile, component: Component, elements: Element[]) {
 
     const textNodes: Element[] = [];
     let hasMxtNode: boolean = false;
@@ -344,7 +347,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
 }
 
-export function processMxtImport(componentFile: ComponentFile, component: ComponentInfo | undefined, element: Element) {
+export function processMxtImport(componentFile: ComponentFile, component: Component | undefined, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
     //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
     //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
@@ -372,7 +375,7 @@ export function processMxtImport(componentFile: ComponentFile, component: Compon
     }
 }
 
-export function processMxtWith(componentFile: ComponentFile, component: ComponentInfo, element: Element) {
+export function processMxtWith(componentFile: ComponentFile, component: Component, element: Element) {
 
     if (element.attribs.data === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR006, element);
@@ -382,33 +385,52 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
 
 }
 
-function processMxtComponent(componentFile: ComponentFile, component: ComponentInfo, element: Element) {
+export function processMxtComponent(componentFile: ComponentFile, component: Component, element: Element) {
+    // <mxt.component name="if01" />
+    // <mxt.component from="../if01" as="something"/>
+    // <mxt.component name="if01" from="./if01" />
+    // <mxt.component name="if01" from="./if01" with="${inner}" />
 
-    const attribs = element.attribs;
-    if (!attribs.name) {
-        if (!attribs.from) {
+    const attrs = element.attribs;
+    let name = attrs.name;
+    if (!name) {
+        if (!attrs.from) {
             // have neither "name" nor "from"
             componentFile.problemFromElement(ProblemCode.ERR007, element);
             return;
         }
-        if (!attribs.as) {
+        if (!attrs.as) {
             // has "from" but neither "name" nor "as"
             componentFile.problemFromElement(ProblemCode.ERR008, element);
             return;
         }
 
         // no "name", but has "from" and "as"
-
-        return;
+        componentFile.imports.add(attrs.as, attrs.from);
+        name = attrs.as;
+    } else {
+        if (attrs.from) {
+            if (attrs.as) {
+                componentFile.imports.add({ name: name, as: attrs.as }, attrs.from);
+                name = attrs.as;
+            } else {
+                componentFile.imports.add({ name: name }, attrs.from);
+            }
+        }
     }
 
+    // regiser import
+    const partId = component.addComponentImport(name);
 
+    const part: PartInfo = {
+        partId
+    }
 
-    // <mxt.component name="if01" />
-    // <mxt.component from="../if01" as="something"/>
-    // <mxt.component name="if01" from="./if01" />
-    // <mxt.component name="if01" from="./if01" with="${inner}" />
+    if (attrs.with) {
+        part.dc = parseInlineExpressions(attrs.with);
+    }
 
+    return part;
 }
 
 export default processTemplate;

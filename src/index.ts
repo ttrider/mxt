@@ -96,12 +96,10 @@ export interface TokenizedContent {
     references?: string[]
 }
 
-export interface ComponentInfo {
-    dynamicStyles?: TokenizedContent[];
-    styles?: TokenizedContent[];
-    id: string;
-    rootPart: string;
-    parts: { [id: string]: TemplateInfo };
+export interface PartInfo {
+
+    partId: string;
+    dc?: ExpressionInfo;
 }
 
 

@@ -229,6 +229,8 @@ export function processTemplate(componentFile: ComponentFile, templateId: string
 }
 
 
+
+
 async function processElementSet(componentFile: ComponentFile, component: Component, elements: Element[]) {
 
     const textNodes: Element[] = [];
@@ -347,6 +349,14 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
 }
 
+function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): PartInfo | undefined {
+
+
+    return;
+
+}
+
+
 export function processMxtImport(componentFile: ComponentFile, component: Component | undefined, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
     //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
@@ -381,6 +391,19 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
         componentFile.problemFromElement(ProblemCode.ERR006, element);
     }
 
+    if (element.children.length > 0) {
+        const partId = wrapAsPart(componentFile, component, element);
+        if (partId) {
+
+            const part: PartInfo = {
+                partId
+            }
+
+            if (attrs.with) {
+                part.dc = parseInlineExpressions(attrs.with);
+            }
+        }
+    }
 
 
 }

@@ -308,7 +308,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtForeach(element);
                     break;
                 case "if":
-                    processMxtIf(element);
+                    processMxtIf(componentFile, component, element);
                     break;
                 case "import":
                     processMxtImport(componentFile, component, element);
@@ -338,9 +338,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
     function processMxtForeach(element: Element) {
 
     }
-    function processMxtIf(element: Element) {
 
-    }
 
     function processMxtSwitch(element: Element) {
 
@@ -456,6 +454,26 @@ export function processMxtComponent(componentFile: ComponentFile, component: Com
     }
 
     return part;
+}
+
+export function processMxtIf(componentFile: ComponentFile, component: Component, element: Element) {
+    // <mxt.if condition="${foo}" />
+
+    if (element.attribs.condition === undefined) {
+        componentFile.problemFromElement(ProblemCode.ERR009, element);
+    }
+
+    if (element.children.length > 0) {
+        const innerPart = wrapAsPart(componentFile, component, element);
+        if (innerPart) {
+
+            const part: PartInfo = {
+                partId: innerPart.partId,
+                when: parseInlineExpressions(element.attribs.condition)
+            }
+            return part;
+        }
+    }
 }
 
 export default processTemplate;

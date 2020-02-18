@@ -11,7 +11,13 @@ const { if01 } =
                 return {
                     sequence: [
                         $pf$.p01,
-                        { part: $pf$.p02, when: ($on: any, $dc$) => $on },
+                        {
+                            part: $pf$.p02,
+                            when: ($on: any, $dc$) => {
+                                const { showElement } = $dc$.$data;
+                                return showElement;
+                            }
+                        },
                         $pf$.p03
                     ],
                     switch: ($dc$) => {

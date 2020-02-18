@@ -15,6 +15,7 @@ export enum ProblemCode {
     ERR007, // missing "name" attribute in mxt.component element
     ERR008, // missing "as" attribute in mxt.component element
 
+    ERR009, // missing "condition" attribute in mxt.if element
 }
 
 const msgTemplates = [
@@ -27,7 +28,7 @@ const msgTemplates = [
     template`mxt.with: missing required attribute: "data"`,
     template`mxt.component: missing required attribute: "name"`,
     template`mxt.component: neither "as" nor "name" attribute with "from"`,
-
+    template`mxt.if: missing required attribute: "condition"`,
 
 ]
 

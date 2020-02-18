@@ -100,6 +100,8 @@ export interface PartInfo {
 
     partId: string;
     dc?: ExpressionInfo;
+
+    when?: ExpressionInfo;
 }
 
 

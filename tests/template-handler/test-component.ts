@@ -1,9 +1,9 @@
-import { ComponentFile } from "../src/component-file";
-import { processMxtImport, processMxtComponent } from "../src/defaultHandlers/template-handler";
+import { ComponentFile } from "../../src/component-file";
+import { processMxtImport, processMxtComponent } from "../../src/defaultHandlers/template-handler";
 import { Element } from "domhandler";
-import { generateCode } from "../src/ts";
-import { Component } from "../src/component";
-import { ProblemCode } from "../src/problem";
+import { generateCode } from "../../src/ts";
+import { Component } from "../../src/component";
+import { ProblemCode } from "../../src/problem";
 
 describe("msx-import", () => {
 

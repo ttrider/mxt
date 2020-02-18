@@ -1,11 +1,11 @@
-import { ComponentFile } from "../src/component-file";
-import { processMxtImport } from "../src/defaultHandlers/template-handler";
+import { ComponentFile } from "../../src/component-file";
+import { processMxtImport } from "../../src/defaultHandlers/template-handler";
 import { Element } from "domhandler";
-import { generateCode } from "../src/ts";
+import { generateCode } from "../../src/ts";
 
 describe("msx-import", () => {
 
-  test("import from as", () => { 
+  test("import from as", () => {
     const code = createInputElement("mxt.import", { from: "./if03", as: "foo" });
     expect(code).toBe("import foo from \"./if03\";");
   });

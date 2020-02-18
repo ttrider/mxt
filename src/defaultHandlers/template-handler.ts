@@ -392,16 +392,18 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
     }
 
     if (element.children.length > 0) {
-        const partId = wrapAsPart(componentFile, component, element);
-        if (partId) {
+        const innerPart = wrapAsPart(componentFile, component, element);
+        if (innerPart) {
 
             const part: PartInfo = {
-                partId
+                partId: innerPart.partId
             }
 
-            if (attrs.with) {
-                part.dc = parseInlineExpressions(attrs.with);
+            if (element.attribs.with) {
+                part.dc = parseInlineExpressions(element.attribs.with);
             }
+
+            return part;
         }
     }
 

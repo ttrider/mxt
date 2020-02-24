@@ -314,7 +314,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtImport(componentFile, component, element);
                     break;
                 case "switch":
-                    processMxtSwitch(element);
+                    processMxtSwitch(componentFile, component, element);
                     break;
                 case "with":
                     processMxtWith(componentFile, component, element);
@@ -340,9 +340,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
     }
 
 
-    function processMxtSwitch(element: Element) {
 
-    }
 
 
 }
@@ -350,10 +348,15 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): PartInfo | undefined {
 
 
-    return;
+    return {
+        partId: "temp"
+    };
 
 }
 
+export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
+
+}
 
 export function processMxtImport(componentFile: ComponentFile, component: Component | undefined, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
@@ -397,8 +400,8 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
                 partId: innerPart.partId
             }
 
-            if (element.attribs.with) {
-                part.dc = parseInlineExpressions(element.attribs.with);
+            if (element.attribs.data) {
+                part.dc = parseInlineExpressions(element.attribs.data);
             }
 
             return part;

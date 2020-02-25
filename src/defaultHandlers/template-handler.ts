@@ -345,6 +345,7 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
 
 
+<<<<<<< HEAD
 
 
 
@@ -408,16 +409,24 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
         }
     }
+=======
+>>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
 
 
 
 
 }
 
+<<<<<<< HEAD
 export function processMxtForeach(componentFile: ComponentFile, component: Component, element: Element) {
     //<mxt.foreach data="${items}">
     // <div/>
     //</mxt.foreach>
+=======
+    return {
+        partId: "temp"
+    };
+>>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
 
     if (!element.attribs.when) {
         componentFile.problemFromElement(ProblemCode.ERR012, element);
@@ -470,7 +479,13 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
                 componentFile.problemFromElement(ProblemCode.ERR011, el);
             }
 
+<<<<<<< HEAD
             const subPart = wrapAsPart(componentFile, component, el);
+=======
+export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
+
+}
+>>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
 
             const casePart: WhenPartReference =
             {
@@ -534,8 +549,8 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
                 part: innerPart
             }
 
-            if (element.attribs.with) {
-                part.dc = parseInlineExpressions(element.attribs.with);
+            if (element.attribs.data) {
+                part.dc = parseInlineExpressions(element.attribs.data);
             }
 
             return part;

@@ -168,7 +168,7 @@ export interface ComponentPart extends Part {
  * Part reference
  */
 export interface PartReference {
-    part: Part,
+    partId?: string,
     dc?: ExpressionInfo
 }
 
@@ -178,30 +178,6 @@ export interface PartReference {
 export interface WhenPartReference extends PartReference {
     when?: ExpressionInfo
 }
-
-/**
- * Part reference
- */
-
-export interface PartRef {
-    partId: string;
-}
-
-export interface SequencePartRef extends PartRef {
-
-    sequence: PartRef[];
-    on?: ExpressionInfo;
-
-}
-
-export interface PartInfoRef extends PartRef {
-
-
-    dc?: ExpressionInfo;
-
-    when?: ExpressionInfo;
-}
-
 
 export interface TemplateInfo extends ElementInfo {
     id: string,

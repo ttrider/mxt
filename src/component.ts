@@ -1,6 +1,7 @@
-import { TokenizedContent, TemplateInfo } from ".";
+import { TokenizedContent, TemplateInfo, Part } from ".";
 
 export class Component {
+
     static partIndex: number = 0;
     static newPartId() {
         return `p${Component.partIndex++}`;
@@ -26,5 +27,15 @@ export class Component {
         return this.importParts[name] = Component.newPartId();
     }
 
+    newPart<T extends Part>(init?: T & { id?: string }) {
+        const id = Component.newPartId();
+
+        const part = {
+            id
+        } as T;
+
+        //parts[id] = part;
+        return part;
+    }
 
 }

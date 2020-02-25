@@ -1,4 +1,4 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo, PartInfoRef, SequencePartRef, PartRef, Part, SwitchSequencePart, PartReference, ComponentPart, WhenPartReference, EmptyPart, ForEachPart } from "../index";
+import { TemplateInfo, AttributeTokenInfo, Part, SwitchSequencePart, PartReference, ComponentPart, WhenPartReference, EmptyPart, ForEachPart } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -336,11 +336,11 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 }
 
 
-function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): Part {
+function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): PartReference {
 
 
     if (element.children.length === 0) {
-        return EmptyPart;
+        return {};
     }
 
 
@@ -348,7 +348,7 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
 
 
-    return EmptyPart;
+    return {};
 
 
     function processElements(elements: Element[]) {
@@ -612,13 +612,24 @@ export function processMxtIf(componentFile: ComponentFile, component: Component,
 
     if (element.children.length > 0) {
         const innerPart = wrapAsPart(componentFile, component, element);
-        if (innerPart) {
+        if (innerPart.partId) {
+
+
+            const part = component.newPart<SwitchSequencePart>({
+                id: "",
+                sequence: [
+                    {
+                        partId: innerPart.partId,
+                        when: parseInlineExpressions(element.attribs.condition)
+                    }
+            });
+
 
             const part: SwitchSequencePart = {
                 id: Component.newPartId(),
                 sequence: [
                     {
-                        part: innerPart,
+                        partId: innerPart.partId,
                         when: parseInlineExpressions(element.attribs.condition)
                     }
                 ]

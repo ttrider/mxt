@@ -1,10 +1,11 @@
 import { observable, autorun, extendObservable, remove, computed } from "mobx"
 
-import { ex01 } from "./templates/ex01";
-import { ex02 } from "./templates/ex02";
-import { ex03 } from "./templates/ex03";
+// import { ex01 } from "./templates/ex01";
+// import { ex02 } from "./templates/ex02";
+// import { ex03 } from "./templates/ex03";
 import { if01 } from "./templates/if01";
 import { if02 } from "./templates/if02";
+import { if04 } from "./templates/if04"; 
 import if03 from "./templates/if03";
 import { switch01 } from "./templates/switch01";
 import component00 from "./templates/component00";
@@ -178,22 +179,22 @@ if (document) {
     style01(data, styletag01);
 
 
-    //example 01
-    const root_ex01 = document.getElementById("ex01");
-    if (root_ex01) {
-        data.el = ex01(data);
-        data.el.insert(root_ex01);
-    }
+    // //example 01
+    // const root_ex01 = document.getElementById("ex01");
+    // if (root_ex01) {
+    //     data.el = ex01(data);
+    //     data.el.insert(root_ex01);
+    // }
 
-    // // example 02
-    const root_ex02 = document.getElementById("ex02");
-    if (root_ex02) {
-        ex02(data).insert(root_ex02);
-    }
+    // // // example 02
+    // const root_ex02 = document.getElementById("ex02");
+    // if (root_ex02) {
+    //     ex02(data).insert(root_ex02);
+    // }
 
-    // // example 03
-    const root_ex03 = document.getElementById("ex03");
-    ex03(data, root_ex03);
+    // // // example 03 
+    // const root_ex03 = document.getElementById("ex03");
+    // ex03(data, root_ex03);
 
     //example 04
     const root_if01 = document.getElementById("if01");
@@ -205,6 +206,9 @@ if (document) {
 
     const root_if03 = document.getElementById("if03");
     if03(data, root_if03);
+
+    const root_if04 = document.getElementById("if04");
+    if04(data, root_if04);
 
     const root_switch01 = document.getElementById("switch01");
     switch01(data, root_switch01);

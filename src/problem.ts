@@ -16,19 +16,26 @@ export enum ProblemCode {
     ERR008, // missing "as" attribute in mxt.component element
 
     ERR009, // missing "condition" attribute in mxt.if element
+    ERR010, // unexpected child element
+    ERR011, // missing required attribute "when"
+
+    ERR012, // missing required attribute "data"
 }
 
 const msgTemplates = [
     template`OK`,
     template`Duplicate template id '${"id"}'`,
     template`Missing template id`,
-    template`Invalid tag '${"name"}'`,
+    template`Invalid tag '${"_name"}'`,
     template`mxt.import: missing required attribute: "from"`,
     template`mxt.import: either "name" or "as" is required`,
     template`mxt.with: missing required attribute: "data"`,
     template`mxt.component: missing required attribute: "name"`,
     template`mxt.component: neither "as" nor "name" attribute with "from"`,
     template`mxt.if: missing required attribute: "condition"`,
+    template`mxt.switch: unexpected child element '${"_name"}'`,
+    template`mxt.case: missing required attribute: "when"`,
+    template`mxt.foreach: missing required attribute: "data"`,
 
 ]
 
@@ -46,7 +53,9 @@ export class Problem extends Error {
 
     static fromElement(code: ProblemCode, element: Element) {
 
-        const message = msgTemplates[code](element);
+        const params = { ...element.attribs, _name: element.name };
+
+        const message = msgTemplates[code](params);
 
         const p = new Problem(message);
         p.name = ProblemCode[code];

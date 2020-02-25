@@ -1,4 +1,4 @@
-import { HandlerContext, TemplateInfo, AttributeTokenInfo, PartInfo } from "../index";
+import { HandlerContext, TemplateInfo, AttributeTokenInfo, PartInfoRef, SequencePartRef, PartRef, Part, SwitchSequencePart, PartReference, ComponentPart, WhenPartReference, EmptyPart, ForEachPart } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -305,7 +305,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtComponent(componentFile, component, element);
                     break;
                 case "foreach":
-                    processMxtForeach(element);
+                    processMxtForeach(componentFile, component, element);
                     break;
                 case "if":
                     processMxtIf(componentFile, component, element);
@@ -314,7 +314,7 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
                     processMxtImport(componentFile, component, element);
                     break;
                 case "switch":
-                    processMxtSwitch(element);
+                    processMxtSwitch(componentFile, component, element);
                     break;
                 case "with":
                     processMxtWith(componentFile, component, element);
@@ -333,28 +333,166 @@ async function processElementSet(componentFile: ComponentFile, component: Compon
 
     }
 
+}
 
 
-    function processMxtForeach(element: Element) {
+function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): Part {
 
+
+    if (element.children.length === 0) {
+        return EmptyPart;
     }
 
 
-    function processMxtSwitch(element: Element) {
 
+
+
+
+    return EmptyPart;
+
+
+    function processElements(elements: Element[]) {
+
+
+
+
+        for (const el of elements) {
+            const elType = el.type.toLowerCase();
+            switch (elType) {
+                case ElementType.Tag:
+                    const name = element.name.toLowerCase();
+                    if (name.startsWith("mxt.")) {
+                        processMxtElement(el, name.substring(4));
+                    } else {
+                        processHtmlTag(el);
+                    }
+                    break;
+                case ElementType.CDATA:
+                case ElementType.Text:
+                    break;
+            }
+        }
+
+        function processHtmlTag(element: Element) { }
+
+
+        function processMxtElement(element: Element, name: string) {
+
+
+
+            switch (name) {
+                case "component":
+                    processMxtComponent(componentFile, component, element);
+                    break;
+                case "foreach":
+                    processMxtForeach(componentFile, component, element);
+                    break;
+                case "if":
+                    processMxtIf(componentFile, component, element);
+                    break;
+                case "import":
+                    processMxtImport(componentFile, component, element);
+                    removeElement(element);
+                    break;
+                case "switch":
+                    processMxtSwitch(componentFile, component, element);
+                    break;
+                case "with":
+                    processMxtWith(componentFile, component, element);
+                    break;
+                default:
+                    componentFile.problemFromElement(ProblemCode.ERR003, element);
+                    break;
+            }
+
+
+        }
     }
+
+
 
 
 }
 
-function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element): PartInfo | undefined {
+export function processMxtForeach(componentFile: ComponentFile, component: Component, element: Element) {
+    //<mxt.foreach data="${items}">
+    // <div/>
+    //</mxt.foreach>
 
+    if (!element.attribs.when) {
+        componentFile.problemFromElement(ProblemCode.ERR012, element);
+    } else {
+        const part: ForEachPart = {
+            id: Component.newPartId(),
+            forEach: parseInlineExpressions(element.attribs.when),
+            part: wrapAsPart(componentFile, component, element)
+        }
+        return part;
 
-    return;
-
+    }
+    return EmptyPart;
 }
+export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
+    // <mxt.switch on="${switchindex}">
+    //     <mxt.case when="${0}">
+    //         <div>Switch index 0</div>
+    //     </mxt.case>
+    //     <mxt.case when="${1}">
+    //         <div>Switch index 1</div>
+    //     </mxt.case>
+    //     <mxt.case when="${2}">
+    //         <div>Switch index 2</div>
+    //     </mxt.case>
+    //     <mxt.case when="${$on > 2}">
+    //         <div>Greater then 2</div>
+    //     </mxt.case>
+    //     <mxt.default>
+    //         <div>Switch index default</div>
+    //     </mxt.default>
+    // </mxt.switch>
 
+    const attrs = element.attribs;
+    const part: SwitchSequencePart = {
 
+        id: Component.newPartId(),
+        sequence: []
+    };
+
+    if (attrs.on) {
+        part.switch = parseInlineExpressions(attrs.on)
+    }
+
+    let defaultPart: Part | undefined;
+    for (const el of element.children as Element[]) {
+
+        if (el.name == "mxt.case") {
+            if (!el.attribs.when) {
+                componentFile.problemFromElement(ProblemCode.ERR011, el);
+            }
+
+            const subPart = wrapAsPart(componentFile, component, el);
+
+            const casePart: WhenPartReference =
+            {
+                part: subPart,
+                when: parseInlineExpressions(attrs.when)
+            }
+
+            part.sequence.push(casePart);
+
+        } if (el.name == "mxt.default") {
+            defaultPart = wrapAsPart(componentFile, component, el);
+
+        } else {
+            componentFile.problemFromElement(ProblemCode.ERR010, element);
+        }
+    }
+    if (defaultPart) {
+        part.sequence.push({ part: defaultPart });
+    }
+
+    return part;
+}
 export function processMxtImport(componentFile: ComponentFile, component: Component | undefined, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
     //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
@@ -382,7 +520,6 @@ export function processMxtImport(componentFile: ComponentFile, component: Compon
         return;
     }
 }
-
 export function processMxtWith(componentFile: ComponentFile, component: Component, element: Element) {
 
     if (element.attribs.data === undefined) {
@@ -393,8 +530,8 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
         const innerPart = wrapAsPart(componentFile, component, element);
         if (innerPart) {
 
-            const part: PartInfo = {
-                partId: innerPart.partId
+            const part: PartReference = {
+                part: innerPart
             }
 
             if (element.attribs.with) {
@@ -404,10 +541,8 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
             return part;
         }
     }
-
-
+    return EmptyPart;
 }
-
 export function processMxtComponent(componentFile: ComponentFile, component: Component, element: Element) {
     // <mxt.component name="if01" />
     // <mxt.component from="../if01" as="something"/>
@@ -445,9 +580,14 @@ export function processMxtComponent(componentFile: ComponentFile, component: Com
     // regiser import
     const partId = component.addComponentImport(name);
 
-    const part: PartInfo = {
-        partId
-    }
+    const cp: ComponentPart = {
+        id: partId,
+        componentId: name
+    };
+
+    const part: PartReference = {
+        part: cp
+    };
 
     if (attrs.with) {
         part.dc = parseInlineExpressions(attrs.with);
@@ -455,9 +595,16 @@ export function processMxtComponent(componentFile: ComponentFile, component: Com
 
     return part;
 }
-
 export function processMxtIf(componentFile: ComponentFile, component: Component, element: Element) {
-    // <mxt.if condition="${foo}" />
+    // <mxt.if condition="${foo}">
+    //   <div/>
+    // </mxt.if> 
+    //             => 
+    // <mxt.switch>
+    //      <mxt.case when="${foo}">
+    //          <div/>
+    //      </mxt.case>
+    // </mxt.switch>
 
     if (element.attribs.condition === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR009, element);
@@ -467,13 +614,19 @@ export function processMxtIf(componentFile: ComponentFile, component: Component,
         const innerPart = wrapAsPart(componentFile, component, element);
         if (innerPart) {
 
-            const part: PartInfo = {
-                partId: innerPart.partId,
-                when: parseInlineExpressions(element.attribs.condition)
+            const part: SwitchSequencePart = {
+                id: Component.newPartId(),
+                sequence: [
+                    {
+                        part: innerPart,
+                        when: parseInlineExpressions(element.attribs.condition)
+                    }
+                ]
             }
             return part;
         }
     }
+    return EmptyPart;
 }
 
 export default processTemplate;

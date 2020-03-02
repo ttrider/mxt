@@ -10,6 +10,7 @@ import { removeElement } from "domutils";
 import processStyle from "./style-handler";
 import { Problem, ProblemCode } from "../problem";
 import { Component } from "../component";
+import { SwitchSequence } from "../template_parts";
 
 let idindex = 1;
 let partid = 1;
@@ -344,17 +345,10 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
     }
 
 
-
-<<<<<<< HEAD
-
-
-
     return {};
 
 
     function processElements(elements: Element[]) {
-
-
 
 
         for (const el of elements) {
@@ -374,7 +368,9 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
             }
         }
 
-        function processHtmlTag(element: Element) { }
+        function processHtmlTag(element: Element) {
+
+        }
 
 
         function processMxtElement(element: Element, name: string) {
@@ -409,24 +405,19 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
         }
     }
-=======
->>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
-
-
-
 
 }
 
-<<<<<<< HEAD
+
 export function processMxtForeach(componentFile: ComponentFile, component: Component, element: Element) {
     //<mxt.foreach data="${items}">
     // <div/>
     //</mxt.foreach>
-=======
+
     return {
         partId: "temp"
     };
->>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
+
 
     if (!element.attribs.when) {
         componentFile.problemFromElement(ProblemCode.ERR012, element);
@@ -479,13 +470,13 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
                 componentFile.problemFromElement(ProblemCode.ERR011, el);
             }
 
-<<<<<<< HEAD
-            const subPart = wrapAsPart(componentFile, component, el);
-=======
-export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
 
-}
->>>>>>> dc75b0196b7cea7270a888c6882e59791af1e54a
+            const subPart = wrapAsPart(componentFile, component, el);
+
+            export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
+
+            }
+
 
             const casePart: WhenPartReference =
             {
@@ -630,25 +621,16 @@ export function processMxtIf(componentFile: ComponentFile, component: Component,
         if (innerPart.partId) {
 
 
-            const part = component.newPart<SwitchSequencePart>({
-                id: "",
+            const part = component.newPart<SwitchSequence>({
                 sequence: [
                     {
                         partId: innerPart.partId,
                         when: parseInlineExpressions(element.attribs.condition)
-                    }
+                    }]
             });
 
 
-            const part: SwitchSequencePart = {
-                id: Component.newPartId(),
-                sequence: [
-                    {
-                        partId: innerPart.partId,
-                        when: parseInlineExpressions(element.attribs.condition)
-                    }
-                ]
-            }
+
             return part;
         }
     }

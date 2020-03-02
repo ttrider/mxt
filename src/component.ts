@@ -1,4 +1,5 @@
-import { TokenizedContent, TemplateInfo, Part } from ".";
+import { TokenizedContent, TemplateInfo } from ".";
+import { Part } from "./template_parts";
 
 export class Component {
 
@@ -16,6 +17,8 @@ export class Component {
 
     importParts: { [id: string]: string } = {};
 
+    partset: { [id: string]: Part } = {};
+
     constructor(id: string) {
         this.id = id;
     }
@@ -27,14 +30,16 @@ export class Component {
         return this.importParts[name] = Component.newPartId();
     }
 
-    newPart<T extends Part>(init?: T & { id?: string }) {
+    newPart<T>(init?: T): Part & T {
         const id = Component.newPartId();
 
-        const part = {
-            id
-        } as T;
+        const part = (init) ? {
+            id,
+            ...init
+        } as Part & T : { id } as Part & T;
 
-        //parts[id] = part;
+        this.partset[id] = part;
+
         return part;
     }
 

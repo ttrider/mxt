@@ -1,4 +1,4 @@
-import { TemplateInfo, AttributeTokenInfo, Part, SwitchSequencePart, PartReference, ComponentPart, WhenPartReference, EmptyPart, ForEachPart } from "../index";
+import { TemplateInfo, AttributeTokenInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
@@ -10,7 +10,7 @@ import { removeElement } from "domutils";
 import processStyle from "./style-handler";
 import { Problem, ProblemCode } from "../problem";
 import { Component } from "../component";
-import { SwitchSequence } from "../template_parts";
+import { SwitchSequence, PartReference, ForEachPart, EmptyPart, SwitchSequencePart, Part, WhenPartReference } from "../template_parts";
 
 let idindex = 1;
 let partid = 1;
@@ -473,9 +473,6 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
 
             const subPart = wrapAsPart(componentFile, component, el);
 
-            export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
-
-            }
 
 
             const casePart: WhenPartReference =

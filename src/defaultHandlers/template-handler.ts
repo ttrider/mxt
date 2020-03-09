@@ -10,7 +10,7 @@ import { removeElement } from "domutils";
 import processStyle from "./style-handler";
 import { Problem, ProblemCode } from "../problem";
 import { Component } from "../component";
-import { SwitchSequence, PartReference, ForEachPart, EmptyPart, SwitchSequencePart, Part, WhenPartReference } from "../template_parts";
+import { SwitchSequence, PartReference, ForEachPart, EmptyPart, SwitchSequencePart, Part, WhenPartReference, ComponentRefPart, ComponentRef } from "../template_parts";
 
 let idindex = 1;
 let partid = 1;
@@ -349,7 +349,7 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
 
     function processElements(elements: Element[]) {
-
+        let hasHtml = false;
 
         for (const el of elements) {
             const elType = el.type.toLowerCase();
@@ -369,7 +369,11 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
         }
 
         function processHtmlTag(element: Element) {
-
+            hasHtml = true;
+            // process attributes here
+            if (element.children.length > 0) {
+                processElements(element.children as Element[]);
+            }
         }
 
 
@@ -532,19 +536,13 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
     if (element.children.length > 0) {
         const innerPart = wrapAsPart(componentFile, component, element);
         if (innerPart) {
-
-            const part: PartReference = {
-                part: innerPart
-            }
-
             if (element.attribs.data) {
-                part.dc = parseInlineExpressions(element.attribs.data);
+                innerPart.dc = parseInlineExpressions(element.attribs.data);
             }
-
-            return part;
+            return innerPart;
         }
     }
-    return EmptyPart;
+    return;
 }
 export function processMxtComponent(componentFile: ComponentFile, component: Component, element: Element) {
     // <mxt.component name="if01" />
@@ -583,17 +581,10 @@ export function processMxtComponent(componentFile: ComponentFile, component: Com
     // regiser import
     const partId = component.addComponentImport(name);
 
-    const cp: ComponentPart = {
-        id: partId,
-        componentId: name
-    };
-
-    const part: PartReference = {
-        part: cp
-    };
+    const partRef = component.newPart<ComponentRef>({ componentId: name }, partId);
 
     if (attrs.with) {
-        part.dc = parseInlineExpressions(attrs.with);
+        partRef.dc = parseInlineExpressions(attrs.with);
     }
 
     return part;

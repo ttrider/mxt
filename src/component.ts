@@ -30,8 +30,10 @@ export class Component {
         return this.importParts[name] = Component.newPartId();
     }
 
-    newPart<T>(init?: T): Part & T {
-        const id = Component.newPartId();
+    newPart<T>(init?: T, id?: string): Part & T {
+        if (!id) {
+            id = Component.newPartId();
+        }
 
         const part = (init) ? {
             id,

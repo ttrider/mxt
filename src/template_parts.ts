@@ -1,5 +1,5 @@
-import { ExpressionInfo } from ".";
-
+import { ExpressionInfo, DynamicElementInfo } from ".";
+import { Element, DataNode } from "domhandler";
 /**
  * Part definition
  */
@@ -30,12 +30,12 @@ export interface SwitchSequence extends Sequence<WhenPartReference> {
  */
 export interface Template {
     elements: Element[];
-    attachTo?: AttachTemplate[];
+    attachTo?: DynamicElementInfo[];
 }
 
 export interface ForEach {
     forEach?: ExpressionInfo;
-    part: Part;
+    partId: string;
 }
 
 export interface AttachTemplate {

@@ -3,6 +3,7 @@ import util from "util";
 import { Node, Element } from "domhandler";
 const globp = util.promisify(glob);
 import { ComponentFile } from "./component-file";
+import { PartReference } from "./template_parts";
 
 
 declare type PluginHandlers =
@@ -71,6 +72,8 @@ export interface DynamicElementInfo {
     originalId?: string;
     attributes: { [name: string]: AttributeTokenInfo };
     events: { [name: string]: Eventinfo };
+    embeddedParts: PartReference[];
+    value?: ExpressionInfo;
 
 }
 

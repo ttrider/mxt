@@ -8,24 +8,24 @@ export function parseInlineExpressions(content: string) {
         content,
         externalReferences: []
     };
+    if (content) {
 
-    const { program, source } = getProgram("`" + content + "`");
+        const { program, source } = getProgram("`" + content + "`");
 
-    const tokens = getTokens(source);
+        const tokens = getTokens(source);
 
-    if (tokens.length > 0) {
-        const diags = ts.getPreEmitDiagnostics(program);
+        if (tokens.length > 0) {
+            const diags = ts.getPreEmitDiagnostics(program);
 
-        if (diags) {
-            state.tokens = tokens;
-            state.externalReferences =
-                diags
-                    .filter(r => r.code === 2304)
-                    .map(r => content.substr(r.start === undefined ? 0 : r.start - 1, r.length));
+            if (diags) {
+                state.tokens = tokens;
+                state.externalReferences =
+                    diags
+                        .filter(r => r.code === 2304)
+                        .map(r => content.substr(r.start === undefined ? 0 : r.start - 1, r.length));
+            }
         }
-
     }
-
     return state;
 }
 

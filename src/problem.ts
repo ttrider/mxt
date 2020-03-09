@@ -19,7 +19,9 @@ export enum ProblemCode {
     ERR010, // unexpected child element
     ERR011, // missing required attribute "when"
 
-    ERR012, // missing required attribute "data"
+    ERR012, // missing required attribute "in"
+
+    
 }
 
 const msgTemplates = [
@@ -35,7 +37,7 @@ const msgTemplates = [
     template`mxt.if: missing required attribute: "condition"`,
     template`mxt.switch: unexpected child element '${"_name"}'`,
     template`mxt.case: missing required attribute: "when"`,
-    template`mxt.foreach: missing required attribute: "data"`,
+    template`mxt.foreach: missing required attribute: "in"`,
 
 ]
 

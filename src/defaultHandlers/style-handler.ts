@@ -93,7 +93,7 @@ async function sassHandler(content: string, wrapClass?: string) {
     return cssValue;
 }
 
-async function scssHandler(content: string, wrapClass?: string) {
+function scssHandler(content: string, wrapClass?: string) {
 
     const output = sass.renderSync({
         data: wrapClass ? wrapClass + " { " + content + " } " : content,

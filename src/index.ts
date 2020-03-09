@@ -3,7 +3,7 @@ import util from "util";
 import { Node, Element } from "domhandler";
 const globp = util.promisify(glob);
 import { ComponentFile } from "./component-file";
-import { PartReference } from "./template_parts";
+import { PartReference } from "./template-parts";
 
 
 declare type PluginHandlers =

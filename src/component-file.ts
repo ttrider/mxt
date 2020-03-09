@@ -24,21 +24,15 @@ export class ComponentFile {
 
     templates: { [id: string]: dom.Element } = {};
     scripts: dom.Element[] = [];
-
-
-    links: ElementInfo[] = [];
-    globalStyles: StyleElementInfo[] = [];
-
+    styles?: TokenizedContent[];
 
     components: { [id: string]: Component } = {};
-    errors: Error[] = [];
+
 
     initStatements = d.StatementList();
     componentStatements = d.StatementList();
 
     imports = d.ImportStatementList();
-
-    styles?: TokenizedContent[];
 
 
     private constructor(content: string, filePath: string) {
@@ -46,8 +40,6 @@ export class ComponentFile {
         this.content = content;
         this.dom = parseDOM(this.content, { xmlMode: true, withStartIndices: true, withEndIndices: true });
         this.filePath = filePath;
-
-
     }
 
     getStatements() {
@@ -59,11 +51,6 @@ export class ComponentFile {
             ] as ts.Statement[];
         return s;
     }
-
-
-
-
-
 
     static fromContent(content: string, filePath: string = "./dummy.html") {
         return new ComponentFile(content, filePath);

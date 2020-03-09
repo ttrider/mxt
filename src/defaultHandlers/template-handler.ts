@@ -2,18 +2,16 @@ import { TemplateInfo, AttributeTokenInfo, DynamicElementInfo } from "../index";
 import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
-import { parseInlineExpressions, tokenizedContent } from "../ast/ts";
+import { parseInlineExpressions } from "../ast/ts";
 import getElementInfo from "../dom/elementInfo";
-import * as du from "domutils";
 import { removeElement } from "domutils";
-//import { DomElement } from "domhandler";
 import processStyle from "./style-handler";
-import { Problem, ProblemCode } from "../problem";
+import { ProblemCode } from "../problem";
 import { Component } from "../component";
-import { SwitchSequence, PartReference, ForEachPart, EmptyPart, SwitchSequencePart, Part, WhenPartReference, ComponentRefPart, ComponentRef, ForEach, Template } from "../template_parts";
+import { SwitchSequence, PartReference, WhenPartReference, ComponentRef, ForEach, Template } from "../template-parts";
 
 let idindex = 1;
-let partid = 1;
+
 
 //<mxt.component name="if01" from="./if01" with="${inner2}" />
 //<mxt.import name="if03" from="./if03" as="f0000" />
@@ -22,323 +20,41 @@ let partid = 1;
 //<mxt.foreach data="${items}"></mxt.foreach data="${items}"> 
 //<mxt.switch on="${switchindex}"><mxt.case when="${0}"></mxt.case><mxt.default></mxt.default></mxt.switch>
 
-export function processTemplate(componentFile: ComponentFile, templateId: string) {
 
-    const templateElement = componentFile.templates[templateId];
+declare type Context = {
+    componentFile: ComponentFile,
+    component: Component,
+    styleElements: Element[]
+};
+
+
+export async function processTemplate(componentFile: ComponentFile, templateElement: Element) {
+
     const component_id = templateElement.attribs.id;
-
     const component = new Component(component_id);
 
-    const template: TemplateInfo = {
-        id: `p${partid++}`,
-        name: "template",
-        attributes: templateElement.attribs,
-        elements: [],
-        dynamicElements: {}
+    componentFile.components[component_id] = component;
+
+    const context: Context = {
+        componentFile,
+        component,
+        styleElements: []
     };
 
+    const rootPart = wrapAsPart(context, templateElement);
 
+    component.rootPart = rootPart;
 
-    // componentFile.components[component_id] = {
-    //     id: component_id,
-    //     rootPart: template.id,
-    //     parts: {
-    //         [template.id]: template
-    //     }
-    // }
-
-    // // traverse template
-    // for (const item of templateElement.children) {
-    //     const element = item as Element;
-    //     template.elements.push(element);
-    //     processItem(template, element);
-    // }
-
-    function processItem(template: TemplateInfo, item: Element) {
-
-        switch (item.type.toLowerCase()) {
-            case ElementType.CDATA: break;
-            case ElementType.Comment: break;
-            case ElementType.Directive: break;
-            case ElementType.Doctype: break;
-            case ElementType.Script: break;
-            case ElementType.Style: break;
-            case ElementType.Tag:
-                processTag(template, item);
-                break;
-            case ElementType.Text: break;
-        }
-
-
-
-
-    }
-
-    function processTag(template: TemplateInfo, tagItem: Element) {
-
-        const elementInfo = getElementInfo(tagItem.name);
-
-        const tokenizedAttributes: string[] = [];
-
-        for (const attrName in tagItem.attribs) {
-            if (tagItem.attribs.hasOwnProperty(attrName)) {
-
-                const attrValue = tagItem.attribs[attrName];
-                const attrState = parseInlineExpressions(attrValue) as AttributeTokenInfo;
-
-                // detect event handlers first
-
-                if (processMxtAttribute(attrName, attrValue, attrState)) {
-                    continue;
-                }
-
-                // detect and process tokens in attributes
-                if (attrValue) {
-                    processAttributeTokens(attrName, attrValue, attrState);
-                }
-
-            }
-        }
-        for (const tokenizedAttribute of tokenizedAttributes) {
-            delete tagItem.attribs[tokenizedAttribute];
-        }
-
-        for (const item of tagItem.children) {
-            processItem(template, item as Element);
-        }
-
-        function processMxtAttribute(attrName: string, attrValue: string, attrState: AttributeTokenInfo) {
-
-            if (!attrName.startsWith("mxt.")) {
-                return false;
-            }
-            // Events
-            // mxt.<event>
-            // mxt.<event>.preventDefault 
-            // mxt.<event>.stopPropagation 
-            // mxt.<event>.stopImmediatePropagation
-
-            const mxtParts = attrName.split(".");
-            if (mxtParts[0] !== "mxt" || mxtParts.length < 2) {
-                return;
-            }
-
-
-            const eventInfo = elementInfo?.events[mxtParts[1]];
-            if (eventInfo) {
-                // we have an event!
-                processMxtEvent(mxtParts);
-            }
-
-
-
-
-            function processMxtEvent(mxtParts: string[]) {
-
-                const name = mxtParts[1];
-
-                const de = getDynamicElement(tagItem);
-
-                let ev = de.events[name];
-                if (!ev) {
-                    ev = de.events[name] = { name }
-                };
-
-                if (mxtParts.length === 3) {
-
-                    const trueValue = attrValue === undefined || attrValue === "" || attrValue.toLowerCase() === "true";
-
-                    switch (mxtParts[2].toLowerCase() ?? "") {
-                        case "preventdefault":
-                            ev.preventDefault = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                        case "stoppropagation":
-                            ev.stopPropagation = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                        case "stopimmediatepropagation":
-                            ev.stopImmediatePropagation = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                        case "capture":
-                            ev.capture = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                        case "once":
-                            ev.once = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                        case "passive":
-                            ev.passive = trueValue;
-                            tokenizedAttributes.push(attrName);
-                            break;
-                    }
-                } else {
-
-                    // event name can come in multiple forms:
-                    // "name"
-                    // "${name}"
-                    // "${(e)=>{ some code here}"
-                    // this is not allowed:
-                    // "sometext${token}someother text"
-
-                    if (attrState.tokens && attrState.externalReferences.length > 0) {
-                        // TODO: we need a lot of error checking here
-                        ev.handler = attrState.externalReferences[0];
-                    } else {
-                        ev.handler = attrValue;
-                    }
-
-                    tokenizedAttributes.push(attrName);
-                }
-            }
-        }
-
-        function processAttributeTokens(attrName: string, attrValue: string, attrState: AttributeTokenInfo) {
-            if (attrState.tokens) {
-
-                const el = getDynamicElement(tagItem);
-                attrState.attributeName = attrName;
-                el.attributes[attrName] = attrState;
-                tokenizedAttributes.push(attrName);
-            }
-        }
-
-        function getDynamicElement(tagItem: Element) {
-
-            const tagId = tagItem.attribs.id ? tagItem.attribs.id : "";
-
-            let item = template.dynamicElements[tagId];
-            if (!item) {
-
-                const originalId = tagId ? tagId : "";
-                tagItem.attribs.id = `tagid_${idindex++}`;
-                item = {
-                    attributes: {},
-                    events: {},
-                    id: tagItem.attribs.id,
-                    originalId,
-                    embeddedParts: []
-                };
-                template.dynamicElements[tagItem.attribs.id] = item;
-            }
-            return item;
-        }
+    for (const styleElement of context.styleElements) {
+        await processStyleElement(context, styleElement);
     }
 
     return true;
-}
-
-
-
-
-async function processElementSet(componentFile: ComponentFile, component: Component, elements: Element[]) {
-
-    const textNodes: Element[] = [];
-    let hasMxtNode: boolean = false;
-
-
-    for (const el of elements) {
-        const elType = el.type.toLowerCase();
-
-        switch (elType) {
-
-            // include as-is
-            case ElementType.Comment:
-            case ElementType.Directive:
-                break;
-            // ignore
-            case ElementType.Doctype:
-                removeElement(el);
-                break;
-            // extract into a top level script 
-            case ElementType.Script:
-                componentFile.scripts.push(el);
-                removeElement(el);
-                break;
-            case ElementType.Style:
-                await processStyleElement(el);
-                removeElement(el);
-                break;
-            // normal elements    
-            case ElementType.Tag:
-                processTagElement(el);
-                break;
-            // text block
-            case ElementType.CDATA:
-            case ElementType.Text:
-                // text blocks 
-                // if we have any <mxt> elements or tokens, we would need to convert it into <span>
-                textNodes.push(el);
-                break;
-        }
-
-    }
-
-    async function processStyleElement(element: Element) {
-
-        const content = (element.firstChild as DataNode)?.data;
-        if (content) {
-            const type = element.attribs.type ?? "text/css";
-            const isGlobal = element.attribs["mxt.global"];
-
-            const { globalStyle, componentStyle, dynamicStyle } = await processStyle(content, type, isGlobal === "true");
-
-            if (globalStyle) {
-                (componentFile.styles = componentFile.styles ?? []).push(globalStyle);
-            }
-            else if (componentStyle) {
-                (component.styles = component.styles ?? []).push(componentStyle);
-            }
-            else if (dynamicStyle) {
-                (component.dynamicStyles = component.dynamicStyles ?? []).push(dynamicStyle);
-            }
-        }
-    }
-
-    function processTagElement(element: Element) {
-
-        const name = element.name.toLowerCase();
-        if (name.startsWith("mxt.")) {
-
-            switch (name.substring(4)) {
-                case "component":
-                    processMxtComponent(componentFile, component, element);
-                    break;
-                case "foreach":
-                    processMxtForeach(componentFile, component, element);
-                    break;
-                case "if":
-                    processMxtIf(componentFile, component, element);
-                    break;
-                case "import":
-                    processMxtImport(componentFile, component, element);
-                    break;
-                case "switch":
-                    processMxtSwitch(componentFile, component, element);
-                    break;
-                case "with":
-                    processMxtWith(componentFile, component, element);
-                    break;
-                default:
-                    componentFile.problemFromElement(ProblemCode.ERR003, element);
-                    break;
-            }
-            removeElement(element);
-        } else {
-
-        }
-
-
-
-
-    }
 
 }
 
-
-function wrapAsPart(componentFile: ComponentFile, component: Component, element: Element) {
+export function wrapAsPart(context: Context, element: Element) {
+    const { componentFile, component } = context;
 
     if (element.children.length === 0) {
         return;
@@ -392,6 +108,24 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
                 case ElementType.CDATA:
                 case ElementType.Text:
                     //TODO: process dynamic values in Text and CDATA(?)
+                    break;
+
+                // include as-is
+                case ElementType.Comment:
+                case ElementType.Directive:
+                    break;
+                // ignore
+                case ElementType.Doctype:
+                    removeElement(el);
+                    break;
+                // extract into a top level script 
+                case ElementType.Script:
+                    componentFile.scripts.push(el);
+                    removeElement(el);
+                    break;
+                case ElementType.Style:
+                    context.styleElements.push(el);
+                    removeElement(el);
                     break;
             }
         }
@@ -514,19 +248,19 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
 
             switch (name) {
                 case "component":
-                    return processMxtComponent(componentFile, component, element);
+                    return processMxtComponent(context, element);
                 case "foreach":
-                    return processMxtForeach(componentFile, component, element);
+                    return processMxtForeach(context, element);
                 case "if":
-                    return processMxtIf(componentFile, component, element);
+                    return processMxtIf(context, element);
                 case "import":
-                    processMxtImport(componentFile, component, element);
+                    processMxtImport(context, element);
                     removeElement(element);
                     return;
                 case "switch":
-                    return processMxtSwitch(componentFile, component, element);
+                    return processMxtSwitch(context, element);
                 case "with":
-                    return processMxtWith(componentFile, component, element);
+                    return processMxtWith(context, element);
                 default:
                     componentFile.problemFromElement(ProblemCode.ERR003, element);
                     return;
@@ -557,10 +291,11 @@ function wrapAsPart(componentFile: ComponentFile, component: Component, element:
     }
 }
 
-export function processMxtForeach(componentFile: ComponentFile, component: Component, element: Element) {
+export function processMxtForeach(context: Context, element: Element) {
     //<mxt.foreach in="${items}" [with=""]>
     // <div/>
     //</mxt.foreach>
+    const { componentFile, component } = context;
 
     if (element.attribs.in === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR012, element);
@@ -568,7 +303,7 @@ export function processMxtForeach(componentFile: ComponentFile, component: Compo
 
     if (element.children.length > 0) {
 
-        const innerPart = wrapAsPart(componentFile, component, element);
+        const innerPart = wrapAsPart(context, element);
         if (innerPart && innerPart.partId) {
 
             const part = component.newPart<ForEach>({
@@ -589,7 +324,7 @@ export function processMxtForeach(componentFile: ComponentFile, component: Compo
 
     return;
 }
-export function processMxtSwitch(componentFile: ComponentFile, component: Component, element: Element) {
+export function processMxtSwitch(context: Context, element: Element) {
     // <mxt.switch on="${switchindex}" [with=""]>
     //     <mxt.case when="${0}" [with=""]>
     //         <div>Switch index 0</div>
@@ -607,6 +342,7 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
     //         <div>Switch index default</div>
     //     </mxt.default>
     // </mxt.switch>
+    const { componentFile, component } = context;
 
     const attrs = element.attribs;
     const part = component.newPart<SwitchSequence>({
@@ -633,7 +369,7 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
                 componentFile.problemFromElement(ProblemCode.ERR011, el);
             }
 
-            const subPart = wrapAsPart(componentFile, component, el);
+            const subPart = wrapAsPart(context, el);
             if (subPart) {
                 const casePart: WhenPartReference =
                 {
@@ -649,7 +385,7 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
             }
 
         } if (el.name == "mxt.default") {
-            defaultPart = wrapAsPart(componentFile, component, el);
+            defaultPart = wrapAsPart(context, el);
             if (defaultPart && element.attribs.with) {
                 defaultPart.dc = parseInlineExpressions(el.attribs.with);
             }
@@ -663,10 +399,11 @@ export function processMxtSwitch(componentFile: ComponentFile, component: Compon
 
     return partRef;
 }
-export function processMxtImport(componentFile: ComponentFile, component: Component | undefined, element: Element) {
+export function processMxtImport(context: Context, element: Element) {
     //<mxt.import from="./if03" as="foo"/>              -> import foo from "./if03
     //<mxt.import from="./if03" name="foo"/>            -> import {foo} from "./if03
     //<mxt.import from="./if03" name="foo" as="bar"/>   -> import {foo as bar} from "./if03
+    const { componentFile } = context;
     const attrs = element.attribs;
 
     if (!attrs.from) {
@@ -690,14 +427,15 @@ export function processMxtImport(componentFile: ComponentFile, component: Compon
         return;
     }
 }
-export function processMxtWith(componentFile: ComponentFile, component: Component, element: Element) {
+export function processMxtWith(context: Context, element: Element) {
+    const { componentFile, component } = context;
 
     if (element.attribs.data === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR006, element);
     }
 
     if (element.children.length > 0) {
-        const innerPart = wrapAsPart(componentFile, component, element);
+        const innerPart = wrapAsPart(context, element);
         if (innerPart) {
             if (element.attribs.data) {
                 innerPart.dc = parseInlineExpressions(element.attribs.data);
@@ -707,11 +445,12 @@ export function processMxtWith(componentFile: ComponentFile, component: Componen
     }
     return;
 }
-export function processMxtComponent(componentFile: ComponentFile, component: Component, element: Element) {
+export function processMxtComponent(context: Context, element: Element) {
     // <mxt.component name="if01" />
     // <mxt.component from="../if01" as="something"/>
     // <mxt.component name="if01" from="./if01" />
     // <mxt.component name="if01" from="./if01" with="${inner}" />
+    const { componentFile, component } = context;
 
     const attrs = element.attribs;
     let name = attrs.name;
@@ -754,7 +493,7 @@ export function processMxtComponent(componentFile: ComponentFile, component: Com
 
     return partRef;
 }
-export function processMxtIf(componentFile: ComponentFile, component: Component, element: Element) {
+export function processMxtIf(context: Context, element: Element) {
     // <mxt.if condition="${foo}" [with=""]>
     //   <div/>
     // </mxt.if> 
@@ -764,13 +503,14 @@ export function processMxtIf(componentFile: ComponentFile, component: Component,
     //          <div/>
     //      </mxt.case>
     // </mxt.switch>
+    const { componentFile, component } = context;
 
     if (element.attribs.condition === undefined) {
         componentFile.problemFromElement(ProblemCode.ERR009, element);
     }
 
     if (element.children.length > 0) {
-        const innerPart = wrapAsPart(componentFile, component, element);
+        const innerPart = wrapAsPart(context, element);
         if (innerPart && innerPart.partId) {
 
 
@@ -793,6 +533,28 @@ export function processMxtIf(componentFile: ComponentFile, component: Component,
         }
     }
     return;
+}
+
+export async function processStyleElement(context: Context, element: Element) {
+    const { componentFile, component } = context;
+
+    const content = (element.firstChild as DataNode)?.data;
+    if (content) {
+        const type = element.attribs.type ?? "text/css";
+        const isGlobal = element.attribs["mxt.global"];
+
+        const { globalStyle, componentStyle, dynamicStyle } = await processStyle(content, type, isGlobal === "true");
+
+        if (globalStyle) {
+            (componentFile.styles = componentFile.styles ?? []).push(globalStyle);
+        }
+        else if (componentStyle) {
+            (component.styles = component.styles ?? []).push(componentStyle);
+        }
+        else if (dynamicStyle) {
+            (component.dynamicStyles = component.dynamicStyles ?? []).push(dynamicStyle);
+        }
+    }
 }
 
 export default processTemplate;

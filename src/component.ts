@@ -1,5 +1,5 @@
 import { TokenizedContent, TemplateInfo } from ".";
-import { Part } from "./template_parts";
+import { Part, PartReference } from "./template-parts";
 
 export class Component {
 
@@ -12,7 +12,7 @@ export class Component {
     dynamicStyles?: TokenizedContent[];
     styles?: TokenizedContent[];
     id: string;
-    rootPart?: string;
+    rootPart?: PartReference;
     parts: { [id: string]: TemplateInfo } = {};
 
     importParts: { [id: string]: string } = {};

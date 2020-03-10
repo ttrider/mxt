@@ -2,6 +2,7 @@ import { ComponentFile } from "../../src/component-file";
 import { processMxtImport } from "../../src/defaultHandlers/template-handler";
 import { Element } from "domhandler";
 import { generateCode } from "../../src/ts";
+import { Component } from "../../src/component";
 
 describe("msx-import", () => {
 
@@ -30,7 +31,7 @@ function createInputElement(name: string, attribs: { [name: string]: string }) {
   el.startIndex = 0;
   el.endIndex = 1;
 
-  processMxtImport(cf, undefined, el);
+  processMxtImport({ componentFile: cf, component: new Component(name), styleElements: [] }, el);
 
   return cf.imports.map(generateCode).join("\n");
 

@@ -84,7 +84,7 @@ function createInputElement(name: string, attribs: { [name: string]: string }) {
   el.startIndex = 0;
   el.endIndex = 1;
 
-  const part = processMxtComponent(cf, c, el);
+  const part = processMxtComponent({ componentFile: cf, component: c, styleElements: [] }, el);
 
   return {
     code: cf.imports.map(generateCode).join("\n"),

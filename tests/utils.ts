@@ -35,7 +35,7 @@ export function codegenSetup(content: string, templateId: string) {
     const { context, componentFile: component, element } = setupElementTest(content);
 
     expect(processComponentFile(component)).toBe(true);
-    expect(processTemplate(component, templateId)).toBe(true);
+    expect(processTemplate(component, element)).toBe(true);
     expect(codegen(context, component)).toBe(true);
 
     return generateCode(component.getStatements());
@@ -44,7 +44,7 @@ export function codegenSetup(content: string, templateId: string) {
 export function templateTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
-    expect(processTemplate(componentFile, templateId)).toBe(true);
+    expect(processTemplate(componentFile, element)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];
@@ -63,7 +63,7 @@ export function dynamicElementTestSetup(content: string, templateId: string) {
 
     const { context, componentFile, element } = setupElementTest(content);
     expect(processComponentFile(componentFile)).toBe(true);
-    expect(processTemplate(componentFile, templateId)).toBe(true);
+    expect(processTemplate(componentFile, element)).toBe(true);
 
     const component = Object.values(componentFile.components)[0];
     const part = Object.values(component.parts)[0];

@@ -1,20 +1,26 @@
 import { ComponentFile } from "../../src/component-file";
-import { processMxtImport, processMxtWith, processMxtIf } from "../../src/defaultHandlers/template-handler";
+import { processMxtIf } from "../../src/defaultHandlers/template-handler";
 import { Element } from "domhandler";
-import { generateCode } from "../../src/ts";
 import { Component } from "../../src/component";
+import { PartReference, SwitchSequencePart } from "../../src/template-parts";
 
 describe("msx-with", () => {
 
   test("import from as", () => {
-    const part = createInputElement("mxt.if", { condition: "${value==1}" });
+    const { component, partRef } = createInputElement("mxt.if", { condition: "${value==1}" });
 
-    expect(part).toBeTruthy();
-    if (!part) return;
-    expect(part.when).toBeTruthy();
-    if (part.when) expect(part.when.externalReferences[0]).toBe("value");
+    expect(partRef).toBeTruthy(); if (!partRef) return;
+    expect(partRef.partId).toBeTruthy(); if (!partRef.partId) return;
+
+    const part = component.partset[partRef.partId] as SwitchSequencePart;
+    expect(part).toBeTruthy(); if (!part) return;
+
+    expect(part.sequence).toBeTruthy(); if (!part.sequence) return;
+    expect(part.sequence.length).toBeTruthy(); if (!part.sequence) return;
+
+    expect(part.sequence[0].when).toBeTruthy(); if (!part.sequence[0].when) return;
+    expect(part.sequence[0].when.externalReferences[0]).toBe("value");
   });
-
 
 });
 
@@ -28,6 +34,9 @@ function createInputElement(name: string, attribs: { [name: string]: string }) {
   el.endIndex = 1;
   el.children.push(new Element("div", {}));
 
-  return processMxtIf(cf, c, el);
+  const context = { componentFile: cf, component: c, styleElements: [], partRef: undefined as PartReference | undefined };
+  context.partRef = processMxtIf(context, el);
+
+  return context;
 }
 

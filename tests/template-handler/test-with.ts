@@ -3,16 +3,17 @@ import { processMxtImport, processMxtWith } from "../../src/defaultHandlers/temp
 import { Element } from "domhandler";
 import { generateCode } from "../../src/ts";
 import { Component } from "../../src/component";
+import { PartReference } from "../../src/template-parts";
 
 describe("msx-with", () => {
 
   test("import from as", () => {
-    const part = createInputElement("mxt.import", { data: "${value}" });
+    const { partRef } = createInputElement("mxt.import", { data: "${value}" });
 
-    expect(part).toBeTruthy();
-    if (!part) return;
-    expect(part.dc).toBeTruthy();
-    if (part.dc) expect(part.dc.externalReferences[0]).toBe("value");
+    expect(partRef).toBeTruthy();
+    if (!partRef) return;
+    expect(partRef.dc).toBeTruthy();
+    if (partRef.dc) expect(partRef.dc.externalReferences[0]).toBe("value");
   });
 
 
@@ -28,6 +29,9 @@ function createInputElement(name: string, attribs: { [name: string]: string }) {
   el.endIndex = 1;
   el.children.push(new Element("div", {}));
 
-  return processMxtWith(cf, c, el);
+  const context = { componentFile: cf, component: c, styleElements: [], partRef: undefined as PartReference | undefined };
+  context.partRef = processMxtWith(context, el);
+
+  return context;
 }
 

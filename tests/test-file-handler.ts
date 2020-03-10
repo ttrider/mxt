@@ -18,7 +18,7 @@ describe("file handler", () => {
         const componentFile = ComponentFile.fromContent(resources[0]);
         expect(processComponentFile(componentFile)).toBeTruthy();
         expect(componentFile.templates).toHaveProperty("t01");
-        expect(componentFile.errors.length).toBe(0);
+        expect(componentFile.problems.length).toBe(0);
         expect(componentFile.scripts.length).toBe(0);
     });
 
@@ -27,7 +27,7 @@ describe("file handler", () => {
         expect(processComponentFile(componentFile)).toBeTruthy();
         expect(componentFile.templates).toHaveProperty("t01");
         expect(componentFile.templates).toHaveProperty("t02");
-        expect(componentFile.errors.length).toBe(0);
+        expect(componentFile.problems.length).toBe(0);
         expect(componentFile.scripts.length).toBe(0);
     });
 
@@ -50,7 +50,7 @@ describe("file handler", () => {
         const componentFile = ComponentFile.fromContent(resources[4]);
         expect(processComponentFile(componentFile)).toBeTruthy();
         expect(componentFile.templates).toHaveProperty("t01");
-        expect(componentFile.errors.length).toBe(0);
+        expect(componentFile.problems.length).toBe(0);
         expect(componentFile.scripts.length).toBe(1);
     });
 
@@ -58,6 +58,6 @@ describe("file handler", () => {
         const componentFile = ComponentFile.fromContent(resources[5]);
         expect(processComponentFile(componentFile)).toBeTruthy();
         expect(componentFile.templates).toHaveProperty(ComponentFile.defaultComponentId);
-        expect(componentFile.errors.length).toBe(0);
+        expect(componentFile.problems.length).toBe(0);
     });
 });

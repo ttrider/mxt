@@ -3,7 +3,7 @@ import { Element, DataNode } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
 import { parseInlineExpressions } from "../ast/ts";
-import getElementInfo from "../dom/elementInfo";
+
 import { removeElement } from "domutils";
 import processStyle from "./style-handler";
 import { ProblemCode } from "../problem";

@@ -4,7 +4,7 @@ import { Element } from "domhandler";
 import { Component } from "../../src/component";
 import { PartReference, SwitchSequencePart } from "../../src/template-parts";
 
-describe("msx-with", () => {
+describe("msx-if", () => {
 
   test("import from as", () => {
     const { component, partRef } = createInputElement("mxt.if", { condition: "${value==1}" });

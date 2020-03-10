@@ -59,12 +59,12 @@ export function wrapAsPart(context: Context, element: Element) {
     if (element.children.length === 0) {
         return;
     }
+    const dynamicElements: { [name: string]: DynamicElementInfo } = {};
 
     const elements = element.children as Element[];
 
     processElements(elements);
 
-    const dynamicElements: { [name: string]: DynamicElementInfo } = {};
 
     const part = component.newPart<Template>({
         elements: elements,

@@ -5,7 +5,7 @@ import { generateCode } from "../../src/ts";
 import { Component } from "../../src/component";
 import { ProblemCode } from "../../src/problem";
 
-describe("msx-import", () => {
+describe("msx-component", () => {
 
   test("component without import", () => {
     const ret = createInputElement("foo", {});

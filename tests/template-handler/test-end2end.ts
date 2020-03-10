@@ -6,7 +6,8 @@ import processTemplate from "../../src/defaultHandlers/template-handler";
 
 describe("msx-end2end", () => {
     test("t00", async () => {
-        expect((await setup("t00")).component).toMatchSnapshot();
+        const { componentFile } = await setup("t00");
+        //expect(componentFile).toMatchSnapshot();
     });
 
 });
@@ -20,7 +21,13 @@ async function setup(fileName: string, id: string = "t01") {
     const componentFile = await ComponentFile.fromFile(inputFile);
 
     processComponentFile(componentFile);
-    await processTemplate(componentFile, componentFile.templates[id]);
+
+    for (const tid in componentFile.templates) {
+        if (componentFile.templates.hasOwnProperty(tid)) {
+            const template = componentFile.templates[tid];
+            await processTemplate(componentFile, template);
+        }
+    }
 
     const component = componentFile.components[id];
 

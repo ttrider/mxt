@@ -9,17 +9,14 @@ import { formatComponentFileObject } from "../utils";
 const writeFile = promisify(fs.writeFile);
 
 describe("msx-end2end", () => {
+
+    const numberOfTests = 3;
+
     const testSet: string[] = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < numberOfTests; i++) {
         testSet.push("t" + i.toString(16));
     }
-
-    test.each(testSet)(
-        't%#',
-        async (fname) => {
-            expect((await setup(fname)).formatted).toMatchSnapshot();
-        },
-    );
+    test.each(testSet)('t%#', async (fname) => { expect((await setup(fname)).formatted).toMatchSnapshot(); });
 });
 
 

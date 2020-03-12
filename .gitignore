@@ -67,3 +67,4 @@ src/*.js
 # playground/src/*.js
 # playground/src/templates/*.js
 *.js.map
+tests/template-handler/__snapshots__/test-end2end/*.json

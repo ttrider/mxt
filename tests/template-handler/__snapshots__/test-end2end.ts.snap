@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`msx-end2end t00 1`] = `
+"{
+    \\"problems\\": [],
+    \\"templates\\": {
+        \\"t01\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 67,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 55,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 49,
+                            \\"data\\": \\"Hello MXT!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 56,
+                    \\"endIndex\\": 56,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    },
+    \\"scripts\\": [],
+    \\"components\\": {
+        \\"t01\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p0\\": {
+                    \\"id\\": \\"p0\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 30,
+                            \\"endIndex\\": 34,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 35,
+                            \\"endIndex\\": 55,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 40,
+                                    \\"endIndex\\": 49,
+                                    \\"data\\": \\"Hello MXT!\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 56,
+                            \\"endIndex\\": 56,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                }
+            },
+            \\"id\\": \\"t01\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p0\\"
+            }
+        }
+    },
+    \\"initStatements\\": [],
+    \\"componentStatements\\": [],
+    \\"imports\\": [],
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>Hello MXT!</div>\\\\n</template>\\",
+    \\"dom\\": [
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 67,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 55,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 49,
+                            \\"data\\": \\"Hello MXT!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 56,
+                    \\"endIndex\\": 56,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    ],
+    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t00.html\\"
+}"
+`;

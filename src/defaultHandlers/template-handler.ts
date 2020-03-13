@@ -228,13 +228,18 @@ export function wrapAsPart(context: Context, element: Element) {
                     // event name can come in multiple forms:
                     // "name"
                     // "${name}"
+
+                    // TODO: support for functions and script-defined functoins
+
                     // "${(e)=>{ some code here}"
                     // this is not allowed:
                     // "sometext${token}someother text"
 
-                    if (attrState.tokens && attrState.externalReferences.length > 0) {
-                        // TODO: we need a lot of error checking here
-                        ev.handler = attrState.externalReferences[0];
+                    ev.handler = attrValue;
+
+                    if (attrState.tokens && attrState.tokens.length > 0 && attrState.externalReferences.length > 0) {
+                        ev.externalReferences = attrState.externalReferences;
+                        ev.handler = attrState.tokens[0].content;
                     } else {
                         ev.handler = attrValue;
                     }

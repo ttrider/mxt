@@ -75,12 +75,25 @@ function getTokens(node: ts.SourceFile) {
                         const content = node.text.substring(exp.pos, exp.end);
                         const token = node.text.substring(start + 1, exp.end + 1);
 
-                        tokens.push({
+                        const t =
+                        {
                             start,
                             end: exp.end,
                             content,
                             token
-                        });
+                        };
+
+                        // TODO: Function Handling
+                        // BUGBUG: Type handling
+
+                        // if (exp.kind === 200) {
+                        //     (t as any).func = processFunction(exp);
+
+                        // } else if (exp.kind === 201) {
+                        //     (t as any).arrow = processArrowFunction(exp);
+                        // }
+
+                        tokens.push(t);
                     }
                 }
             }
@@ -88,6 +101,57 @@ function getTokens(node: ts.SourceFile) {
         }
         ts.forEachChild(nd, traverse);
     }
+
+
+    // function processArrowFunction(expression: ts.ArrowFunction) {
+    //     // process arguments, if any
+
+    //     return {
+    //         params:
+    //             expression.parameters.map(p => {
+
+    //                 return {
+    //                     name: p.name ? node.text.substring(p.name.pos, p.name.end) : "",
+    //                     dot: p.dotDotDotToken ? true : false
+
+    //                 }
+    //             }),
+    //         types: expression.typeParameters ?
+    //             expression.typeParameters.map(p => {
+
+    //                 return {
+    //                     name: p.name ? node.text.substring(p.name.pos, p.name.end) : "",
+
+    //                 }
+    //             }) : []
+
+    //     }
+    // }
+
+    // function processFunction(expression: ts.FunctionExpression) {
+    //     // process arguments, if any
+
+    //     return {
+    //         params:
+    //             expression.parameters.map(p => {
+
+    //                 return {
+    //                     name: p.name ? node.text.substring(p.name.pos, p.name.end) : "",
+    //                     dot: p.dotDotDotToken ? true : false
+
+    //                 }
+    //             }),
+    //         types: expression.typeParameters ?
+    //             expression.typeParameters.map(p => {
+
+    //                 return {
+    //                     name: p.name ? node.text.substring(p.name.pos, p.name.end) : "",
+
+    //                 }
+    //             }) : []
+
+    //     }
+    // }
 }
 
 export function generateCode(node: ts.Node | ts.Statement[]) {

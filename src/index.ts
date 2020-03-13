@@ -87,7 +87,7 @@ export interface Eventinfo {
     capture?: boolean;
     once?: boolean;
     passive?: boolean;
-
+    externalReferences?: string[];
 }
 
 export interface StyleElementInfo extends ElementInfo {

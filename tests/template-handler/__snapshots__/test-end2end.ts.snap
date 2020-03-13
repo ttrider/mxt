@@ -315,7 +315,7 @@ exports[`msx-end2end t2 1`] = `
         \\"t01\\": {
             \\"type\\": \\"tag\\",
             \\"startIndex\\": 0,
-            \\"endIndex\\": 169,
+            \\"endIndex\\": 177,
             \\"children\\": [
                 {
                     \\"type\\": \\"text\\",
@@ -326,13 +326,13 @@ exports[`msx-end2end t2 1`] = `
                 {
                     \\"type\\": \\"tag\\",
                     \\"startIndex\\": 35,
-                    \\"endIndex\\": 157,
+                    \\"endIndex\\": 165,
                     \\"children\\": [
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 142,
-                            \\"endIndex\\": 151,
-                            \\"data\\": \\"Hello MXT!\\"
+                            \\"startIndex\\": 141,
+                            \\"endIndex\\": 159,
+                            \\"data\\": \\"\\\\n        Hello MXT!\\"
                         }
                     ],
                     \\"name\\": \\"div\\",
@@ -342,8 +342,8 @@ exports[`msx-end2end t2 1`] = `
                 },
                 {
                     \\"type\\": \\"text\\",
-                    \\"startIndex\\": 158,
-                    \\"endIndex\\": 158,
+                    \\"startIndex\\": 166,
+                    \\"endIndex\\": 166,
                     \\"data\\": \\"\\\\n\\"
                 }
             ],
@@ -372,13 +372,13 @@ exports[`msx-end2end t2 1`] = `
                         {
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 35,
-                            \\"endIndex\\": 157,
+                            \\"endIndex\\": 165,
                             \\"children\\": [
                                 {
                                     \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 142,
-                                    \\"endIndex\\": 151,
-                                    \\"data\\": \\"Hello MXT!\\"
+                                    \\"startIndex\\": 141,
+                                    \\"endIndex\\": 159,
+                                    \\"data\\": \\"\\\\n        Hello MXT!\\"
                                 }
                             ],
                             \\"name\\": \\"div\\",
@@ -388,8 +388,8 @@ exports[`msx-end2end t2 1`] = `
                         },
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 158,
-                            \\"endIndex\\": 158,
+                            \\"startIndex\\": 166,
+                            \\"endIndex\\": 166,
                             \\"data\\": \\"\\\\n\\"
                         }
                     ],
@@ -420,7 +420,10 @@ exports[`msx-end2end t2 1`] = `
                                 },
                                 \\"zoom\\": {
                                     \\"name\\": \\"zoom\\",
-                                    \\"handler\\": \\"something\\"
+                                    \\"handler\\": \\"something.zoom\\",
+                                    \\"externalReferences\\": [
+                                        \\"something\\"
+                                    ]
                                 }
                             },
                             \\"id\\": \\"tagid_2\\",
@@ -439,12 +442,12 @@ exports[`msx-end2end t2 1`] = `
     \\"initStatements\\": [],
     \\"componentStatements\\": [],
     \\"imports\\": [],
-    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div style=\\\\\\"color: \${newColor}\\\\\\" mxt.click=\\\\\\"doClick\\\\\\" mxt.zoom=\\\\\\"\${something.zoom}\\\\\\" mxt.click.preventDefault >Hello MXT!</div>\\\\n</template>\\",
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div style=\\\\\\"color: \${newColor}\\\\\\" mxt.click=\\\\\\"doClick\\\\\\" mxt.zoom=\\\\\\"\${something.zoom}\\\\\\" mxt.click.preventDefault>\\\\n        Hello MXT!</div>\\\\n</template>\\",
     \\"dom\\": [
         {
             \\"type\\": \\"tag\\",
             \\"startIndex\\": 0,
-            \\"endIndex\\": 169,
+            \\"endIndex\\": 177,
             \\"children\\": [
                 {
                     \\"type\\": \\"text\\",
@@ -455,13 +458,13 @@ exports[`msx-end2end t2 1`] = `
                 {
                     \\"type\\": \\"tag\\",
                     \\"startIndex\\": 35,
-                    \\"endIndex\\": 157,
+                    \\"endIndex\\": 165,
                     \\"children\\": [
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 142,
-                            \\"endIndex\\": 151,
-                            \\"data\\": \\"Hello MXT!\\"
+                            \\"startIndex\\": 141,
+                            \\"endIndex\\": 159,
+                            \\"data\\": \\"\\\\n        Hello MXT!\\"
                         }
                     ],
                     \\"name\\": \\"div\\",
@@ -471,8 +474,8 @@ exports[`msx-end2end t2 1`] = `
                 },
                 {
                     \\"type\\": \\"text\\",
-                    \\"startIndex\\": 158,
-                    \\"endIndex\\": 158,
+                    \\"startIndex\\": 166,
+                    \\"endIndex\\": 166,
                     \\"data\\": \\"\\\\n\\"
                 }
             ],

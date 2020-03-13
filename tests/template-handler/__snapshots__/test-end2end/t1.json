@@ -1,0 +1,166 @@
+{
+    "problems": [],
+    "templates": {
+        "t01": {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 94,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 82,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 67,
+                            "endIndex": 76,
+                            "data": "Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {
+                        "id": "tagid_1"
+                    }
+                },
+                {
+                    "type": "text",
+                    "startIndex": 83,
+                    "endIndex": 83,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        }
+    },
+    "scripts": [],
+    "components": {
+        "t01": {
+            "parts": {},
+            "importParts": {},
+            "partset": {
+                "p1": {
+                    "id": "p1",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "startIndex": 30,
+                            "endIndex": 34,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 35,
+                            "endIndex": 82,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "startIndex": 67,
+                                    "endIndex": 76,
+                                    "data": "Hello MXT!"
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {
+                                "id": "tagid_1"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 83,
+                            "endIndex": 83,
+                            "data": "\n"
+                        }
+                    ],
+                    "attachTo": [
+                        {
+                            "attributes": {
+                                "style": {
+                                    "content": "color: ${newColor}",
+                                    "externalReferences": [
+                                        "newColor"
+                                    ],
+                                    "tokens": [
+                                        {
+                                            "start": 7,
+                                            "end": 18,
+                                            "content": "newColor",
+                                            "token": "${newColor}"
+                                        }
+                                    ],
+                                    "attributeName": "style"
+                                }
+                            },
+                            "events": {},
+                            "id": "tagid_1",
+                            "originalId": "",
+                            "embeddedParts": []
+                        }
+                    ]
+                }
+            },
+            "id": "t01",
+            "rootPart": {
+                "partId": "p1"
+            }
+        }
+    },
+    "initStatements": [],
+    "componentStatements": [],
+    "imports": [],
+    "content": "<template id=\"t01\" type=\"mxt\">\n    <div style=\"color: ${newColor}\">Hello MXT!</div>\n</template>",
+    "dom": [
+        {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 94,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 82,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 67,
+                            "endIndex": 76,
+                            "data": "Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {
+                        "id": "tagid_1"
+                    }
+                },
+                {
+                    "type": "text",
+                    "startIndex": 83,
+                    "endIndex": 83,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        }
+    ],
+    "filePath": "/Users/vladyang/src/github/mxt/tests/resources/t1.html"
+}

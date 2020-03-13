@@ -489,3 +489,268 @@ exports[`msx-end2end t2 1`] = `
     \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t2.html\\"
 }"
 `;
+
+exports[`msx-end2end t3 1`] = `
+"{
+    \\"problems\\": [],
+    \\"templates\\": {
+        \\"t01\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 181,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 77,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 71,
+                            \\"data\\": \\"\\\\n        Hello \${info} MXT!\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 78,
+                    \\"endIndex\\": 82,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 83,
+                    \\"endIndex\\": 169,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 88,
+                            \\"endIndex\\": 117,
+                            \\"data\\": \\"\\\\n        One\${one}enO\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 118,
+                            \\"endIndex\\": 131,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 123,
+                                    \\"endIndex\\": 125,
+                                    \\"data\\": \\"two\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 132,
+                            \\"endIndex\\": 163,
+                            \\"data\\": \\"\\\\n        Three\${three}eerhT\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 170,
+                    \\"endIndex\\": 170,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    },
+    \\"scripts\\": [],
+    \\"components\\": {
+        \\"t01\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p3\\": {
+                    \\"id\\": \\"p3\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 30,
+                            \\"endIndex\\": 34,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 35,
+                            \\"endIndex\\": 77,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 40,
+                                    \\"endIndex\\": 71,
+                                    \\"data\\": \\"\\\\n        Hello \${info} MXT!\\\\n    \\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 78,
+                            \\"endIndex\\": 82,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 83,
+                            \\"endIndex\\": 169,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 88,
+                                    \\"endIndex\\": 117,
+                                    \\"data\\": \\"\\\\n        One\${one}enO\\\\n        \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 118,
+                                    \\"endIndex\\": 131,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 123,
+                                            \\"endIndex\\": 125,
+                                            \\"data\\": \\"two\\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"div\\",
+                                    \\"attribs\\": {}
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 132,
+                                    \\"endIndex\\": 163,
+                                    \\"data\\": \\"\\\\n        Three\${three}eerhT\\\\n    \\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 170,
+                            \\"endIndex\\": 170,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                }
+            },
+            \\"id\\": \\"t01\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p3\\"
+            }
+        }
+    },
+    \\"initStatements\\": [],
+    \\"componentStatements\\": [],
+    \\"imports\\": [],
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>\\\\n        Hello \${info} MXT!\\\\n    </div>\\\\n    <div>\\\\n        One\${one}enO\\\\n        <div>two</div>\\\\n        Three\${three}eerhT\\\\n    </div>\\\\n</template>\\",
+    \\"dom\\": [
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 181,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 77,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 71,
+                            \\"data\\": \\"\\\\n        Hello \${info} MXT!\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 78,
+                    \\"endIndex\\": 82,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 83,
+                    \\"endIndex\\": 169,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 88,
+                            \\"endIndex\\": 117,
+                            \\"data\\": \\"\\\\n        One\${one}enO\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 118,
+                            \\"endIndex\\": 131,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 123,
+                                    \\"endIndex\\": 125,
+                                    \\"data\\": \\"two\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 132,
+                            \\"endIndex\\": 163,
+                            \\"data\\": \\"\\\\n        Three\${three}eerhT\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 170,
+                    \\"endIndex\\": 170,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    ],
+    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t3.html\\"
+}"
+`;

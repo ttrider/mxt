@@ -1,0 +1,179 @@
+{
+    "problems": [],
+    "templates": {
+        "t01": {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 177,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 165,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 141,
+                            "endIndex": 159,
+                            "data": "\n        Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {
+                        "id": "tagid_2"
+                    }
+                },
+                {
+                    "type": "text",
+                    "startIndex": 166,
+                    "endIndex": 166,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        }
+    },
+    "scripts": [],
+    "components": {
+        "t01": {
+            "parts": {},
+            "importParts": {},
+            "partset": {
+                "p2": {
+                    "id": "p2",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "startIndex": 30,
+                            "endIndex": 34,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 35,
+                            "endIndex": 165,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "startIndex": 141,
+                                    "endIndex": 159,
+                                    "data": "\n        Hello MXT!"
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {
+                                "id": "tagid_2"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 166,
+                            "endIndex": 166,
+                            "data": "\n"
+                        }
+                    ],
+                    "attachTo": [
+                        {
+                            "attributes": {
+                                "style": {
+                                    "content": "color: ${newColor}",
+                                    "externalReferences": [
+                                        "newColor"
+                                    ],
+                                    "tokens": [
+                                        {
+                                            "start": 7,
+                                            "end": 18,
+                                            "content": "newColor",
+                                            "token": "${newColor}"
+                                        }
+                                    ],
+                                    "attributeName": "style"
+                                }
+                            },
+                            "events": {
+                                "click": {
+                                    "name": "click",
+                                    "handler": "doClick",
+                                    "preventDefault": true
+                                },
+                                "zoom": {
+                                    "name": "zoom",
+                                    "handler": "something.zoom",
+                                    "externalReferences": [
+                                        "something"
+                                    ]
+                                }
+                            },
+                            "id": "tagid_2",
+                            "originalId": "",
+                            "embeddedParts": []
+                        }
+                    ]
+                }
+            },
+            "id": "t01",
+            "rootPart": {
+                "partId": "p2"
+            }
+        }
+    },
+    "initStatements": [],
+    "componentStatements": [],
+    "imports": [],
+    "content": "<template id=\"t01\" type=\"mxt\">\n    <div style=\"color: ${newColor}\" mxt.click=\"doClick\" mxt.zoom=\"${something.zoom}\" mxt.click.preventDefault>\n        Hello MXT!</div>\n</template>",
+    "dom": [
+        {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 177,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 165,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 141,
+                            "endIndex": 159,
+                            "data": "\n        Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {
+                        "id": "tagid_2"
+                    }
+                },
+                {
+                    "type": "text",
+                    "startIndex": 166,
+                    "endIndex": 166,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        }
+    ],
+    "filePath": "/Users/vladyang/src/github/mxt/tests/resources/t2.html"
+}

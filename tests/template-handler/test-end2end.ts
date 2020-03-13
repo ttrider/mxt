@@ -10,7 +10,7 @@ const writeFile = promisify(fs.writeFile);
 
 describe("msx-end2end", () => {
 
-    const numberOfTests = 3;
+    const numberOfTests = 4;
 
     const testSet: string[] = [];
     for (let i = 0; i < numberOfTests; i++) {

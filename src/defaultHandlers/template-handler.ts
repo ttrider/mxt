@@ -12,11 +12,12 @@ import { SwitchSequence, PartReference, WhenPartReference, ComponentRef, ForEach
 
 let idindex = 1;
 
+//<mxt.if></mxt.if>
 
 //<mxt.component name="if01" from="./if01" with="${inner2}" />
 //<mxt.import name="if03" from="./if03" as="f0000" />
 //<mxt.with data="${inner}">
-//<mxt.if></mxt.if>
+
 //<mxt.foreach data="${items}"></mxt.foreach data="${items}"> 
 //<mxt.switch on="${switchindex}"><mxt.case when="${0}"></mxt.case><mxt.default></mxt.default></mxt.switch>
 
@@ -91,14 +92,12 @@ export function wrapAsPart(context: Context, element: Element) {
                     if (name.startsWith("mxt.")) {
                         const partRef = processMxtElement(el, name.substring(4));
                         if (partRef) {
-                            // convert element into <SPAN>
-                            el.name = "span";
-                            el.tagName = "span";
-                            el.attribs = {};
-                            el.children = [];
-                            //<TODO> how to cleanup the value?
-                            //el.value
-                            const de = getDynamicElement(el);
+                            const newEl = new Element("span", {});
+                            newEl.startIndex = el.startIndex;
+                            newEl.endIndex =  el.endIndex;
+                            prepend(el, newEl);
+                            removeElement(el);
+                            const de = getDynamicElement(newEl);
                             de.embeddedParts.push(partRef);
                         }
                     } else {

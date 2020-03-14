@@ -1278,3 +1278,519 @@ exports[`msx-end2end t3 1`] = `
     \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t3.html\\"
 }"
 `;
+
+exports[`msx-end2end t4 1`] = `
+"{
+    \\"problems\\": [],
+    \\"templates\\": {
+        \\"t01\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 265,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 134,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 48,
+                            \\"data\\": \\"\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 49,
+                            \\"endIndex\\": 123,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 76,
+                                    \\"endIndex\\": 88,
+                                    \\"data\\": \\"\\\\n            \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 89,
+                                    \\"endIndex\\": 105,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 94,
+                                            \\"endIndex\\": 99,
+                                            \\"data\\": \\"if foo\\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"div\\",
+                                    \\"attribs\\": {}
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 106,
+                                    \\"endIndex\\": 114,
+                                    \\"data\\": \\"\\\\n        \\"
+                                }
+                            ],
+                            \\"name\\": \\"mxt.if\\",
+                            \\"attribs\\": {
+                                \\"id\\": \\"tagid_10\\"
+                            }
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 124,
+                            \\"endIndex\\": 128,
+                            \\"data\\": \\"\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 135,
+                    \\"endIndex\\": 139,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 140,
+                    \\"endIndex\\": 253,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 145,
+                            \\"endIndex\\": 153,
+                            \\"data\\": \\"\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 154,
+                            \\"endIndex\\": 242,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 195,
+                                    \\"endIndex\\": 207,
+                                    \\"data\\": \\"\\\\n            \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 208,
+                                    \\"endIndex\\": 224,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 213,
+                                            \\"endIndex\\": 218,
+                                            \\"data\\": \\"if bar\\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"div\\",
+                                    \\"attribs\\": {}
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 225,
+                                    \\"endIndex\\": 233,
+                                    \\"data\\": \\"\\\\n        \\"
+                                }
+                            ],
+                            \\"name\\": \\"mxt.if\\",
+                            \\"attribs\\": {
+                                \\"with\\": \\"foobar\\",
+                                \\"id\\": \\"tagid_11\\"
+                            }
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 243,
+                            \\"endIndex\\": 247,
+                            \\"data\\": \\"\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 254,
+                    \\"endIndex\\": 254,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    },
+    \\"scripts\\": [],
+    \\"components\\": {
+        \\"t01\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p4\\": {
+                    \\"id\\": \\"p4\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 30,
+                            \\"endIndex\\": 34,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 35,
+                            \\"endIndex\\": 134,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 40,
+                                    \\"endIndex\\": 48,
+                                    \\"data\\": \\"\\\\n        \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 49,
+                                    \\"endIndex\\": 123,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 76,
+                                            \\"endIndex\\": 88,
+                                            \\"data\\": \\"\\\\n            \\"
+                                        },
+                                        {
+                                            \\"type\\": \\"tag\\",
+                                            \\"startIndex\\": 89,
+                                            \\"endIndex\\": 105,
+                                            \\"children\\": [
+                                                {
+                                                    \\"type\\": \\"text\\",
+                                                    \\"startIndex\\": 94,
+                                                    \\"endIndex\\": 99,
+                                                    \\"data\\": \\"if foo\\"
+                                                }
+                                            ],
+                                            \\"name\\": \\"div\\",
+                                            \\"attribs\\": {}
+                                        },
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 106,
+                                            \\"endIndex\\": 114,
+                                            \\"data\\": \\"\\\\n        \\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"mxt.if\\",
+                                    \\"attribs\\": {
+                                        \\"id\\": \\"tagid_10\\"
+                                    }
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 124,
+                                    \\"endIndex\\": 128,
+                                    \\"data\\": \\"\\\\n    \\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 135,
+                            \\"endIndex\\": 139,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 140,
+                            \\"endIndex\\": 253,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 145,
+                                    \\"endIndex\\": 153,
+                                    \\"data\\": \\"\\\\n        \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 154,
+                                    \\"endIndex\\": 242,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 195,
+                                            \\"endIndex\\": 207,
+                                            \\"data\\": \\"\\\\n            \\"
+                                        },
+                                        {
+                                            \\"type\\": \\"tag\\",
+                                            \\"startIndex\\": 208,
+                                            \\"endIndex\\": 224,
+                                            \\"children\\": [
+                                                {
+                                                    \\"type\\": \\"text\\",
+                                                    \\"startIndex\\": 213,
+                                                    \\"endIndex\\": 218,
+                                                    \\"data\\": \\"if bar\\"
+                                                }
+                                            ],
+                                            \\"name\\": \\"div\\",
+                                            \\"attribs\\": {}
+                                        },
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 225,
+                                            \\"endIndex\\": 233,
+                                            \\"data\\": \\"\\\\n        \\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"mxt.if\\",
+                                    \\"attribs\\": {
+                                        \\"with\\": \\"foobar\\",
+                                        \\"id\\": \\"tagid_11\\"
+                                    }
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 243,
+                                    \\"endIndex\\": 247,
+                                    \\"data\\": \\"\\\\n    \\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 254,
+                            \\"endIndex\\": 254,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": [
+                        {
+                            \\"attributes\\": {
+                                \\"condition\\": {
+                                    \\"content\\": \\"\${foo}\\",
+                                    \\"externalReferences\\": [
+                                        \\"foo\\"
+                                    ],
+                                    \\"tokens\\": [
+                                        {
+                                            \\"start\\": 0,
+                                            \\"end\\": 6,
+                                            \\"content\\": \\"foo\\",
+                                            \\"token\\": \\"\${foo}\\"
+                                        }
+                                    ],
+                                    \\"attributeName\\": \\"condition\\"
+                                }
+                            },
+                            \\"events\\": {},
+                            \\"id\\": \\"tagid_10\\",
+                            \\"originalId\\": \\"\\",
+                            \\"embeddedParts\\": []
+                        },
+                        {
+                            \\"attributes\\": {
+                                \\"condition\\": {
+                                    \\"content\\": \\"\${bar}\\",
+                                    \\"externalReferences\\": [
+                                        \\"bar\\"
+                                    ],
+                                    \\"tokens\\": [
+                                        {
+                                            \\"start\\": 0,
+                                            \\"end\\": 6,
+                                            \\"content\\": \\"bar\\",
+                                            \\"token\\": \\"\${bar}\\"
+                                        }
+                                    ],
+                                    \\"attributeName\\": \\"condition\\"
+                                }
+                            },
+                            \\"events\\": {},
+                            \\"id\\": \\"tagid_11\\",
+                            \\"originalId\\": \\"\\",
+                            \\"embeddedParts\\": []
+                        }
+                    ]
+                }
+            },
+            \\"id\\": \\"t01\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p4\\"
+            }
+        }
+    },
+    \\"initStatements\\": [],
+    \\"componentStatements\\": [],
+    \\"imports\\": [],
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"\${foo}\\\\\\">\\\\n            <div>if foo</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"\${bar}\\\\\\" with=\\\\\\"foobar\\\\\\">\\\\n            <div>if bar</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n</template>\\",
+    \\"dom\\": [
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 265,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 134,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 48,
+                            \\"data\\": \\"\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 49,
+                            \\"endIndex\\": 123,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 76,
+                                    \\"endIndex\\": 88,
+                                    \\"data\\": \\"\\\\n            \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 89,
+                                    \\"endIndex\\": 105,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 94,
+                                            \\"endIndex\\": 99,
+                                            \\"data\\": \\"if foo\\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"div\\",
+                                    \\"attribs\\": {}
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 106,
+                                    \\"endIndex\\": 114,
+                                    \\"data\\": \\"\\\\n        \\"
+                                }
+                            ],
+                            \\"name\\": \\"mxt.if\\",
+                            \\"attribs\\": {
+                                \\"id\\": \\"tagid_10\\"
+                            }
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 124,
+                            \\"endIndex\\": 128,
+                            \\"data\\": \\"\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 135,
+                    \\"endIndex\\": 139,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 140,
+                    \\"endIndex\\": 253,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 145,
+                            \\"endIndex\\": 153,
+                            \\"data\\": \\"\\\\n        \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 154,
+                            \\"endIndex\\": 242,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 195,
+                                    \\"endIndex\\": 207,
+                                    \\"data\\": \\"\\\\n            \\"
+                                },
+                                {
+                                    \\"type\\": \\"tag\\",
+                                    \\"startIndex\\": 208,
+                                    \\"endIndex\\": 224,
+                                    \\"children\\": [
+                                        {
+                                            \\"type\\": \\"text\\",
+                                            \\"startIndex\\": 213,
+                                            \\"endIndex\\": 218,
+                                            \\"data\\": \\"if bar\\"
+                                        }
+                                    ],
+                                    \\"name\\": \\"div\\",
+                                    \\"attribs\\": {}
+                                },
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 225,
+                                    \\"endIndex\\": 233,
+                                    \\"data\\": \\"\\\\n        \\"
+                                }
+                            ],
+                            \\"name\\": \\"mxt.if\\",
+                            \\"attribs\\": {
+                                \\"with\\": \\"foobar\\",
+                                \\"id\\": \\"tagid_11\\"
+                            }
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 243,
+                            \\"endIndex\\": 247,
+                            \\"data\\": \\"\\\\n    \\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 254,
+                    \\"endIndex\\": 254,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    ],
+    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t4.html\\"
+}"
+`;

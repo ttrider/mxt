@@ -8,9 +8,10 @@ module.exports = {
         "**/tests/**/*.+(ts|tsx|js)",
         "**/?(*.)+(spec|test).+(ts|tsx|js)"
     ],
-    // "transform": {
-    //     "^.+\\.(ts|tsx)?$": "ts-jest"
-    // },
+    maxWorkers: "10%"
+        // "transform": {
+        //     "^.+\\.(ts|tsx)?$": "ts-jest"
+        // },
 };
 
 

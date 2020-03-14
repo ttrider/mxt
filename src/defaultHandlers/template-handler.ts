@@ -1,10 +1,10 @@
-import { TemplateInfo, AttributeTokenInfo, DynamicElementInfo } from "../index";
-import { Element, DataNode } from "domhandler";
+import { TemplateInfo, AttributeTokenInfo, DynamicElementInfo, ExpressionInfo } from "../index";
+import { Element, DataNode, Node } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
 import { parseInlineExpressions } from "../ast/ts";
 
-import { removeElement } from "domutils";
+import { removeElement, append, prepend } from "domutils";
 import processStyle from "./style-handler";
 import { ProblemCode } from "../problem";
 import { Component } from "../component";
@@ -106,8 +106,9 @@ export function wrapAsPart(context: Context, element: Element) {
                     }
                     break;
                 case ElementType.CDATA:
+                    break;
                 case ElementType.Text:
-                    //TODO: process dynamic values in Text and CDATA(?)
+                    processText(el as any);
                     break;
 
                 // include as-is
@@ -128,6 +129,59 @@ export function wrapAsPart(context: Context, element: Element) {
                     removeElement(el);
                     break;
             }
+        }
+
+        function processText(element: DataNode) {
+            const data = element.data;
+            const textState = parseInlineExpressions(data) as ExpressionInfo;
+            if (textState.tokens) {
+
+                const startIndex = element.startIndex ?? 0;
+
+                const nodeSet: Node[] = [];
+
+                let last = data.length;
+                for (let i = textState.tokens.length - 1; i >= 0; i--) {
+
+                    const token = textState.tokens[i];
+                    if (token.end != last) {
+                        // create text node
+                        const txt = new DataNode(ElementType.Text, data.substring(token.end, last));
+                        txt.startIndex = startIndex + token.end;
+                        txt.endIndex = startIndex + last;
+                        nodeSet.unshift(txt);
+                        last = token.end;
+                    }
+
+                    const spanNode = new Element("span", {});
+                    spanNode.startIndex = startIndex + token.start;
+                    spanNode.endIndex = startIndex + token.end;
+                    nodeSet.unshift(spanNode);
+                    last = token.start;
+                    const spanDyn = getDynamicElement(spanNode);
+
+                    spanDyn.value = {
+                        content: token.content,
+                        externalReferences: textState.externalReferences,
+                        tokens: [token]
+                    };
+                }
+
+                if (last > 0) {
+                    const txt = new DataNode(ElementType.Text, data.substring(0, last));
+                    txt.startIndex = startIndex;
+                    txt.endIndex = startIndex + last;
+                    nodeSet.unshift(txt);
+                }
+
+                // replace the original Node
+                for (const node of nodeSet) {
+                    prepend(element, node);
+                }
+                removeElement(element);
+
+            }
+
         }
 
         function processHtmlTag(element: Element) {

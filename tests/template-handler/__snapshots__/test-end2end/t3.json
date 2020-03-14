@@ -4,7 +4,7 @@
         "t01": {
             "type": "tag",
             "startIndex": 0,
-            "endIndex": 181,
+            "endIndex": 273,
             "children": [
                 {
                     "type": "text",
@@ -20,8 +20,24 @@
                         {
                             "type": "text",
                             "startIndex": 40,
-                            "endIndex": 71,
-                            "data": "\n        Hello ${info} MXT!\n    "
+                            "endIndex": 55,
+                            "data": "\n        Hello "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 55,
+                            "endIndex": 62,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_3"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 62,
+                            "endIndex": 72,
+                            "data": " MXT!\n    "
                         }
                     ],
                     "name": "div",
@@ -36,13 +52,29 @@
                 {
                     "type": "tag",
                     "startIndex": 83,
-                    "endIndex": 169,
+                    "endIndex": 193,
                     "children": [
                         {
                             "type": "text",
                             "startIndex": 88,
-                            "endIndex": 117,
-                            "data": "\n        One${one}enO\n        "
+                            "endIndex": 100,
+                            "data": "\n        One"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 100,
+                            "endIndex": 106,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_4"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 106,
+                            "endIndex": 118,
+                            "data": "enO\n        "
                         },
                         {
                             "type": "tag",
@@ -62,8 +94,40 @@
                         {
                             "type": "text",
                             "startIndex": 132,
-                            "endIndex": 163,
-                            "data": "\n        Three${three}eerhT\n    "
+                            "endIndex": 146,
+                            "data": "\n        Three"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 146,
+                            "endIndex": 154,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_6"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 154,
+                            "endIndex": 172,
+                            "data": "eerhT\n        Four"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 172,
+                            "endIndex": 179,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_5"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 179,
+                            "endIndex": 188,
+                            "data": "ruoF\n    "
                         }
                     ],
                     "name": "div",
@@ -71,8 +135,68 @@
                 },
                 {
                     "type": "text",
-                    "startIndex": 170,
-                    "endIndex": 170,
+                    "startIndex": 194,
+                    "endIndex": 198,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 199,
+                    "endIndex": 221,
+                    "children": [
+                        {
+                            "type": "tag",
+                            "startIndex": 204,
+                            "endIndex": 216,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_7"
+                            }
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 222,
+                    "endIndex": 226,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 227,
+                    "endIndex": 261,
+                    "children": [
+                        {
+                            "type": "tag",
+                            "startIndex": 232,
+                            "endIndex": 244,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_9"
+                            }
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 244,
+                            "endIndex": 256,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_8"
+                            }
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 262,
+                    "endIndex": 262,
                     "data": "\n"
                 }
             ],
@@ -106,8 +230,24 @@
                                 {
                                     "type": "text",
                                     "startIndex": 40,
-                                    "endIndex": 71,
-                                    "data": "\n        Hello ${info} MXT!\n    "
+                                    "endIndex": 55,
+                                    "data": "\n        Hello "
+                                },
+                                {
+                                    "type": "tag",
+                                    "startIndex": 55,
+                                    "endIndex": 62,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_3"
+                                    }
+                                },
+                                {
+                                    "type": "text",
+                                    "startIndex": 62,
+                                    "endIndex": 72,
+                                    "data": " MXT!\n    "
                                 }
                             ],
                             "name": "div",
@@ -122,13 +262,29 @@
                         {
                             "type": "tag",
                             "startIndex": 83,
-                            "endIndex": 169,
+                            "endIndex": 193,
                             "children": [
                                 {
                                     "type": "text",
                                     "startIndex": 88,
-                                    "endIndex": 117,
-                                    "data": "\n        One${one}enO\n        "
+                                    "endIndex": 100,
+                                    "data": "\n        One"
+                                },
+                                {
+                                    "type": "tag",
+                                    "startIndex": 100,
+                                    "endIndex": 106,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_4"
+                                    }
+                                },
+                                {
+                                    "type": "text",
+                                    "startIndex": 106,
+                                    "endIndex": 118,
+                                    "data": "enO\n        "
                                 },
                                 {
                                     "type": "tag",
@@ -148,8 +304,40 @@
                                 {
                                     "type": "text",
                                     "startIndex": 132,
-                                    "endIndex": 163,
-                                    "data": "\n        Three${three}eerhT\n    "
+                                    "endIndex": 146,
+                                    "data": "\n        Three"
+                                },
+                                {
+                                    "type": "tag",
+                                    "startIndex": 146,
+                                    "endIndex": 154,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_6"
+                                    }
+                                },
+                                {
+                                    "type": "text",
+                                    "startIndex": 154,
+                                    "endIndex": 172,
+                                    "data": "eerhT\n        Four"
+                                },
+                                {
+                                    "type": "tag",
+                                    "startIndex": 172,
+                                    "endIndex": 179,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_5"
+                                    }
+                                },
+                                {
+                                    "type": "text",
+                                    "startIndex": 179,
+                                    "endIndex": 188,
+                                    "data": "ruoF\n    "
                                 }
                             ],
                             "name": "div",
@@ -157,12 +345,224 @@
                         },
                         {
                             "type": "text",
-                            "startIndex": 170,
-                            "endIndex": 170,
+                            "startIndex": 194,
+                            "endIndex": 198,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 199,
+                            "endIndex": 221,
+                            "children": [
+                                {
+                                    "type": "tag",
+                                    "startIndex": 204,
+                                    "endIndex": 216,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_7"
+                                    }
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {}
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 222,
+                            "endIndex": 226,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 227,
+                            "endIndex": 261,
+                            "children": [
+                                {
+                                    "type": "tag",
+                                    "startIndex": 232,
+                                    "endIndex": 244,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_9"
+                                    }
+                                },
+                                {
+                                    "type": "tag",
+                                    "startIndex": 244,
+                                    "endIndex": 256,
+                                    "children": [],
+                                    "name": "span",
+                                    "attribs": {
+                                        "id": "tagid_8"
+                                    }
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {}
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 262,
+                            "endIndex": 262,
                             "data": "\n"
                         }
                     ],
-                    "attachTo": []
+                    "attachTo": [
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_3",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "info",
+                                "externalReferences": [
+                                    "info"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 15,
+                                        "end": 22,
+                                        "content": "info",
+                                        "token": "${info}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_4",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "one",
+                                "externalReferences": [
+                                    "one"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 12,
+                                        "end": 18,
+                                        "content": "one",
+                                        "token": "${one}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_5",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "four",
+                                "externalReferences": [
+                                    "three",
+                                    "four"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 40,
+                                        "end": 47,
+                                        "content": "four",
+                                        "token": "${four}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_6",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "three",
+                                "externalReferences": [
+                                    "three",
+                                    "four"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 14,
+                                        "end": 22,
+                                        "content": "three",
+                                        "token": "${three}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_7",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "justtoken",
+                                "externalReferences": [
+                                    "justtoken"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 0,
+                                        "end": 12,
+                                        "content": "justtoken",
+                                        "token": "${justtoken}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_8",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "token_two",
+                                "externalReferences": [
+                                    "token_one",
+                                    "token_two"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 12,
+                                        "end": 24,
+                                        "content": "token_two",
+                                        "token": "${token_two}"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "attributes": {},
+                            "events": {},
+                            "id": "tagid_9",
+                            "originalId": "",
+                            "embeddedParts": [],
+                            "value": {
+                                "content": "token_one",
+                                "externalReferences": [
+                                    "token_one",
+                                    "token_two"
+                                ],
+                                "tokens": [
+                                    {
+                                        "start": 0,
+                                        "end": 12,
+                                        "content": "token_one",
+                                        "token": "${token_one}"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             },
             "id": "t01",
@@ -174,12 +574,12 @@
     "initStatements": [],
     "componentStatements": [],
     "imports": [],
-    "content": "<template id=\"t01\" type=\"mxt\">\n    <div>\n        Hello ${info} MXT!\n    </div>\n    <div>\n        One${one}enO\n        <div>two</div>\n        Three${three}eerhT\n    </div>\n</template>",
+    "content": "<template id=\"t01\" type=\"mxt\">\n    <div>\n        Hello ${info} MXT!\n    </div>\n    <div>\n        One${one}enO\n        <div>two</div>\n        Three${three}eerhT\n        Four${four}ruoF\n    </div>\n    <div>${justtoken}</div>\n    <div>${token_one}${token_two}</div>\n</template>",
     "dom": [
         {
             "type": "tag",
             "startIndex": 0,
-            "endIndex": 181,
+            "endIndex": 273,
             "children": [
                 {
                     "type": "text",
@@ -195,8 +595,24 @@
                         {
                             "type": "text",
                             "startIndex": 40,
-                            "endIndex": 71,
-                            "data": "\n        Hello ${info} MXT!\n    "
+                            "endIndex": 55,
+                            "data": "\n        Hello "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 55,
+                            "endIndex": 62,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_3"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 62,
+                            "endIndex": 72,
+                            "data": " MXT!\n    "
                         }
                     ],
                     "name": "div",
@@ -211,13 +627,29 @@
                 {
                     "type": "tag",
                     "startIndex": 83,
-                    "endIndex": 169,
+                    "endIndex": 193,
                     "children": [
                         {
                             "type": "text",
                             "startIndex": 88,
-                            "endIndex": 117,
-                            "data": "\n        One${one}enO\n        "
+                            "endIndex": 100,
+                            "data": "\n        One"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 100,
+                            "endIndex": 106,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_4"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 106,
+                            "endIndex": 118,
+                            "data": "enO\n        "
                         },
                         {
                             "type": "tag",
@@ -237,8 +669,40 @@
                         {
                             "type": "text",
                             "startIndex": 132,
-                            "endIndex": 163,
-                            "data": "\n        Three${three}eerhT\n    "
+                            "endIndex": 146,
+                            "data": "\n        Three"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 146,
+                            "endIndex": 154,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_6"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 154,
+                            "endIndex": 172,
+                            "data": "eerhT\n        Four"
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 172,
+                            "endIndex": 179,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_5"
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 179,
+                            "endIndex": 188,
+                            "data": "ruoF\n    "
                         }
                     ],
                     "name": "div",
@@ -246,8 +710,68 @@
                 },
                 {
                     "type": "text",
-                    "startIndex": 170,
-                    "endIndex": 170,
+                    "startIndex": 194,
+                    "endIndex": 198,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 199,
+                    "endIndex": 221,
+                    "children": [
+                        {
+                            "type": "tag",
+                            "startIndex": 204,
+                            "endIndex": 216,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_7"
+                            }
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 222,
+                    "endIndex": 226,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 227,
+                    "endIndex": 261,
+                    "children": [
+                        {
+                            "type": "tag",
+                            "startIndex": 232,
+                            "endIndex": 244,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_9"
+                            }
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 244,
+                            "endIndex": 256,
+                            "children": [],
+                            "name": "span",
+                            "attribs": {
+                                "id": "tagid_8"
+                            }
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 262,
+                    "endIndex": 262,
                     "data": "\n"
                 }
             ],

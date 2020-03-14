@@ -88,17 +88,19 @@ export function wrapAsPart(context: Context, element: Element) {
             const elType = el.type.toLowerCase();
             switch (elType) {
                 case ElementType.Tag:
-                    const name = element.name.toLowerCase();
+                    const name = el.name.toLowerCase();
                     if (name.startsWith("mxt.")) {
+
                         const partRef = processMxtElement(el, name.substring(4));
                         if (partRef) {
                             const newEl = new Element("span", {});
                             newEl.startIndex = el.startIndex;
-                            newEl.endIndex =  el.endIndex;
+                            newEl.endIndex = el.endIndex;
                             prepend(el, newEl);
                             removeElement(el);
                             const de = getDynamicElement(newEl);
                             de.embeddedParts.push(partRef);
+                            break;
                         }
                     } else {
                         processHtmlTag(el);

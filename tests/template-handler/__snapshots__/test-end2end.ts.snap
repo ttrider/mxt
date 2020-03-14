@@ -134,8 +134,7 @@ exports[`msx-end2end t0 1`] = `
                 \\"type\\": \\"mxt\\"
             }
         }
-    ],
-    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t0.html\\"
+    ]
 }"
 `;
 
@@ -303,8 +302,7 @@ exports[`msx-end2end t1 1`] = `
                 \\"type\\": \\"mxt\\"
             }
         }
-    ],
-    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t1.html\\"
+    ]
 }"
 `;
 
@@ -485,8 +483,7 @@ exports[`msx-end2end t2 1`] = `
                 \\"type\\": \\"mxt\\"
             }
         }
-    ],
-    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t2.html\\"
+    ]
 }"
 `;
 
@@ -1274,8 +1271,7 @@ exports[`msx-end2end t3 1`] = `
                 \\"type\\": \\"mxt\\"
             }
         }
-    ],
-    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t3.html\\"
+    ]
 }"
 `;
 
@@ -1309,36 +1305,8 @@ exports[`msx-end2end t4 1`] = `
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 49,
                             \\"endIndex\\": 123,
-                            \\"children\\": [
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 76,
-                                    \\"endIndex\\": 88,
-                                    \\"data\\": \\"\\\\n            \\"
-                                },
-                                {
-                                    \\"type\\": \\"tag\\",
-                                    \\"startIndex\\": 89,
-                                    \\"endIndex\\": 105,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 94,
-                                            \\"endIndex\\": 99,
-                                            \\"data\\": \\"if foo\\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"div\\",
-                                    \\"attribs\\": {}
-                                },
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 106,
-                                    \\"endIndex\\": 114,
-                                    \\"data\\": \\"\\\\n        \\"
-                                }
-                            ],
-                            \\"name\\": \\"mxt.if\\",
+                            \\"children\\": [],
+                            \\"name\\": \\"span\\",
                             \\"attribs\\": {
                                 \\"id\\": \\"tagid_10\\"
                             }
@@ -1374,38 +1342,9 @@ exports[`msx-end2end t4 1`] = `
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 154,
                             \\"endIndex\\": 242,
-                            \\"children\\": [
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 195,
-                                    \\"endIndex\\": 207,
-                                    \\"data\\": \\"\\\\n            \\"
-                                },
-                                {
-                                    \\"type\\": \\"tag\\",
-                                    \\"startIndex\\": 208,
-                                    \\"endIndex\\": 224,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 213,
-                                            \\"endIndex\\": 218,
-                                            \\"data\\": \\"if bar\\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"div\\",
-                                    \\"attribs\\": {}
-                                },
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 225,
-                                    \\"endIndex\\": 233,
-                                    \\"data\\": \\"\\\\n        \\"
-                                }
-                            ],
-                            \\"name\\": \\"mxt.if\\",
+                            \\"children\\": [],
+                            \\"name\\": \\"span\\",
                             \\"attribs\\": {
-                                \\"with\\": \\"foobar\\",
                                 \\"id\\": \\"tagid_11\\"
                             }
                         },
@@ -1444,6 +1383,116 @@ exports[`msx-end2end t4 1`] = `
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
+                            \\"startIndex\\": 76,
+                            \\"endIndex\\": 88,
+                            \\"data\\": \\"\\\\n            \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 89,
+                            \\"endIndex\\": 105,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 94,
+                                    \\"endIndex\\": 99,
+                                    \\"data\\": \\"if foo\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 106,
+                            \\"endIndex\\": 114,
+                            \\"data\\": \\"\\\\n        \\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                },
+                \\"p5\\": {
+                    \\"id\\": \\"p5\\",
+                    \\"sequence\\": [
+                        {
+                            \\"partId\\": \\"p4\\",
+                            \\"when\\": {
+                                \\"content\\": \\"\${foo}\\",
+                                \\"externalReferences\\": [
+                                    \\"foo\\"
+                                ],
+                                \\"tokens\\": [
+                                    {
+                                        \\"start\\": 0,
+                                        \\"end\\": 6,
+                                        \\"content\\": \\"foo\\",
+                                        \\"token\\": \\"\${foo}\\"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                \\"p6\\": {
+                    \\"id\\": \\"p6\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 195,
+                            \\"endIndex\\": 207,
+                            \\"data\\": \\"\\\\n            \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 208,
+                            \\"endIndex\\": 224,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 213,
+                                    \\"endIndex\\": 218,
+                                    \\"data\\": \\"if bar\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 225,
+                            \\"endIndex\\": 233,
+                            \\"data\\": \\"\\\\n        \\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                },
+                \\"p7\\": {
+                    \\"id\\": \\"p7\\",
+                    \\"sequence\\": [
+                        {
+                            \\"partId\\": \\"p6\\",
+                            \\"when\\": {
+                                \\"content\\": \\"\${bar}\\",
+                                \\"externalReferences\\": [
+                                    \\"bar\\"
+                                ],
+                                \\"tokens\\": [
+                                    {
+                                        \\"start\\": 0,
+                                        \\"end\\": 6,
+                                        \\"content\\": \\"bar\\",
+                                        \\"token\\": \\"\${bar}\\"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                \\"p8\\": {
+                    \\"id\\": \\"p8\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
                             \\"startIndex\\": 30,
                             \\"endIndex\\": 34,
                             \\"data\\": \\"\\\\n    \\"
@@ -1463,36 +1512,8 @@ exports[`msx-end2end t4 1`] = `
                                     \\"type\\": \\"tag\\",
                                     \\"startIndex\\": 49,
                                     \\"endIndex\\": 123,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 76,
-                                            \\"endIndex\\": 88,
-                                            \\"data\\": \\"\\\\n            \\"
-                                        },
-                                        {
-                                            \\"type\\": \\"tag\\",
-                                            \\"startIndex\\": 89,
-                                            \\"endIndex\\": 105,
-                                            \\"children\\": [
-                                                {
-                                                    \\"type\\": \\"text\\",
-                                                    \\"startIndex\\": 94,
-                                                    \\"endIndex\\": 99,
-                                                    \\"data\\": \\"if foo\\"
-                                                }
-                                            ],
-                                            \\"name\\": \\"div\\",
-                                            \\"attribs\\": {}
-                                        },
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 106,
-                                            \\"endIndex\\": 114,
-                                            \\"data\\": \\"\\\\n        \\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"mxt.if\\",
+                                    \\"children\\": [],
+                                    \\"name\\": \\"span\\",
                                     \\"attribs\\": {
                                         \\"id\\": \\"tagid_10\\"
                                     }
@@ -1528,38 +1549,9 @@ exports[`msx-end2end t4 1`] = `
                                     \\"type\\": \\"tag\\",
                                     \\"startIndex\\": 154,
                                     \\"endIndex\\": 242,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 195,
-                                            \\"endIndex\\": 207,
-                                            \\"data\\": \\"\\\\n            \\"
-                                        },
-                                        {
-                                            \\"type\\": \\"tag\\",
-                                            \\"startIndex\\": 208,
-                                            \\"endIndex\\": 224,
-                                            \\"children\\": [
-                                                {
-                                                    \\"type\\": \\"text\\",
-                                                    \\"startIndex\\": 213,
-                                                    \\"endIndex\\": 218,
-                                                    \\"data\\": \\"if bar\\"
-                                                }
-                                            ],
-                                            \\"name\\": \\"div\\",
-                                            \\"attribs\\": {}
-                                        },
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 225,
-                                            \\"endIndex\\": 233,
-                                            \\"data\\": \\"\\\\n        \\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"mxt.if\\",
+                                    \\"children\\": [],
+                                    \\"name\\": \\"span\\",
                                     \\"attribs\\": {
-                                        \\"with\\": \\"foobar\\",
                                         \\"id\\": \\"tagid_11\\"
                                     }
                                 },
@@ -1582,57 +1574,37 @@ exports[`msx-end2end t4 1`] = `
                     ],
                     \\"attachTo\\": [
                         {
-                            \\"attributes\\": {
-                                \\"condition\\": {
-                                    \\"content\\": \\"\${foo}\\",
-                                    \\"externalReferences\\": [
-                                        \\"foo\\"
-                                    ],
-                                    \\"tokens\\": [
-                                        {
-                                            \\"start\\": 0,
-                                            \\"end\\": 6,
-                                            \\"content\\": \\"foo\\",
-                                            \\"token\\": \\"\${foo}\\"
-                                        }
-                                    ],
-                                    \\"attributeName\\": \\"condition\\"
-                                }
-                            },
+                            \\"attributes\\": {},
                             \\"events\\": {},
                             \\"id\\": \\"tagid_10\\",
                             \\"originalId\\": \\"\\",
-                            \\"embeddedParts\\": []
+                            \\"embeddedParts\\": [
+                                {
+                                    \\"partId\\": \\"p5\\"
+                                }
+                            ]
                         },
                         {
-                            \\"attributes\\": {
-                                \\"condition\\": {
-                                    \\"content\\": \\"\${bar}\\",
-                                    \\"externalReferences\\": [
-                                        \\"bar\\"
-                                    ],
-                                    \\"tokens\\": [
-                                        {
-                                            \\"start\\": 0,
-                                            \\"end\\": 6,
-                                            \\"content\\": \\"bar\\",
-                                            \\"token\\": \\"\${bar}\\"
-                                        }
-                                    ],
-                                    \\"attributeName\\": \\"condition\\"
-                                }
-                            },
+                            \\"attributes\\": {},
                             \\"events\\": {},
                             \\"id\\": \\"tagid_11\\",
                             \\"originalId\\": \\"\\",
-                            \\"embeddedParts\\": []
+                            \\"embeddedParts\\": [
+                                {
+                                    \\"partId\\": \\"p7\\",
+                                    \\"dc\\": {
+                                        \\"content\\": \\"foobar\\",
+                                        \\"externalReferences\\": []
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
             },
             \\"id\\": \\"t01\\",
             \\"rootPart\\": {
-                \\"partId\\": \\"p4\\"
+                \\"partId\\": \\"p8\\"
             }
         }
     },
@@ -1667,36 +1639,8 @@ exports[`msx-end2end t4 1`] = `
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 49,
                             \\"endIndex\\": 123,
-                            \\"children\\": [
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 76,
-                                    \\"endIndex\\": 88,
-                                    \\"data\\": \\"\\\\n            \\"
-                                },
-                                {
-                                    \\"type\\": \\"tag\\",
-                                    \\"startIndex\\": 89,
-                                    \\"endIndex\\": 105,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 94,
-                                            \\"endIndex\\": 99,
-                                            \\"data\\": \\"if foo\\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"div\\",
-                                    \\"attribs\\": {}
-                                },
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 106,
-                                    \\"endIndex\\": 114,
-                                    \\"data\\": \\"\\\\n        \\"
-                                }
-                            ],
-                            \\"name\\": \\"mxt.if\\",
+                            \\"children\\": [],
+                            \\"name\\": \\"span\\",
                             \\"attribs\\": {
                                 \\"id\\": \\"tagid_10\\"
                             }
@@ -1732,38 +1676,9 @@ exports[`msx-end2end t4 1`] = `
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 154,
                             \\"endIndex\\": 242,
-                            \\"children\\": [
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 195,
-                                    \\"endIndex\\": 207,
-                                    \\"data\\": \\"\\\\n            \\"
-                                },
-                                {
-                                    \\"type\\": \\"tag\\",
-                                    \\"startIndex\\": 208,
-                                    \\"endIndex\\": 224,
-                                    \\"children\\": [
-                                        {
-                                            \\"type\\": \\"text\\",
-                                            \\"startIndex\\": 213,
-                                            \\"endIndex\\": 218,
-                                            \\"data\\": \\"if bar\\"
-                                        }
-                                    ],
-                                    \\"name\\": \\"div\\",
-                                    \\"attribs\\": {}
-                                },
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 225,
-                                    \\"endIndex\\": 233,
-                                    \\"data\\": \\"\\\\n        \\"
-                                }
-                            ],
-                            \\"name\\": \\"mxt.if\\",
+                            \\"children\\": [],
+                            \\"name\\": \\"span\\",
                             \\"attribs\\": {
-                                \\"with\\": \\"foobar\\",
                                 \\"id\\": \\"tagid_11\\"
                             }
                         },
@@ -1790,7 +1705,6 @@ exports[`msx-end2end t4 1`] = `
                 \\"type\\": \\"mxt\\"
             }
         }
-    ],
-    \\"filePath\\": \\"/Users/vladyang/src/github/mxt/tests/resources/t4.html\\"
+    ]
 }"
 `;

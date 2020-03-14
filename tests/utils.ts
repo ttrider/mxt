@@ -106,6 +106,7 @@ export function formatComponentFileObject(componentFile: ComponentFile) {
             case 'next':
             case 'parent':
             case 'prev':
+            case 'filePath':
                 return undefined;
             case 'children':
             case 'data':

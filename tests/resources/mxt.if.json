@@ -4,7 +4,7 @@
         "t01": {
             "type": "tag",
             "startIndex": 0,
-            "endIndex": 265,
+            "endIndex": 266,
             "children": [
                 {
                     "type": "text",
@@ -52,7 +52,7 @@
                 {
                     "type": "tag",
                     "startIndex": 140,
-                    "endIndex": 253,
+                    "endIndex": 254,
                     "children": [
                         {
                             "type": "text",
@@ -63,7 +63,7 @@
                         {
                             "type": "tag",
                             "startIndex": 154,
-                            "endIndex": 242,
+                            "endIndex": 243,
                             "children": [],
                             "name": "span",
                             "attribs": {
@@ -72,8 +72,8 @@
                         },
                         {
                             "type": "text",
-                            "startIndex": 243,
-                            "endIndex": 247,
+                            "startIndex": 244,
+                            "endIndex": 248,
                             "data": "\n    "
                         }
                     ],
@@ -82,8 +82,8 @@
                 },
                 {
                     "type": "text",
-                    "startIndex": 254,
-                    "endIndex": 254,
+                    "startIndex": 255,
+                    "endIndex": 255,
                     "data": "\n"
                 }
             ],
@@ -100,8 +100,8 @@
             "parts": {},
             "importParts": {},
             "partset": {
-                "p4": {
-                    "id": "p4",
+                "p6": {
+                    "id": "p6",
                     "elements": [
                         {
                             "type": "text",
@@ -133,13 +133,13 @@
                     ],
                     "attachTo": []
                 },
-                "p5": {
-                    "id": "p5",
+                "p7": {
+                    "id": "p7",
                     "sequence": [
                         {
-                            "partId": "p4",
+                            "partId": "p6",
                             "when": {
-                                "content": "${foo}",
+                                "content": "foo",
                                 "externalReferences": [
                                     "foo"
                                 ],
@@ -155,24 +155,24 @@
                         }
                     ]
                 },
-                "p6": {
-                    "id": "p6",
+                "p8": {
+                    "id": "p8",
                     "elements": [
                         {
                             "type": "text",
-                            "startIndex": 195,
-                            "endIndex": 207,
+                            "startIndex": 196,
+                            "endIndex": 208,
                             "data": "\n            "
                         },
                         {
                             "type": "tag",
-                            "startIndex": 208,
-                            "endIndex": 224,
+                            "startIndex": 209,
+                            "endIndex": 225,
                             "children": [
                                 {
                                     "type": "text",
-                                    "startIndex": 213,
-                                    "endIndex": 218,
+                                    "startIndex": 214,
+                                    "endIndex": 219,
                                     "data": "if bar"
                                 }
                             ],
@@ -181,37 +181,37 @@
                         },
                         {
                             "type": "text",
-                            "startIndex": 225,
-                            "endIndex": 233,
+                            "startIndex": 226,
+                            "endIndex": 234,
                             "data": "\n        "
                         }
                     ],
                     "attachTo": []
                 },
-                "p7": {
-                    "id": "p7",
+                "p9": {
+                    "id": "p9",
                     "sequence": [
                         {
-                            "partId": "p6",
+                            "partId": "p8",
                             "when": {
-                                "content": "${bar}",
+                                "content": "bar > 0",
                                 "externalReferences": [
                                     "bar"
                                 ],
                                 "tokens": [
                                     {
                                         "start": 0,
-                                        "end": 6,
-                                        "content": "bar",
-                                        "token": "${bar}"
+                                        "end": 10,
+                                        "content": "bar > 0",
+                                        "token": "${bar > 0}"
                                     }
                                 ]
                             }
                         }
                     ]
                 },
-                "p8": {
-                    "id": "p8",
+                "p10": {
+                    "id": "p10",
                     "elements": [
                         {
                             "type": "text",
@@ -259,7 +259,7 @@
                         {
                             "type": "tag",
                             "startIndex": 140,
-                            "endIndex": 253,
+                            "endIndex": 254,
                             "children": [
                                 {
                                     "type": "text",
@@ -270,7 +270,7 @@
                                 {
                                     "type": "tag",
                                     "startIndex": 154,
-                                    "endIndex": 242,
+                                    "endIndex": 243,
                                     "children": [],
                                     "name": "span",
                                     "attribs": {
@@ -279,8 +279,8 @@
                                 },
                                 {
                                     "type": "text",
-                                    "startIndex": 243,
-                                    "endIndex": 247,
+                                    "startIndex": 244,
+                                    "endIndex": 248,
                                     "data": "\n    "
                                 }
                             ],
@@ -289,8 +289,8 @@
                         },
                         {
                             "type": "text",
-                            "startIndex": 254,
-                            "endIndex": 254,
+                            "startIndex": 255,
+                            "endIndex": 255,
                             "data": "\n"
                         }
                     ],
@@ -302,7 +302,7 @@
                             "originalId": "",
                             "embeddedParts": [
                                 {
-                                    "partId": "p5"
+                                    "partId": "p7"
                                 }
                             ]
                         },
@@ -313,10 +313,20 @@
                             "originalId": "",
                             "embeddedParts": [
                                 {
-                                    "partId": "p7",
+                                    "partId": "p9",
                                     "dc": {
                                         "content": "foobar",
-                                        "externalReferences": []
+                                        "externalReferences": [
+                                            "foobar"
+                                        ],
+                                        "tokens": [
+                                            {
+                                                "start": 0,
+                                                "end": 9,
+                                                "content": "foobar",
+                                                "token": "${foobar}"
+                                            }
+                                        ]
                                     }
                                 }
                             ]
@@ -326,19 +336,19 @@
             },
             "id": "t01",
             "rootPart": {
-                "partId": "p8"
+                "partId": "p10"
             }
         }
     },
     "initStatements": [],
     "componentStatements": [],
     "imports": [],
-    "content": "<template id=\"t01\" type=\"mxt\">\n    <div>\n        <mxt.if condition=\"${foo}\">\n            <div>if foo</div>\n        </mxt.if>\n    </div>\n    <div>\n        <mxt.if condition=\"${bar}\" with=\"foobar\">\n            <div>if bar</div>\n        </mxt.if>\n    </div>\n</template>",
+    "content": "<template id=\"t01\" type=\"mxt\">\n    <div>\n        <mxt.if condition=\"${foo}\">\n            <div>if foo</div>\n        </mxt.if>\n    </div>\n    <div>\n        <mxt.if condition=\"bar > 0\" with=\"foobar\">\n            <div>if bar</div>\n        </mxt.if>\n    </div>\n</template>",
     "dom": [
         {
             "type": "tag",
             "startIndex": 0,
-            "endIndex": 265,
+            "endIndex": 266,
             "children": [
                 {
                     "type": "text",
@@ -386,7 +396,7 @@
                 {
                     "type": "tag",
                     "startIndex": 140,
-                    "endIndex": 253,
+                    "endIndex": 254,
                     "children": [
                         {
                             "type": "text",
@@ -397,7 +407,7 @@
                         {
                             "type": "tag",
                             "startIndex": 154,
-                            "endIndex": 242,
+                            "endIndex": 243,
                             "children": [],
                             "name": "span",
                             "attribs": {
@@ -406,8 +416,8 @@
                         },
                         {
                             "type": "text",
-                            "startIndex": 243,
-                            "endIndex": 247,
+                            "startIndex": 244,
+                            "endIndex": 248,
                             "data": "\n    "
                         }
                     ],
@@ -416,8 +426,8 @@
                 },
                 {
                     "type": "text",
-                    "startIndex": 254,
-                    "endIndex": 254,
+                    "startIndex": 255,
+                    "endIndex": 255,
                     "data": "\n"
                 }
             ],

@@ -1,0 +1,389 @@
+{
+    "problems": [],
+    "templates": {
+        "t01": {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 67,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 55,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 40,
+                            "endIndex": 49,
+                            "data": "Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 56,
+                    "endIndex": 56,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        },
+        "t02": {
+            "type": "tag",
+            "startIndex": 70,
+            "endIndex": 139,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 100,
+                    "endIndex": 104,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 105,
+                    "endIndex": 127,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 110,
+                            "endIndex": 121,
+                            "data": "Hello MXT 2!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 128,
+                    "endIndex": 128,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t02",
+                "type": "mxt"
+            }
+        },
+        "t03": {
+            "type": "tag",
+            "startIndex": 142,
+            "endIndex": 211,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 172,
+                    "endIndex": 176,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 177,
+                    "endIndex": 199,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 182,
+                            "endIndex": 193,
+                            "data": "Hello MXT 3!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 200,
+                    "endIndex": 200,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t03",
+                "type": "mxt"
+            }
+        }
+    },
+    "scripts": [],
+    "components": {
+        "t01": {
+            "parts": {},
+            "importParts": {},
+            "partset": {
+                "p3": {
+                    "id": "p3",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "startIndex": 30,
+                            "endIndex": 34,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 35,
+                            "endIndex": 55,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "startIndex": 40,
+                                    "endIndex": 49,
+                                    "data": "Hello MXT!"
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {}
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 56,
+                            "endIndex": 56,
+                            "data": "\n"
+                        }
+                    ],
+                    "attachTo": []
+                }
+            },
+            "id": "t01",
+            "rootPart": {
+                "partId": "p3"
+            }
+        },
+        "t02": {
+            "parts": {},
+            "importParts": {},
+            "partset": {
+                "p4": {
+                    "id": "p4",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "startIndex": 100,
+                            "endIndex": 104,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 105,
+                            "endIndex": 127,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "startIndex": 110,
+                                    "endIndex": 121,
+                                    "data": "Hello MXT 2!"
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {}
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 128,
+                            "endIndex": 128,
+                            "data": "\n"
+                        }
+                    ],
+                    "attachTo": []
+                }
+            },
+            "id": "t02",
+            "rootPart": {
+                "partId": "p4"
+            }
+        },
+        "t03": {
+            "parts": {},
+            "importParts": {},
+            "partset": {
+                "p5": {
+                    "id": "p5",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "startIndex": 172,
+                            "endIndex": 176,
+                            "data": "\n    "
+                        },
+                        {
+                            "type": "tag",
+                            "startIndex": 177,
+                            "endIndex": 199,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "startIndex": 182,
+                                    "endIndex": 193,
+                                    "data": "Hello MXT 3!"
+                                }
+                            ],
+                            "name": "div",
+                            "attribs": {}
+                        },
+                        {
+                            "type": "text",
+                            "startIndex": 200,
+                            "endIndex": 200,
+                            "data": "\n"
+                        }
+                    ],
+                    "attachTo": []
+                }
+            },
+            "id": "t03",
+            "rootPart": {
+                "partId": "p5"
+            }
+        }
+    },
+    "initStatements": [],
+    "componentStatements": [],
+    "imports": [],
+    "content": "<template id=\"t01\" type=\"mxt\">\n    <div>Hello MXT!</div>\n</template>\n\n<template id=\"t02\" type=\"mxt\">\n    <div>Hello MXT 2!</div>\n</template>\n\n<template id=\"t03\" type=\"mxt\">\n    <div>Hello MXT 3!</div>\n</template>",
+    "dom": [
+        {
+            "type": "tag",
+            "startIndex": 0,
+            "endIndex": 67,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 30,
+                    "endIndex": 34,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 35,
+                    "endIndex": 55,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 40,
+                            "endIndex": 49,
+                            "data": "Hello MXT!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 56,
+                    "endIndex": 56,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t01",
+                "type": "mxt"
+            }
+        },
+        {
+            "type": "text",
+            "startIndex": 68,
+            "endIndex": 69,
+            "data": "\n\n"
+        },
+        {
+            "type": "tag",
+            "startIndex": 70,
+            "endIndex": 139,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 100,
+                    "endIndex": 104,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 105,
+                    "endIndex": 127,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 110,
+                            "endIndex": 121,
+                            "data": "Hello MXT 2!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 128,
+                    "endIndex": 128,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t02",
+                "type": "mxt"
+            }
+        },
+        {
+            "type": "text",
+            "startIndex": 140,
+            "endIndex": 141,
+            "data": "\n\n"
+        },
+        {
+            "type": "tag",
+            "startIndex": 142,
+            "endIndex": 211,
+            "children": [
+                {
+                    "type": "text",
+                    "startIndex": 172,
+                    "endIndex": 176,
+                    "data": "\n    "
+                },
+                {
+                    "type": "tag",
+                    "startIndex": 177,
+                    "endIndex": 199,
+                    "children": [
+                        {
+                            "type": "text",
+                            "startIndex": 182,
+                            "endIndex": 193,
+                            "data": "Hello MXT 3!"
+                        }
+                    ],
+                    "name": "div",
+                    "attribs": {}
+                },
+                {
+                    "type": "text",
+                    "startIndex": 200,
+                    "endIndex": 200,
+                    "data": "\n"
+                }
+            ],
+            "name": "template",
+            "attribs": {
+                "id": "t03",
+                "type": "mxt"
+            }
+        }
+    ]
+}

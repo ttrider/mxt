@@ -1,6 +1,20 @@
 import * as ts from "typescript";
 import { ExpressionInfo, TokenInfo } from "..";
 
+export function parseExpressions(content: string) {
+    content = content?.trim();
+    let expression = content;
+    if (content) {
+        if (!(content.startsWith("${") && content.endsWith("}"))) {
+            content = "${" + content + "}";
+        } else {
+            expression = content.substring(2, content.length - 1);
+        }
+    }
+    const state = parseInlineExpressions(content);
+    state.content = expression;
+    return state;
+}
 export function parseInlineExpressions(content: string) {
 
     const state: ExpressionInfo = {

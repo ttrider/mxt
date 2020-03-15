@@ -2,7 +2,7 @@ import { TemplateInfo, AttributeTokenInfo, DynamicElementInfo, ExpressionInfo } 
 import { Element, DataNode, Node } from "domhandler";
 import { ElementType } from "domelementtype";
 import { ComponentFile } from "../component-file";
-import { parseInlineExpressions } from "../ast/ts";
+import { parseInlineExpressions, parseExpressions } from "../ast/ts";
 
 import { removeElement, append, prepend } from "domutils";
 import processStyle from "./style-handler";
@@ -76,7 +76,7 @@ export function wrapAsPart(context: Context, element: Element) {
         partId: part.id
     };
     if (element.attribs.with) {
-        partRef.dc = parseInlineExpressions(element.attribs.with);
+        partRef.dc = parseExpressions(element.attribs.with);
     }
 
     return partRef;
@@ -368,14 +368,14 @@ export function processMxtForeach(context: Context, element: Element) {
 
             const part = component.newPart<ForEach>({
                 partId: innerPart.partId,
-                forEach: parseInlineExpressions(element.attribs.in)
+                forEach: parseExpressions(element.attribs.in)
             });
 
             const partRef: PartReference = {
                 partId: part.id
             };
             if (element.attribs.with) {
-                partRef.dc = parseInlineExpressions(element.attribs.with);
+                partRef.dc = parseExpressions(element.attribs.with);
             }
 
             return partRef;
@@ -410,14 +410,14 @@ export function processMxtSwitch(context: Context, element: Element) {
     });
 
     if (attrs.on) {
-        part.switch = parseInlineExpressions(attrs.on)
+        part.switch = parseExpressions(attrs.on)
     }
 
     const partRef: PartReference = {
         partId: part.id
     };
     if (element.attribs.with) {
-        partRef.dc = parseInlineExpressions(element.attribs.with);
+        partRef.dc = parseExpressions(element.attribs.with);
     }
 
 
@@ -434,11 +434,11 @@ export function processMxtSwitch(context: Context, element: Element) {
                 const casePart: WhenPartReference =
                 {
                     partId: subPart.partId,
-                    when: parseInlineExpressions(attrs.when)
+                    when: parseExpressions(attrs.when)
                 };
 
                 if (element.attribs.with) {
-                    casePart.dc = parseInlineExpressions(el.attribs.with);
+                    casePart.dc = parseExpressions(el.attribs.with);
                 }
 
                 part.sequence.push(casePart);
@@ -447,7 +447,7 @@ export function processMxtSwitch(context: Context, element: Element) {
         } if (el.name == "mxt.default") {
             defaultPart = wrapAsPart(context, el);
             if (defaultPart && element.attribs.with) {
-                defaultPart.dc = parseInlineExpressions(el.attribs.with);
+                defaultPart.dc = parseExpressions(el.attribs.with);
             }
         } else {
             componentFile.problemFromElement(ProblemCode.ERR010, element);
@@ -498,7 +498,7 @@ export function processMxtWith(context: Context, element: Element) {
         const innerPart = wrapAsPart(context, element);
         if (innerPart) {
             if (element.attribs.data) {
-                innerPart.dc = parseInlineExpressions(element.attribs.data);
+                innerPart.dc = parseExpressions(element.attribs.data);
             }
             return innerPart;
         }
@@ -548,7 +548,7 @@ export function processMxtComponent(context: Context, element: Element) {
         partId: part.id
     };
     if (element.attribs.with) {
-        partRef.dc = parseInlineExpressions(element.attribs.with);
+        partRef.dc = parseExpressions(element.attribs.with);
     }
 
     return partRef;
@@ -578,7 +578,7 @@ export function processMxtIf(context: Context, element: Element) {
                 sequence: [
                     {
                         partId: innerPart.partId,
-                        when: parseInlineExpressions(element.attribs.condition)
+                        when: parseExpressions(element.attribs.condition)
                     }]
             });
 
@@ -586,7 +586,7 @@ export function processMxtIf(context: Context, element: Element) {
                 partId: part.id
             };
             if (element.attribs.with) {
-                partRef.dc = parseInlineExpressions(element.attribs.with);
+                partRef.dc = parseExpressions(element.attribs.with);
             }
 
             return partRef;

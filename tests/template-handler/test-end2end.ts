@@ -8,25 +8,39 @@ import { formatComponentFileObject } from "../utils";
 
 const writeFile = promisify(fs.writeFile);
 
-const files = fs.readdirSync(path.resolve(__dirname, "..", "resources"));
-const numberOfTests = files.map(f => path.extname(".html") ? f : undefined).length;
+const basePath = path.resolve(__dirname, "..", "resources");
+const files = fs.readdirSync(basePath);
+const testSet = files.map(f => {
 
-const testSet: string[] = [];
-for (let i = 0; i < numberOfTests; i++) {
-    testSet.push("t" + i.toString(16));
+    if (path.extname(f) !== ".html") return undefined;
+    const v =
+        [
+            path.basename(f, ".html"),
+            path.resolve(basePath, f)
+        ];
+    return v;
 }
+).filter(v => v);
+
+console.log(testSet);
 
 describe("msx-end2end", () => {
-    test.each(testSet)('t%#', async (fname) => { expect((await setup(fname)).formatted).toMatchSnapshot(); });
+    test.each(testSet)('%p', async (data, data2) => {
+        const filePath = data2 as any as string;
+        expect((await setup(filePath)).formatted).toMatchSnapshot();
+    });
 });
 
 
 
 
-async function setup(fileName: string, id: string = "t01") {
+async function setup(fileName: string) {
 
-    const inputFile = path.resolve(__dirname, "..", "resources", fileName + ".html");
-    const outputFile = path.resolve(__dirname, "__snapshots__", "test-end2end", fileName + ".json");
+    const inputFile = fileName;
+    const outputFile = fileName.substring(0, fileName.length - 5) + ".json";
+
+    console.log(inputFile);
+    console.log(outputFile);
 
     const componentFile = await ComponentFile.fromFile(inputFile);
 
@@ -39,15 +53,13 @@ async function setup(fileName: string, id: string = "t01") {
         }
     }
 
-    const component = componentFile.components[id];
-
     const formatted = formatComponentFileObject(componentFile);
 
     await writeFile(outputFile, formatted);
 
     return {
         componentFile,
-        component,
+       
         formatted
     }
 }

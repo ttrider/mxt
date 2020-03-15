@@ -49,8 +49,8 @@
             "parts": {},
             "importParts": {},
             "partset": {
-                "p2": {
-                    "id": "p2",
+                "p1": {
+                    "id": "p1",
                     "elements": [
                         {
                             "type": "text",
@@ -124,7 +124,7 @@
             },
             "id": "t01",
             "rootPart": {
-                "partId": "p2"
+                "partId": "p1"
             }
         }
     },

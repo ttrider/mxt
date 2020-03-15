@@ -1,144 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`msx-end2end t0 1`] = `
-"{
-    \\"problems\\": [],
-    \\"templates\\": {
-        \\"t01\\": {
-            \\"type\\": \\"tag\\",
-            \\"startIndex\\": 0,
-            \\"endIndex\\": 67,
-            \\"children\\": [
-                {
-                    \\"type\\": \\"text\\",
-                    \\"startIndex\\": 30,
-                    \\"endIndex\\": 34,
-                    \\"data\\": \\"\\\\n    \\"
-                },
-                {
-                    \\"type\\": \\"tag\\",
-                    \\"startIndex\\": 35,
-                    \\"endIndex\\": 55,
-                    \\"children\\": [
-                        {
-                            \\"type\\": \\"text\\",
-                            \\"startIndex\\": 40,
-                            \\"endIndex\\": 49,
-                            \\"data\\": \\"Hello MXT!\\"
-                        }
-                    ],
-                    \\"name\\": \\"div\\",
-                    \\"attribs\\": {}
-                },
-                {
-                    \\"type\\": \\"text\\",
-                    \\"startIndex\\": 56,
-                    \\"endIndex\\": 56,
-                    \\"data\\": \\"\\\\n\\"
-                }
-            ],
-            \\"name\\": \\"template\\",
-            \\"attribs\\": {
-                \\"id\\": \\"t01\\",
-                \\"type\\": \\"mxt\\"
-            }
-        }
-    },
-    \\"scripts\\": [],
-    \\"components\\": {
-        \\"t01\\": {
-            \\"parts\\": {},
-            \\"importParts\\": {},
-            \\"partset\\": {
-                \\"p0\\": {
-                    \\"id\\": \\"p0\\",
-                    \\"elements\\": [
-                        {
-                            \\"type\\": \\"text\\",
-                            \\"startIndex\\": 30,
-                            \\"endIndex\\": 34,
-                            \\"data\\": \\"\\\\n    \\"
-                        },
-                        {
-                            \\"type\\": \\"tag\\",
-                            \\"startIndex\\": 35,
-                            \\"endIndex\\": 55,
-                            \\"children\\": [
-                                {
-                                    \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 40,
-                                    \\"endIndex\\": 49,
-                                    \\"data\\": \\"Hello MXT!\\"
-                                }
-                            ],
-                            \\"name\\": \\"div\\",
-                            \\"attribs\\": {}
-                        },
-                        {
-                            \\"type\\": \\"text\\",
-                            \\"startIndex\\": 56,
-                            \\"endIndex\\": 56,
-                            \\"data\\": \\"\\\\n\\"
-                        }
-                    ],
-                    \\"attachTo\\": []
-                }
-            },
-            \\"id\\": \\"t01\\",
-            \\"rootPart\\": {
-                \\"partId\\": \\"p0\\"
-            }
-        }
-    },
-    \\"initStatements\\": [],
-    \\"componentStatements\\": [],
-    \\"imports\\": [],
-    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>Hello MXT!</div>\\\\n</template>\\",
-    \\"dom\\": [
-        {
-            \\"type\\": \\"tag\\",
-            \\"startIndex\\": 0,
-            \\"endIndex\\": 67,
-            \\"children\\": [
-                {
-                    \\"type\\": \\"text\\",
-                    \\"startIndex\\": 30,
-                    \\"endIndex\\": 34,
-                    \\"data\\": \\"\\\\n    \\"
-                },
-                {
-                    \\"type\\": \\"tag\\",
-                    \\"startIndex\\": 35,
-                    \\"endIndex\\": 55,
-                    \\"children\\": [
-                        {
-                            \\"type\\": \\"text\\",
-                            \\"startIndex\\": 40,
-                            \\"endIndex\\": 49,
-                            \\"data\\": \\"Hello MXT!\\"
-                        }
-                    ],
-                    \\"name\\": \\"div\\",
-                    \\"attribs\\": {}
-                },
-                {
-                    \\"type\\": \\"text\\",
-                    \\"startIndex\\": 56,
-                    \\"endIndex\\": 56,
-                    \\"data\\": \\"\\\\n\\"
-                }
-            ],
-            \\"name\\": \\"template\\",
-            \\"attribs\\": {
-                \\"id\\": \\"t01\\",
-                \\"type\\": \\"mxt\\"
-            }
-        }
-    ]
-}"
-`;
-
-exports[`msx-end2end t1 1`] = `
+exports[`msx-end2end "attributes" 1`] = `
 "{
     \\"problems\\": [],
     \\"templates\\": {
@@ -190,8 +52,8 @@ exports[`msx-end2end t1 1`] = `
             \\"parts\\": {},
             \\"importParts\\": {},
             \\"partset\\": {
-                \\"p1\\": {
-                    \\"id\\": \\"p1\\",
+                \\"p0\\": {
+                    \\"id\\": \\"p0\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -252,7 +114,7 @@ exports[`msx-end2end t1 1`] = `
             },
             \\"id\\": \\"t01\\",
             \\"rootPart\\": {
-                \\"partId\\": \\"p1\\"
+                \\"partId\\": \\"p0\\"
             }
         }
     },
@@ -306,7 +168,7 @@ exports[`msx-end2end t1 1`] = `
 }"
 `;
 
-exports[`msx-end2end t2 1`] = `
+exports[`msx-end2end "events" 1`] = `
 "{
     \\"problems\\": [],
     \\"templates\\": {
@@ -358,8 +220,8 @@ exports[`msx-end2end t2 1`] = `
             \\"parts\\": {},
             \\"importParts\\": {},
             \\"partset\\": {
-                \\"p2\\": {
-                    \\"id\\": \\"p2\\",
+                \\"p1\\": {
+                    \\"id\\": \\"p1\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -433,7 +295,7 @@ exports[`msx-end2end t2 1`] = `
             },
             \\"id\\": \\"t01\\",
             \\"rootPart\\": {
-                \\"partId\\": \\"p2\\"
+                \\"partId\\": \\"p1\\"
             }
         }
     },
@@ -487,7 +349,7 @@ exports[`msx-end2end t2 1`] = `
 }"
 `;
 
-exports[`msx-end2end t3 1`] = `
+exports[`msx-end2end "inline.values" 1`] = `
 "{
     \\"problems\\": [],
     \\"templates\\": {
@@ -703,8 +565,8 @@ exports[`msx-end2end t3 1`] = `
             \\"parts\\": {},
             \\"importParts\\": {},
             \\"partset\\": {
-                \\"p3\\": {
-                    \\"id\\": \\"p3\\",
+                \\"p2\\": {
+                    \\"id\\": \\"p2\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -1057,7 +919,7 @@ exports[`msx-end2end t3 1`] = `
             },
             \\"id\\": \\"t01\\",
             \\"rootPart\\": {
-                \\"partId\\": \\"p3\\"
+                \\"partId\\": \\"p2\\"
             }
         }
     },
@@ -1275,14 +1137,406 @@ exports[`msx-end2end t3 1`] = `
 }"
 `;
 
-exports[`msx-end2end t4 1`] = `
+exports[`msx-end2end "multiple.templates" 1`] = `
 "{
     \\"problems\\": [],
     \\"templates\\": {
         \\"t01\\": {
             \\"type\\": \\"tag\\",
             \\"startIndex\\": 0,
-            \\"endIndex\\": 265,
+            \\"endIndex\\": 67,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 55,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 49,
+                            \\"data\\": \\"Hello MXT!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 56,
+                    \\"endIndex\\": 56,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        },
+        \\"t02\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 70,
+            \\"endIndex\\": 139,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 100,
+                    \\"endIndex\\": 104,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 105,
+                    \\"endIndex\\": 127,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 110,
+                            \\"endIndex\\": 121,
+                            \\"data\\": \\"Hello MXT 2!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 128,
+                    \\"endIndex\\": 128,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t02\\",
+                \\"type\\": \\"mxt\\"
+            }
+        },
+        \\"t03\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 142,
+            \\"endIndex\\": 211,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 172,
+                    \\"endIndex\\": 176,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 177,
+                    \\"endIndex\\": 199,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 182,
+                            \\"endIndex\\": 193,
+                            \\"data\\": \\"Hello MXT 3!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 200,
+                    \\"endIndex\\": 200,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t03\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    },
+    \\"scripts\\": [],
+    \\"components\\": {
+        \\"t01\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p3\\": {
+                    \\"id\\": \\"p3\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 30,
+                            \\"endIndex\\": 34,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 35,
+                            \\"endIndex\\": 55,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 40,
+                                    \\"endIndex\\": 49,
+                                    \\"data\\": \\"Hello MXT!\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 56,
+                            \\"endIndex\\": 56,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                }
+            },
+            \\"id\\": \\"t01\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p3\\"
+            }
+        },
+        \\"t02\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p4\\": {
+                    \\"id\\": \\"p4\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 100,
+                            \\"endIndex\\": 104,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 105,
+                            \\"endIndex\\": 127,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 110,
+                                    \\"endIndex\\": 121,
+                                    \\"data\\": \\"Hello MXT 2!\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 128,
+                            \\"endIndex\\": 128,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                }
+            },
+            \\"id\\": \\"t02\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p4\\"
+            }
+        },
+        \\"t03\\": {
+            \\"parts\\": {},
+            \\"importParts\\": {},
+            \\"partset\\": {
+                \\"p5\\": {
+                    \\"id\\": \\"p5\\",
+                    \\"elements\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 172,
+                            \\"endIndex\\": 176,
+                            \\"data\\": \\"\\\\n    \\"
+                        },
+                        {
+                            \\"type\\": \\"tag\\",
+                            \\"startIndex\\": 177,
+                            \\"endIndex\\": 199,
+                            \\"children\\": [
+                                {
+                                    \\"type\\": \\"text\\",
+                                    \\"startIndex\\": 182,
+                                    \\"endIndex\\": 193,
+                                    \\"data\\": \\"Hello MXT 3!\\"
+                                }
+                            ],
+                            \\"name\\": \\"div\\",
+                            \\"attribs\\": {}
+                        },
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 200,
+                            \\"endIndex\\": 200,
+                            \\"data\\": \\"\\\\n\\"
+                        }
+                    ],
+                    \\"attachTo\\": []
+                }
+            },
+            \\"id\\": \\"t03\\",
+            \\"rootPart\\": {
+                \\"partId\\": \\"p5\\"
+            }
+        }
+    },
+    \\"initStatements\\": [],
+    \\"componentStatements\\": [],
+    \\"imports\\": [],
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>Hello MXT!</div>\\\\n</template>\\\\n\\\\n<template id=\\\\\\"t02\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>Hello MXT 2!</div>\\\\n</template>\\\\n\\\\n<template id=\\\\\\"t03\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>Hello MXT 3!</div>\\\\n</template>\\",
+    \\"dom\\": [
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 67,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 30,
+                    \\"endIndex\\": 34,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 35,
+                    \\"endIndex\\": 55,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 40,
+                            \\"endIndex\\": 49,
+                            \\"data\\": \\"Hello MXT!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 56,
+                    \\"endIndex\\": 56,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t01\\",
+                \\"type\\": \\"mxt\\"
+            }
+        },
+        {
+            \\"type\\": \\"text\\",
+            \\"startIndex\\": 68,
+            \\"endIndex\\": 69,
+            \\"data\\": \\"\\\\n\\\\n\\"
+        },
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 70,
+            \\"endIndex\\": 139,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 100,
+                    \\"endIndex\\": 104,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 105,
+                    \\"endIndex\\": 127,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 110,
+                            \\"endIndex\\": 121,
+                            \\"data\\": \\"Hello MXT 2!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 128,
+                    \\"endIndex\\": 128,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t02\\",
+                \\"type\\": \\"mxt\\"
+            }
+        },
+        {
+            \\"type\\": \\"text\\",
+            \\"startIndex\\": 140,
+            \\"endIndex\\": 141,
+            \\"data\\": \\"\\\\n\\\\n\\"
+        },
+        {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 142,
+            \\"endIndex\\": 211,
+            \\"children\\": [
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 172,
+                    \\"endIndex\\": 176,
+                    \\"data\\": \\"\\\\n    \\"
+                },
+                {
+                    \\"type\\": \\"tag\\",
+                    \\"startIndex\\": 177,
+                    \\"endIndex\\": 199,
+                    \\"children\\": [
+                        {
+                            \\"type\\": \\"text\\",
+                            \\"startIndex\\": 182,
+                            \\"endIndex\\": 193,
+                            \\"data\\": \\"Hello MXT 3!\\"
+                        }
+                    ],
+                    \\"name\\": \\"div\\",
+                    \\"attribs\\": {}
+                },
+                {
+                    \\"type\\": \\"text\\",
+                    \\"startIndex\\": 200,
+                    \\"endIndex\\": 200,
+                    \\"data\\": \\"\\\\n\\"
+                }
+            ],
+            \\"name\\": \\"template\\",
+            \\"attribs\\": {
+                \\"id\\": \\"t03\\",
+                \\"type\\": \\"mxt\\"
+            }
+        }
+    ]
+}"
+`;
+
+exports[`msx-end2end "mxt.if" 1`] = `
+"{
+    \\"problems\\": [],
+    \\"templates\\": {
+        \\"t01\\": {
+            \\"type\\": \\"tag\\",
+            \\"startIndex\\": 0,
+            \\"endIndex\\": 266,
             \\"children\\": [
                 {
                     \\"type\\": \\"text\\",
@@ -1330,7 +1584,7 @@ exports[`msx-end2end t4 1`] = `
                 {
                     \\"type\\": \\"tag\\",
                     \\"startIndex\\": 140,
-                    \\"endIndex\\": 253,
+                    \\"endIndex\\": 254,
                     \\"children\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -1341,7 +1595,7 @@ exports[`msx-end2end t4 1`] = `
                         {
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 154,
-                            \\"endIndex\\": 242,
+                            \\"endIndex\\": 243,
                             \\"children\\": [],
                             \\"name\\": \\"span\\",
                             \\"attribs\\": {
@@ -1350,8 +1604,8 @@ exports[`msx-end2end t4 1`] = `
                         },
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 243,
-                            \\"endIndex\\": 247,
+                            \\"startIndex\\": 244,
+                            \\"endIndex\\": 248,
                             \\"data\\": \\"\\\\n    \\"
                         }
                     ],
@@ -1360,8 +1614,8 @@ exports[`msx-end2end t4 1`] = `
                 },
                 {
                     \\"type\\": \\"text\\",
-                    \\"startIndex\\": 254,
-                    \\"endIndex\\": 254,
+                    \\"startIndex\\": 255,
+                    \\"endIndex\\": 255,
                     \\"data\\": \\"\\\\n\\"
                 }
             ],
@@ -1378,8 +1632,8 @@ exports[`msx-end2end t4 1`] = `
             \\"parts\\": {},
             \\"importParts\\": {},
             \\"partset\\": {
-                \\"p4\\": {
-                    \\"id\\": \\"p4\\",
+                \\"p6\\": {
+                    \\"id\\": \\"p6\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -1411,13 +1665,13 @@ exports[`msx-end2end t4 1`] = `
                     ],
                     \\"attachTo\\": []
                 },
-                \\"p5\\": {
-                    \\"id\\": \\"p5\\",
+                \\"p7\\": {
+                    \\"id\\": \\"p7\\",
                     \\"sequence\\": [
                         {
-                            \\"partId\\": \\"p4\\",
+                            \\"partId\\": \\"p6\\",
                             \\"when\\": {
-                                \\"content\\": \\"\${foo}\\",
+                                \\"content\\": \\"foo\\",
                                 \\"externalReferences\\": [
                                     \\"foo\\"
                                 ],
@@ -1433,24 +1687,24 @@ exports[`msx-end2end t4 1`] = `
                         }
                     ]
                 },
-                \\"p6\\": {
-                    \\"id\\": \\"p6\\",
+                \\"p8\\": {
+                    \\"id\\": \\"p8\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 195,
-                            \\"endIndex\\": 207,
+                            \\"startIndex\\": 196,
+                            \\"endIndex\\": 208,
                             \\"data\\": \\"\\\\n            \\"
                         },
                         {
                             \\"type\\": \\"tag\\",
-                            \\"startIndex\\": 208,
-                            \\"endIndex\\": 224,
+                            \\"startIndex\\": 209,
+                            \\"endIndex\\": 225,
                             \\"children\\": [
                                 {
                                     \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 213,
-                                    \\"endIndex\\": 218,
+                                    \\"startIndex\\": 214,
+                                    \\"endIndex\\": 219,
                                     \\"data\\": \\"if bar\\"
                                 }
                             ],
@@ -1459,37 +1713,37 @@ exports[`msx-end2end t4 1`] = `
                         },
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 225,
-                            \\"endIndex\\": 233,
+                            \\"startIndex\\": 226,
+                            \\"endIndex\\": 234,
                             \\"data\\": \\"\\\\n        \\"
                         }
                     ],
                     \\"attachTo\\": []
                 },
-                \\"p7\\": {
-                    \\"id\\": \\"p7\\",
+                \\"p9\\": {
+                    \\"id\\": \\"p9\\",
                     \\"sequence\\": [
                         {
-                            \\"partId\\": \\"p6\\",
+                            \\"partId\\": \\"p8\\",
                             \\"when\\": {
-                                \\"content\\": \\"\${bar}\\",
+                                \\"content\\": \\"bar > 0\\",
                                 \\"externalReferences\\": [
                                     \\"bar\\"
                                 ],
                                 \\"tokens\\": [
                                     {
                                         \\"start\\": 0,
-                                        \\"end\\": 6,
-                                        \\"content\\": \\"bar\\",
-                                        \\"token\\": \\"\${bar}\\"
+                                        \\"end\\": 10,
+                                        \\"content\\": \\"bar > 0\\",
+                                        \\"token\\": \\"\${bar > 0}\\"
                                     }
                                 ]
                             }
                         }
                     ]
                 },
-                \\"p8\\": {
-                    \\"id\\": \\"p8\\",
+                \\"p10\\": {
+                    \\"id\\": \\"p10\\",
                     \\"elements\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -1537,7 +1791,7 @@ exports[`msx-end2end t4 1`] = `
                         {
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 140,
-                            \\"endIndex\\": 253,
+                            \\"endIndex\\": 254,
                             \\"children\\": [
                                 {
                                     \\"type\\": \\"text\\",
@@ -1548,7 +1802,7 @@ exports[`msx-end2end t4 1`] = `
                                 {
                                     \\"type\\": \\"tag\\",
                                     \\"startIndex\\": 154,
-                                    \\"endIndex\\": 242,
+                                    \\"endIndex\\": 243,
                                     \\"children\\": [],
                                     \\"name\\": \\"span\\",
                                     \\"attribs\\": {
@@ -1557,8 +1811,8 @@ exports[`msx-end2end t4 1`] = `
                                 },
                                 {
                                     \\"type\\": \\"text\\",
-                                    \\"startIndex\\": 243,
-                                    \\"endIndex\\": 247,
+                                    \\"startIndex\\": 244,
+                                    \\"endIndex\\": 248,
                                     \\"data\\": \\"\\\\n    \\"
                                 }
                             ],
@@ -1567,8 +1821,8 @@ exports[`msx-end2end t4 1`] = `
                         },
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 254,
-                            \\"endIndex\\": 254,
+                            \\"startIndex\\": 255,
+                            \\"endIndex\\": 255,
                             \\"data\\": \\"\\\\n\\"
                         }
                     ],
@@ -1580,7 +1834,7 @@ exports[`msx-end2end t4 1`] = `
                             \\"originalId\\": \\"\\",
                             \\"embeddedParts\\": [
                                 {
-                                    \\"partId\\": \\"p5\\"
+                                    \\"partId\\": \\"p7\\"
                                 }
                             ]
                         },
@@ -1591,10 +1845,20 @@ exports[`msx-end2end t4 1`] = `
                             \\"originalId\\": \\"\\",
                             \\"embeddedParts\\": [
                                 {
-                                    \\"partId\\": \\"p7\\",
+                                    \\"partId\\": \\"p9\\",
                                     \\"dc\\": {
                                         \\"content\\": \\"foobar\\",
-                                        \\"externalReferences\\": []
+                                        \\"externalReferences\\": [
+                                            \\"foobar\\"
+                                        ],
+                                        \\"tokens\\": [
+                                            {
+                                                \\"start\\": 0,
+                                                \\"end\\": 9,
+                                                \\"content\\": \\"foobar\\",
+                                                \\"token\\": \\"\${foobar}\\"
+                                            }
+                                        ]
                                     }
                                 }
                             ]
@@ -1604,19 +1868,19 @@ exports[`msx-end2end t4 1`] = `
             },
             \\"id\\": \\"t01\\",
             \\"rootPart\\": {
-                \\"partId\\": \\"p8\\"
+                \\"partId\\": \\"p10\\"
             }
         }
     },
     \\"initStatements\\": [],
     \\"componentStatements\\": [],
     \\"imports\\": [],
-    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"\${foo}\\\\\\">\\\\n            <div>if foo</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"\${bar}\\\\\\" with=\\\\\\"foobar\\\\\\">\\\\n            <div>if bar</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n</template>\\",
+    \\"content\\": \\"<template id=\\\\\\"t01\\\\\\" type=\\\\\\"mxt\\\\\\">\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"\${foo}\\\\\\">\\\\n            <div>if foo</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n    <div>\\\\n        <mxt.if condition=\\\\\\"bar > 0\\\\\\" with=\\\\\\"foobar\\\\\\">\\\\n            <div>if bar</div>\\\\n        </mxt.if>\\\\n    </div>\\\\n</template>\\",
     \\"dom\\": [
         {
             \\"type\\": \\"tag\\",
             \\"startIndex\\": 0,
-            \\"endIndex\\": 265,
+            \\"endIndex\\": 266,
             \\"children\\": [
                 {
                     \\"type\\": \\"text\\",
@@ -1664,7 +1928,7 @@ exports[`msx-end2end t4 1`] = `
                 {
                     \\"type\\": \\"tag\\",
                     \\"startIndex\\": 140,
-                    \\"endIndex\\": 253,
+                    \\"endIndex\\": 254,
                     \\"children\\": [
                         {
                             \\"type\\": \\"text\\",
@@ -1675,7 +1939,7 @@ exports[`msx-end2end t4 1`] = `
                         {
                             \\"type\\": \\"tag\\",
                             \\"startIndex\\": 154,
-                            \\"endIndex\\": 242,
+                            \\"endIndex\\": 243,
                             \\"children\\": [],
                             \\"name\\": \\"span\\",
                             \\"attribs\\": {
@@ -1684,8 +1948,8 @@ exports[`msx-end2end t4 1`] = `
                         },
                         {
                             \\"type\\": \\"text\\",
-                            \\"startIndex\\": 243,
-                            \\"endIndex\\": 247,
+                            \\"startIndex\\": 244,
+                            \\"endIndex\\": 248,
                             \\"data\\": \\"\\\\n    \\"
                         }
                     ],
@@ -1694,8 +1958,8 @@ exports[`msx-end2end t4 1`] = `
                 },
                 {
                     \\"type\\": \\"text\\",
-                    \\"startIndex\\": 254,
-                    \\"endIndex\\": 254,
+                    \\"startIndex\\": 255,
+                    \\"endIndex\\": 255,
                     \\"data\\": \\"\\\\n\\"
                 }
             ],
